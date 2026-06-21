@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+
+
+<head>
+<meta charset="UTF-8">
+<title>Kalps Studio Dashboard</title>
+
+<style>
+/*======================navbar=====================*/
+
+.navbar {
+  width: 100%;
+  background-color: #555;
+  overflow: auto;
+}
+
+.navbar a {
+  float: left;
+  padding: 12px;
+  color: white;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.navbar a:hover {
+  background-color: #000;
+}
+
+.active {
+  background-color: #04AA6D;
+}
+
+@media screen and (max-width: 500px) {
+  .navbar a {
+    float: none;
+    display: block;
+  }
+}
+
+
+/*================ Loader ==================================*/
+#loader-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+.loader {
+  position: relative;
+  transform: rotateZ(45deg);
+  perspective: 1000px;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  color: #fff;
+}
+
+.loader {
+        font-size:48px;
+        color: #FFF;
+        width: 1em;
+        height: 1em;
+        box-sizing: border-box;
+        background-color: currentcolor;
+        position: relative;
+        border-radius: 50%;
+        transform: rotateX(-60deg) perspective(1000px);
+      }
+      .loader:before,
+      .loader:after {
+        content: '';
+        display: block;
+        position: absolute;
+        box-sizing: border-box;
+        top: 0;
+        left: 0;
+        width: inherit;
+        height: inherit;
+        border-radius: inherit;
+        animation: flowerFlow 1s ease-out infinite;
+      }
+      .loader:after {
+        animation-delay: .4s;
+      }
+
+      @keyframes flowerFlow {
+        0% {
+          opacity: 1;
+          transform: rotate(0deg);
+          box-shadow: 0 0 0 -.5em currentcolor,
+          0 0 0 -.5em currentcolor,
+          0 0 0 -.5em currentcolor,
+          0 0 0 -.5em currentcolor,
+          0 0 0 -.5em currentcolor,
+          0 0 0 -.5em currentcolor,
+          0 0 0 -.5em currentcolor,
+          0 0 0 -.5em currentcolor;
+        }
+        100% {
+          opacity: 0;
+          transform: rotate(180deg);
+          box-shadow: -1em -1em 0 -.35em currentcolor,
+          0 -1.5em 0 -.35em currentcolor,
+          1em -1em 0 -.35em currentcolor,
+          -1.5em 0 0 -.35em currentcolor,
+          1.5em -0 0 -.35em currentcolor,
+          -1em 1em 0 -.35em currentcolor,
+          0 1.5em 0 -.35em currentcolor,
+          1em 1em 0 -.35em currentcolor;
+        }
+      }
+      
+/*=====================general============*/
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial;
+}
+
+/* ===================== BACKGROUND ===================== */
+body{
+    color:white;
+    min-height:100vh;
+
+    background:
+    radial-gradient(circle at top left, rgba(249,115,22,0.15), transparent 40%),
+    radial-gradient(circle at bottom right, rgba(59,130,246,0.15), transparent 40%),
+    linear-gradient(135deg, #0b1220, #020617);
+}
+
+/* GRID OVERLAY */
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size:60px 60px;
+    opacity:0.4;
+    pointer-events:none;
+}
+
+/* ================= HEADER ================= */
+header{
+    padding:20px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:rgba(255,255,255,0.04);
+    backdrop-filter: blur(12px);
+    border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+/* ================= MAIN ================= */
+.container{
+    padding:40px;
+}
+
+/* WELCOME */
+.welcome{
+    padding:20px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:12px;
+    margin-bottom:20px;
+}
+
+/* ================= QUIZ BANNER ================= */
+.quiz-banner{
+    padding:25px;
+    background: linear-gradient(135deg, rgba(249,115,22,0.15), rgba(59,130,246,0.15));
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:16px;
+    backdrop-filter: blur(12px);
+    position:relative;
+    overflow:hidden;
+}
+
+.quiz-banner::after{
+    content:"";
+    position:absolute;
+    top:-50%;
+    left:-50%;
+    width:200%;
+    height:200%;
+    background: radial-gradient(circle, rgba(249,115,22,0.25), transparent 60%);
+    animation: glow 6s linear infinite;
+}
+
+@keyframes glow{
+    0%{transform:rotate(0deg);}
+    100%{transform:rotate(360deg);}
+}
+
+.quiz-content{
+    position:relative;
+    z-index:2;
+}
+
+/* ================= BUTTON ================= */
+button{
+    padding:10px 16px;
+    background:#f97316;
+    border:none;
+    color:white;
+    cursor:pointer;
+    border-radius:8px;
+}
+
+/* ================= PAYMENT PAGE ================= */
+#paymentPage{
+    position:fixed;
+    inset:0;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    background:rgba(0,0,0,0.8);
+    backdrop-filter: blur(10px);
+}
+
+.payBox{
+    width:380px;
+    background:white;
+    color:black;
+    padding:25px;
+    border-radius:16px;
+}
+
+.planCard{
+    background:#f1f5f9;
+    padding:15px;
+    border-radius:12px;
+    margin:15px 0;
+}
+
+.planCard ul{
+    padding-left:18px;
+    margin-top:10px;
+}
+
+input{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border-radius:8px;
+    border:1px solid #ddd;
+}
+
+button:hover{
+    opacity:0.9;
+}
+
+/*===================smooth banner=================*/
+.quiz-banner {
+  transform: scale(0.95);
+  transition: 0.4s ease;
+  max-height: 500px;
+  overflow-y: auto;
+}
+</style>
+</head>
+
+<body>
+<div id="loader-wrapper">
+  <span class="loader"></span>
+</div>
+
+<div id="main-content" style="display: none;">
+<!-- ================= HEADER ================= -->
+<div class="navbar">
+  <a class="active" href="Index.html"><i class="fa fa-fw fa-home"></i> Home</a>
+  <a href="Shop.html">📦 Shop</a>
+  <a href="cart.html">🛍️ Cart</a>
+  <a href="Checkout.html">💳 Checkout</a>
+  <a href="privacy.html">🛡️Privacy Policy</a>
+  <a href="contact.html">✉ Contact us</a>
+  <a href="about.html">ℹ️About us</a>
+</div>
+<header>
+    <h2>Kalps Studio Dashboard</h2>
+</header>
+<span class="loader"></span>
+<div class="container">
+
+<div class="quiz-banners">
+	<p>Upgrade to Beta for many more features. 24 days free! <a href="D:\Srivats Personal File\Coding - Srivats\kalps studio\New version\plans.html">Learn more.</a>
+</div>
+    <!-- WELCOME -->
+    <div class="welcome">
+        <h2>Welcome to Your Creative Dashboard</h2>
+        <p>Explore tools, quizzes, and analytics</p>
+    </div>
+
+    <!-- ================= QUIZ BANNER ================= -->
+    <div class="quiz-banner" id="quizBanner">
+
+		<div class="quiz-content">
+
+			<h2>🧠 Creative Quiz Challenge</h2>
+			<p>Answer the questions below</p>
+
+			<div id="quizContainer"></div>
+
+				<div style="margin-top:15px;">
+			</div>
+
+			<br>
+			<button onclick="submitQuiz()">Submit Quiz</button>
+
+		</div>
+	</div>
+
+</div>
+
+<!-- ================= PAYMENT SYSTEM ================= -->
+<div id="paymentPage">
+
+    <div class="payBox">
+
+        <h2>Complete Your Membership</h2>
+
+        <div class="planCard">
+            <h3>Kalps Studio Pro</h3>
+			<h4>Gold membership</h4>
+			<p>Annual Plan</p>
+            <p>Unlock Quiz Results & Premium Tools</p>
+
+            <h1>₹369 <span style="font-size:14px;color:gray;"><del>₹499</del> (26% OFF)</span></h1>
+
+            <ul>
+                <li>Unlimited Quizzes</li>
+                <li>Analytics Dashboard</li>
+                <li>Premium Access</li>
+            </ul>
+        </div>
+		<label for card number>Card Number :</label>
+        <input type="text" id="cardNumber" placeholder="1234-5678-9012-3456" maxlength="19">
+		<label for Name on Card>Name on Card :</label>
+        <input id="name" placeholder="Srivats Sridaran">
+
+        <button onclick="payNow()">Pay Securely</button>
+
+        <p id="status"></p>
+
+    </div>
+
+</div>
+
+<!-- ================= JS ================= -->
+<script>
+//Card input
+const cardInput = document.getElementById("cardNumber");
+
+cardInput.addEventListener("input", function (e) {
+  let value = e.target.value.replace(/\D/g, ""); // remove non-digits
+  let formatted = "";
+
+  for (let i = 0; i < value.length; i++) {
+    if (i > 0 && i % 4 === 0) {
+      formatted += "-";
+    }
+    formatted += value[i];
+  }
+
+  e.target.value = formatted;
+});
+
+let score = 0;
+
+/* ================= QUIZ SUBMIT ================= */
+const allQuestions = [
+  {q:"What is 2 + 2?", options:["3","4","5"], answer:"4"},
+  {q:"HTML stands for?", options:["Markup","Machine","Code"], answer:"Markup"},
+  {q:"CSS is used for?", options:["Styling","Logic","Database"], answer:"Styling"},
+  {q:"JS is?", options:["Language","Browser","OS"], answer:"Language"},
+  {q:"5 + 5?", options:["10","11","9"], answer:"10"},
+
+  {q:"Capital of India?", options:["Delhi","Mumbai","Chennai"], answer:"Delhi"},
+  {q:"React is a ?", options:["Library","Framework","Language"], answer:"Library"},
+  {q:"2 x 6?", options:["10","12","8"], answer:"12"},
+  {q:"Color of sky?", options:["Blue","Red","Green"], answer:"Blue"},
+  {q:"Sun rises in?", options:["East","West","North"], answer:"East"},
+
+  {q:"Water formula?", options:["H2O","CO2","O2"], answer:"H2O"},
+  {q:"Earth is?", options:["Planet","Star","Moon"], answer:"Planet"},
+  {q:"Speed unit?", options:["m/s","kg","amp"], answer:"m/s"},
+  {q:"Binary of 2?", options:["10","11","01"], answer:"10"},
+  {q:"1 byte = ?", options:["8 bits","16 bits","4 bits"], answer:"8 bits"},
+
+  {q:"HTML tag?", options:["<div>","function","var"], answer:"<div>"},
+  {q:"CSS property?", options:["color","print","input"], answer:"color"},
+  {q:"JS keyword?", options:["let","style","body"], answer:"let"},
+  {q:"AI stands for?", options:["Artificial Intelligence","Auto Input","Active Info"], answer:"Artificial Intelligence"},
+  {q:"RAM is for?", options:["Memory","CPU","Disk"], answer:"Memory"}
+];
+
+let currentIndex = 0;
+let answers = {};
+
+function loadQuestions(){
+  let container = document.getElementById("quizContainer");
+  container.innerHTML = "";
+
+  let slice = allQuestions.slice(currentIndex, currentIndex + 5);
+
+  slice.forEach((q, i) => {
+    let qIndex = currentIndex + i;
+
+    let html = `<p>${qIndex+1}. ${q.q}</p>`;
+
+    q.options.forEach(opt => {
+      html += `
+        <label>
+          <input type="radio" name="q${qIndex}" value="${opt}"
+          ${answers[qIndex] === opt ? "checked" : ""}>
+          ${opt}
+        </label>
+      `;
+    });
+
+    container.innerHTML += html + "<br>";
+  });
+}
+
+function nextSet(){
+  saveAnswers();
+  if(currentIndex + 5 < allQuestions.length){
+    currentIndex += 5;
+    loadQuestions();
+  }
+}
+
+function prevSet(){
+  saveAnswers();
+  if(currentIndex - 5 >= 0){
+    currentIndex -= 5;
+    loadQuestions();
+  }
+}
+
+function saveAnswers(){
+  document.querySelectorAll("input[type=radio]:checked").forEach(el=>{
+    let qNum = el.name.replace("q","");
+    answers[qNum] = el.value;
+  });
+}
+
+function submitQuiz(){
+  saveAnswers();
+
+  let score = 0;
+
+  allQuestions.forEach((q, i)=>{
+    if(answers[i] === q.answer){
+      score++;
+    }
+  });
+
+  document.getElementById("paymentPage").style.display = "flex";
+  document.getElementById("status").innerText = "";
+
+  window.finalScore = score; // store globally
+}
+
+// load first 5
+loadQuestions();
+
+/* ================= PAYMENT FLOW ================= */
+function payNow(){
+
+    let status = document.getElementById("status");
+
+    if(!document.getElementById("card").value ||
+       !document.getElementById("name").value){
+        status.innerText = "Please fill payment details";
+        return;
+    }
+
+    // STEP 1 LOADING
+    status.innerText = "Processing payment...";
+
+    setTimeout(() => {
+
+        status.innerText = "Verifying card details...";
+
+        // STEP 2 VERIFY
+        setTimeout(() => {
+
+            status.innerText = "Connecting to secure gateway...";
+
+            // STEP 3 FINAL SUCCESS
+            setTimeout(() => {
+
+                document.getElementById("paymentPage").style.display = "none";
+				localStorage.setItem("proVersion", "true");
+
+                // RESULT SCREEN
+                showResult();
+
+            }, 1500);
+
+        }, 1500);
+
+    }, 1200);
+}
+
+/* ================= RESULT ================= */
+function showResult(){
+
+    let msg =
+    `🎉 Membership Unlocked!
+
+Your Score: ${score}/2
+Membership Status: Gold Membership`;
+
+    alert(msg);
+
+    localStorage.setItem("membership", "active");
+}
+
+/* ================= AUTO CHECK ================= */
+document.addEventListener("DOMContentLoaded", () => {
+    if(localStorage.getItem("membership") === "active"){
+        console.log("Premium user detected");
+    }
+});
+
+//Loader hide
+  window.addEventListener("load", function () {
+    setTimeout(function () {
+      document.getElementById("loader-wrapper").style.display = "none";
+      document.getElementById("main-content").style.display = "block";
+    }, 2000); // change time if needed (2000ms = 2 seconds)
+  });
+  //Quiz activation
+ window.addEventListener("scroll", () => {
+  document.getElementById("quizBanner").style.transform = "scale(1)";
+});
+</script>
+
+
+<a href="setting.html" id="gearBtn">⚙</a>
+
+<style>
+#gearBtn{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:#111;
+    color:#fff;
+    font-size:22px;
+    padding:12px;
+    border-radius:50%;
+    text-decoration:none;
+    z-index:999;
+}
+</style>
+</div>
+
+
+</body>
+</html>

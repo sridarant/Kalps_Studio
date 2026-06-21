@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Cart - Kalps Studio</title>
+<style>
+body { font-family:Arial; background:#f5f5f5; margin:0; }
+header { padding:20px; background:white; display:flex; justify-content:space-between; }
+.item { background:white; padding:10px; margin:10px; display:flex; justify-content:space-between; }
+button { background:#ff4d6d; color:white; border:none; padding:5px 10px; }
+.checkout-btn { background:#6a5acd; color:white; padding:10px; margin:20px; border:none; }
+</style>
+</head>
+<body>
+
+<header>
+  <h2>Cart</h2>
+  <nav>
+    <a href="shop.html">Shop</a>
+    <a href="checkout.html">Checkout</a>
+  </nav>
+</header>
+
+<div id="cart"></div>
+
+<button class="checkout-btn" onclick="goCheckout()">Go to Checkout</button>  
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+function render(){
+  let div = document.getElementById("cart");
+  div.innerHTML = "";
+
+  cart.forEach((item, i)=>{
+    div.innerHTML += `
+      <div class="item">
+        <span>${item.name} - ₹${item.price}</span>
+        <button onclick="removeItem(${i})">Remove</button>
+      </div>
+    `;
+  });
+}
+
+function removeItem(i){
+  cart.splice(i,1);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  render();
+}
+
+function goCheckout(){
+  window.location.href = "checkout.html";
+}
+
+render();
+</script>
+
+</body>
+</html>

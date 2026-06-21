@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Panel</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#0a0f1c;
+  color:white;
+}
+
+.container{
+  max-width:1000px;
+  margin:auto;
+  padding:30px 20px;
+}
+
+.card{
+  background:#121a2b;
+  padding:15px;
+  border-radius:10px;
+  margin-bottom:15px;
+}
+
+.stats{
+  display:flex;
+  gap:10px;
+  margin-bottom:15px;
+}
+
+.stat{
+  flex:1;
+  background:#121a2b;
+  padding:15px;
+  border-radius:10px;
+  text-align:center;
+}
+
+.search{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  margin-bottom:15px;
+}
+
+button{
+  padding:8px 12px;
+  border:none;
+  border-radius:6px;
+  color:white;
+  cursor:pointer;
+  margin-right:5px;
+}
+
+.replyBtn{
+  background:#3b82f6;
+}
+
+.deleteBtn{
+  background:#ef4444;
+}
+
+.starBtn{
+  background:#f59e0b;
+}
+
+.clearBtn{
+  background:#ef4444;
+  margin-bottom:15px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <h2>Admin Panel</h2>
+
+  <div class="stats">
+
+    <div class="stat">
+      <h3 id="total">0</h3>
+      <small>Total Messages</small>
+    </div>
+
+    <div class="stat">
+      <h3 id="unread">0</h3>
+      <small>Unread</small>
+    </div>
+
+  </div>
+
+  <input
+    class="search"
+    id="search"
+    placeholder="Search messages..."
+  >
+
+  <button
+    class="clearBtn"
+    onclick="clearMessages()"
+  >
+    Clear All Messages
+  </button>
+
+  <div id="messages"></div>
+
+</div>
+
+<script>
+const box = document.getElementById("messages");
+const searchBox = document.getElementById("search");
+
+function escapeHTML(text=""){
+  return String(text)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;");
+}
+
+function load(filter=""){
+
+  const messages =
+    JSON.parse(localStorage.getItem("messages")) || [];
+
+  document.getElementById("total").textContent =
+    messages.length;
+
+  document.getElementById("unread").textContent =
+    messages.filter(m => !m.read).length;
+
+  const filtered = messages.filter(m =>
+    JSON.stringify(m)
+      .toLowerCase()
+      .includes(filter.toLowerCase())
+  );
+
+  if(filtered.length === 0){
+    box.innerHTML =
+      "<div class='card'>No messages found.</div>";
+    return;
+  }
+
+  box.innerHTML = filtered.map(m => `
+    <div class="card">
+
+      <div style="display:flex;justify-content:space-between">
+
+        <div>
+          <strong>${escapeHTML(m.name)}</strong>
+          ${m.important ? "⭐" : ""}
+        </div>
+
+        <small>${escapeHTML(m.time)}</small>
+
+      </div>
+
+      <br>
+
+      📧 ${escapeHTML(m.email)}<br>
+      📱 ${escapeHTML(m.phone)}<br><br>
+
+      ${escapeHTML(m.message)}
+
+      <hr>
+
+      <strong>Reply:</strong><br>
+      ${escapeHTML(m.reply || "No reply yet")}
+
+      <br><br>
+
+      <button
+        class="replyBtn"
+        onclick="reply(${m.id})"
+      >
+        Reply
+      </button>
+
+      <button
+        class="starBtn"
+        onclick="toggleStar(${m.id})"
+      >
+        Star
+      </button>
+
+      <button
+        class="deleteBtn"
+        onclick="deleteMessage(${m.id})"
+      >
+        Delete
+      </button>
+
+    </div>
+  `).join("");
+}
+
+function reply(id){
+
+  const messages =
+    JSON.parse(localStorage.getItem("messages")) || [];
+
+  const msg =
+    messages.find(m => m.id === id);
+
+  if(!msg) return;
+
+  const text =
+    prompt("Enter reply:", msg.reply || "");
+
+  if(text === null) return;
+
+  msg.reply = text;
+  msg.read = true;
+
+  localStorage.setItem(
+    "messages",
+    JSON.stringify(messages)
+  );
+
+  load(searchBox.value);
+}
+
+function toggleStar(id){
+
+  const messages =
+    JSON.parse(localStorage.getItem("messages")) || [];
+
+  const msg =
+    messages.find(m => m.id === id);
+
+  if(!msg) return;
+
+  msg.important = !msg.important;
+
+  localStorage.setItem(
+    "messages",
+    JSON.stringify(messages)
+  );
+
+  load(searchBox.value);
+}
+
+function deleteMessage(id){
+
+  if(!confirm("Delete this message?"))
+    return;
+
+  let messages =
+    JSON.parse(localStorage.getItem("messages")) || [];
+
+  messages =
+    messages.filter(m => m.id !== id);
+
+  localStorage.setItem(
+    "messages",
+    JSON.stringify(messages)
+  );
+
+  load(searchBox.value);
+}
+
+function clearMessages(){
+
+  if(confirm("Delete ALL messages?")){
+
+    localStorage.removeItem("messages");
+
+    load();
+  }
+}
+
+searchBox.addEventListener("input", ()=>{
+  load(searchBox.value);
+});
+
+load();
+
+setInterval(()=>{
+  load(searchBox.value);
+}, 2000);
+</script>
+
+</body>
+</html>

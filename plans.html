@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plans | Kalp's Studio</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial,sans-serif;
+        }
+
+        body{
+            color:white;
+            min-height:100vh;
+            background:
+                    radial-gradient(circle at top left, rgba(249,115,22,0.15), transparent 40%),
+                    radial-gradient(circle at bottom right, rgba(59,130,246,0.15), transparent 40%),
+                    linear-gradient(135deg,#0b1220,#020617);
+        }
+
+        body::before{
+            content:"";
+            position:fixed;
+            inset:0;
+            background-image:
+                    linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+            background-size:60px 60px;
+            pointer-events:none;
+        }
+
+        header{
+            padding:20px 40px;
+            background:rgba(255,255,255,.04);
+            backdrop-filter:blur(12px);
+            border-bottom:1px solid rgba(255,255,255,.08);
+        }
+
+        .container{
+            max-width:1200px;
+            margin:auto;
+            padding:40px 20px;
+        }
+
+        .hero{
+            text-align:center;
+            margin-bottom:50px;
+        }
+
+        .hero h1{
+            font-size:3rem;
+            margin-bottom:10px;
+        }
+
+        .hero p{
+            color:#94a3b8;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-bottom:60px;
+            background:rgba(255,255,255,.05);
+            border-radius:20px;
+            overflow:hidden;
+        }
+
+        th{
+            background:rgba(255,255,255,.08);
+        }
+
+        td,th{
+            padding:15px;
+            border:1px solid rgba(255,255,255,.08);
+        }
+
+        tr:hover{
+            background:rgba(255,255,255,.03);
+        }
+
+        .pricing{
+            display:flex;
+            justify-content:center;
+            gap:30px;
+            flex-wrap:wrap;
+        }
+
+        .card{
+            width:340px;
+            background:rgba(255,255,255,.05);
+            border:1px solid rgba(255,255,255,.1);
+            border-radius:24px;
+            padding:30px;
+            backdrop-filter:blur(12px);
+            transition:.3s;
+        }
+
+        .card:hover{
+            transform:translateY(-6px);
+        }
+
+        .featured{
+            border:2px solid #f97316;
+            transform:scale(1.05);
+            box-shadow:0 0 30px rgba(249,115,22,.25);
+        }
+
+        .tag{
+            background:#f97316;
+            display:inline-block;
+            padding:6px 12px;
+            border-radius:999px;
+            font-size:12px;
+            margin-bottom:15px;
+            font-weight:bold;
+        }
+
+        .price{
+            font-size:48px;
+            margin:20px 0;
+            color:#f97316;
+            font-weight:bold;
+        }
+
+        .price span{
+            font-size:16px;
+            color:#cbd5e1;
+        }
+
+        .card ul{
+            list-style:none;
+            margin:20px 0;
+        }
+
+        .card li{
+            margin-bottom:10px;
+        }
+
+        button{
+            padding:12px 20px;
+            border:none;
+            border-radius:10px;
+            background:#f97316;
+            color:white;
+            font-weight:bold;
+            cursor:pointer;
+        }
+
+        button:hover{
+            opacity:.9;
+        }
+
+        .badge{
+            background:red;
+            padding:4px 10px;
+            border-radius:999px;
+            font-size:12px;
+            margin-left:10px;
+        }
+
+        /* Payment Modal */
+
+        #paymentPage{
+            position:fixed;
+            inset:0;
+            display:none;
+            justify-content:center;
+            align-items:center;
+            background:rgba(0,0,0,.85);
+            backdrop-filter:blur(8px);
+            z-index:999;
+        }
+
+        .payBox{
+            width:400px;
+            background:white;
+            color:black;
+            padding:25px;
+            border-radius:18px;
+        }
+
+        .planCard{
+            background:#f1f5f9;
+            padding:15px;
+            border-radius:12px;
+            margin-bottom:20px;
+        }
+
+        .payBox input{
+            width:100%;
+            padding:10px;
+            margin:8px 0 15px;
+            border-radius:8px;
+            border:1px solid #ddd;
+        }
+
+        #status{
+            margin-top:15px;
+            color:#f97316;
+            font-weight:bold;
+        }
+
+        .closeBtn{
+            float:right;
+            background:#ef4444;
+            margin-bottom:10px;
+        }
+
+        footer{
+            text-align:center;
+            padding:50px;
+            color:#94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h2>🎨 Kalp's Studio</h2>
+</header>
+
+<div class="container">
+
+    <div class="hero">
+        <h1>Membership Plans</h1>
+        <p>Unlock premium tools and creative benefits.</p>
+    </div>
+
+    <table>
+        <tr>
+            <th>Features</th>
+            <th>Gold</th>
+            <th>Beta</th>
+        </tr>
+        <tr>
+            <td>Art.Attack Paint Gallery</td>
+            <td>❌</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td>Free Quiz</td>
+            <td>✅</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td>Priority Messages</td>
+            <td>❌</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td>Free Delivery</td>
+            <td>❌</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td>International Delivery</td>
+            <td>❌</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td>Fast Processing</td>
+            <td>✅</td>
+            <td>✅</td>
+        </tr>
+    </table>
+
+    <section class="pricing">
+
+        <div class="card">
+            <h2>Gold</h2>
+
+            <div class="price">
+                ₹369
+                <span>/year</span>
+            </div>
+
+            <ul>
+                <li>✓ Free Quiz</li>
+                <li>✓ Fast Processing</li>
+                <li>✓ Premium Access</li>
+                <li>✗ Free Delivery</li>
+                <li>✗ International Delivery</li>
+            </ul>
+
+            <button onclick="submitQuizGold()">
+                Upgrade to Gold
+            </button>
+        </div>
+
+        <div class="card featured">
+
+            <div class="tag">MOST POPULAR</div>
+
+            <h2>
+                Beta
+                <span class="badge">BETA</span>
+            </h2>
+
+            <div class="price">
+                ₹2999
+                <span>/month</span>
+            </div>
+
+            <ul>
+                <li>✓ Art.Attack Gallery</li>
+                <li>✓ Free Quiz</li>
+                <li>✓ Priority Support</li>
+                <li>✓ Free Delivery</li>
+                <li>✓ International Delivery</li>
+            </ul>
+
+            <button onclick="submitQuiz()">
+                Upgrade to Beta
+            </button>
+
+        </div>
+
+    </section>
+
+</div>
+
+<!-- Payment Modal -->
+
+<div id="paymentPage">
+
+    <div class="payBox">
+
+        <button class="closeBtn"
+                onclick="closePayment()">
+            ✕
+        </button>
+
+        <h2>Complete Your Membership</h2>
+
+        <div class="planCard">
+            <h3 id="planTitle">Membership</h3>
+            <h1 id="planPrice">₹0</h1>
+        </div>
+
+        <label>Card Number</label>
+        <input
+                type="text"
+                id="cardNumber"
+                placeholder="1234-5678-9012-3456"
+                maxlength="19">
+
+        <label>Name on Card</label>
+        <input
+                type="text"
+                id="name"
+                placeholder="Your Name">
+
+        <button onclick="payNow()">
+            Pay Securely
+        </button>
+
+        <p id="status"></p>
+
+    </div>
+
+</div>
+
+<footer>
+    © 2026 Kalp's Studio • All Rights Reserved
+</footer>
+
+<script>
+
+    let selectedPlan = "";
+
+    /* Beta */
+
+    function submitQuiz(){
+
+        selectedPlan = "Beta";
+
+        document.getElementById("planTitle").innerText =
+            "Beta Membership";
+
+        document.getElementById("planPrice").innerHTML =
+            "₹2999 <span style='font-size:14px'><del>₹3500</del></span>";
+
+        document.getElementById("paymentPage").style.display =
+            "flex";
+
+        document.getElementById("status").innerText = "";
+    }
+
+    /* Gold */
+
+    function submitQuizGold(){
+
+        selectedPlan = "Gold";
+
+        document.getElementById("planTitle").innerText =
+            "Gold Membership";
+
+        document.getElementById("planPrice").innerHTML =
+            "₹369 <span style='font-size:14px'><del>₹499</del> (26% OFF)</span>";
+
+        document.getElementById("paymentPage").style.display =
+            "flex";
+
+        document.getElementById("status").innerText = "";
+    }
+
+    function closePayment(){
+        document.getElementById("paymentPage").style.display =
+            "none";
+    }
+
+    function payNow(){
+
+        let card =
+            document.getElementById("cardNumber").value.trim();
+
+        let name =
+            document.getElementById("name").value.trim();
+
+        let status =
+            document.getElementById("status");
+
+        if(card === "" || name === ""){
+            status.innerText =
+                "Please fill payment details.";
+            return;
+        }
+
+        status.innerText =
+            "Processing payment...";
+
+        setTimeout(() => {
+
+            status.innerText =
+                "Verifying card details...";
+
+            setTimeout(() => {
+
+                status.innerText =
+                    "Connecting to secure gateway...";
+
+                setTimeout(() => {
+
+                    status.innerText =
+                        "Membership Activated!";
+
+                    localStorage.setItem(
+                        "membership",
+                        selectedPlan
+                    );
+
+                    setTimeout(() => {
+
+                        document.getElementById(
+                            "paymentPage"
+                        ).style.display = "none";
+
+                        alert(
+                            selectedPlan +
+                            " Membership Activated!"
+                        );
+
+                    },1000);
+
+                },1500);
+
+            },1500);
+
+        },1200);
+    }
+
+    /* Card Formatting */
+
+    const cardInput =
+        document.getElementById("cardNumber");
+
+    cardInput.addEventListener("input", function(e){
+
+        let value =
+            e.target.value.replace(/\D/g,"");
+
+        let formatted = "";
+
+        for(let i=0;i<value.length;i++){
+
+            if(i>0 && i%4===0){
+                formatted += "-";
+            }
+
+            formatted += value[i];
+        }
+
+        e.target.value = formatted;
+    });
+
+</script>
+
+</body>
+</html>
+</html>

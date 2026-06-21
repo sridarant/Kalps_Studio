@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings</title>
+
+<style>
+/*================ Loader ==================================*/
+#loader-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+.loader {
+  position: relative;
+  transform: rotateZ(45deg);
+  perspective: 1000px;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  color: #fff;
+}
+
+.loader {
+    position: relative;
+    width: 100px;
+    height: 100px;
+  }
+  .loader:before{
+    content: '';
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    top: 50%;
+    left: 0;
+    transform: translate(-5px, -50%);
+    background: linear-gradient(to right, #fff 50%, #de3500 50%) no-repeat;
+    background-size: 200% auto;
+    background-position: 100% 0;
+    animation: colorBallMoveX 1.5s linear infinite alternate;
+  }
+ .loader:after{
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 100%;
+    background: #de3500;
+ }
+@keyframes colorBallMoveX {
+  0%  {
+    background-position: 0% 0;
+    transform: translate(-15px, -50%);
+  }
+  15%  , 25% {
+    background-position: 0% 0;
+    transform: translate(0px, -50%);
+  }
+  75% , 85% {
+    background-position: 100% 0;
+    transform: translate(50px, -50%);
+  }
+  100% {
+    background-position: 100% 0;
+    transform: translate(65px, -50%);
+  }
+}
+  
+
+body{
+    background:#111;
+    color:#0f0;
+    font-family:monospace;
+    padding:20px;
+}
+
+#modeDisplay{
+    margin-bottom:10px;
+    padding:5px;
+    border:2px solid #0f0;
+}
+
+#console{
+    height:300px;
+    overflow-y:auto;
+    border:3px solid green;
+    padding:10px;
+    margin-bottom:10px;
+}
+
+input{
+    width:100%;
+    padding:10px;
+    background:black;
+    color:#0f0;
+    border:1px solid #0f0;
+}
+
+a{ color:#0f0; }
+</style>
+</head>
+
+<body>
+<div id="loader-wrapper">
+  <span class="loader"></span>
+</div>
+
+<div id="main-content" style="display: none;">
+<a href="index.html">← Back</a>
+<h2>⚙ Settings Terminal</h2>
+
+<div id="modeDisplay"></div>
+
+<div id="console"></div>
+<input id="cmd">
+
+<script>
+
+// DEFAULT SETTINGS
+const defaultSettings = {
+    theme:"light",
+    title:"Kalps Studio"
+};
+
+let settings = {...defaultSettings};
+
+// ROLE
+function getRole(){
+    return sessionStorage.getItem("role") || "user";
+}
+
+// PROMPT
+function getPrompt(){
+    return "C://"+getRole().toLowerCase()+"settings/UIupgrade.updating/web.append/commandlineprompt/Terminal.>";
+}
+
+// LOAD
+function load(){
+    let s = localStorage.getItem("settings");
+    if(s) Object.assign(settings, JSON.parse(s));
+
+    apply();
+    updateInputPrompt();
+
+    bootMessage(); // 👈 ADD THIS
+}
+
+// APPLY
+function apply(){
+    document.body.style.background =
+        settings.theme==="dark" ? "#000" : "#fff";
+
+    document.body.style.color =
+        settings.theme==="dark" ? "#0f0" : "#090808";
+
+    document.title = settings.title;
+    updateModeDisplay();
+}
+
+// SAVE
+function save(){
+    localStorage.setItem("settings", JSON.stringify(settings));
+}
+
+// PRINT
+function print(msg, isCommand=false){
+    const con = document.getElementById("console");
+
+    if(isCommand){
+        con.innerHTML += "<div>"+getPrompt()+msg+"</div>";
+    } else {
+        con.innerHTML += "<div>> "+msg+"</div>";
+    }
+
+    con.scrollTop = con.scrollHeight;
+}
+
+// MODE DISPLAY
+function updateModeDisplay(){
+    document.getElementById("modeDisplay").innerHTML =
+        "Mode: "+getRole().toUpperCase()+
+        " | Theme: "+settings.theme.toUpperCase();
+}
+
+// INPUT PROMPT
+function updateInputPrompt(){
+    document.getElementById("cmd").placeholder = getPrompt();
+}
+
+// ---------------- COMMAND HANDLER ----------------
+function run(command){
+    print(command, true);
+
+    let p = command.trim().split(" ");
+    let role = getRole();
+
+    // HELP
+    if(p[0]==="help"){
+        if(role==="admin"){
+            print("set/get/show/delete/theme/toggle/title/time/date/reset/clear/echo/role/sysinfo/wipe/export/import/loadanim/random/reload/upper/lower/reverse");
+        } else {
+            print("theme toggle title time date clear random upper lower");
+        }
+        return;
+    }
+
+    // BASIC
+    if(p[0]==="clear"){
+        document.getElementById("console").innerHTML="";
+        return;
+    }
+
+    if(p[0]==="theme"){
+        if(p[1]==="dark" || p[1]==="light"){
+            settings.theme = p[1];
+            save(); apply();
+            print("Theme changed");
+        }
+        return;
+    }
+
+    if(p[0]==="toggle" && p[1]==="theme"){
+        settings.theme =
+            settings.theme==="dark" ? "light" : "dark";
+        save(); apply();
+        print("Theme toggled");
+        return;
+    }
+
+    if(p[0]==="title"){
+        settings.title = p.slice(1).join(" ");
+        save(); apply();
+        print("Title updated");
+        return;
+    }
+
+    if(p[0]==="time"){
+        print(new Date().toLocaleTimeString());
+        return;
+    }
+
+    if(p[0]==="date"){
+        print(new Date().toLocaleDateString());
+        return;
+    }
+
+    // EXTRA USER COMMANDS
+    if(p[0]==="random"){
+        print(Math.random());
+        return;
+    }
+
+    if(p[0]==="upper"){
+        print(p.slice(1).join(" ").toUpperCase());
+        return;
+    }
+
+    if(p[0]==="lower"){
+        print(p.slice(1).join(" ").toLowerCase());
+        return;
+    }
+
+    // ADMIN
+    if(role==="admin"){
+
+        switch(p[0]){
+
+            case "set":
+                settings[p[1]] = p.slice(2).join(" ");
+                save(); apply();
+                print("Updated");
+                break;
+
+            case "get":
+                print(settings[p[1]]);
+                break;
+
+            case "show":
+                print(JSON.stringify(settings));
+                break;
+
+            case "delete":
+                delete settings[p[1]];
+                save(); apply();
+                print("Deleted");
+                break;
+
+            case "reset":
+                settings = {...defaultSettings};
+                save(); apply();
+                print("Reset done");
+                break;
+
+            case "echo":
+                print(p.slice(1).join(" "));
+                break;
+
+            case "role":
+                sessionStorage.setItem("role", p[1]);
+                updateModeDisplay();
+                updateInputPrompt();
+                print("Role changed");
+                break;
+
+            case "sysinfo":
+                print(navigator.userAgent);
+                break;
+
+            case "wipe":
+                localStorage.clear();
+                sessionStorage.clear();
+                print("Wiped");
+                break;
+
+            case "export":
+                print(JSON.stringify(settings));
+                break;
+
+            case "import":
+                try{
+                    let data = JSON.parse(p.slice(1).join(" "));
+                    settings = {...settings, ...data};
+                    save(); apply();
+                    print("Imported");
+                } catch{
+                    print("Error");
+                }
+                break;
+
+            case "loadanim":
+                let i = 0;
+                let interval = setInterval(()=>{
+                    print("Loading" + ".".repeat(i%4));
+                    i++;
+                    if(i>4) clearInterval(interval);
+                }, 300);
+                break;
+
+            case "reload":
+                location.reload();
+                break;
+
+            case "reverse":
+                print(p.slice(1).join(" ").split("").reverse().join(""));
+                break;
+
+            case "command.close":
+                print("Closing Terminal...")
+                print("Redirecting to Dashboard. Thanks for using Terminal!")
+              window.location.replace("Dashboard.html");
+
+
+
+          default:
+                print("Unknown");
+        }
+
+    } else {
+        print("Unknown");
+    }
+}
+
+// EVENTS
+document.getElementById("cmd").addEventListener("keydown", e=>{
+    if(e.key==="Enter"){
+        run(e.target.value);
+        e.target.value="";
+    }
+});
+
+//boot message
+function bootMessage(){
+    const lines = [
+        "Initializing system...",
+        "Loading settings...",
+        "Checking storage...",
+        "Starting terminal...",
+        "Welcome " + getRole().toUpperCase()+" on C.web://settings/localhost60042/webAppend/commandlineprompt/Terminal> local server station, status active",
+        "Type 'help' to begin"
+    ];
+
+    let i = 0;
+
+    let interval = setInterval(()=>{
+        print(lines[i]);
+        i++;
+        if(i >= lines.length) clearInterval(interval);
+    }, 300);
+}
+
+// INIT
+load();
+
+//Loader hide
+  window.addEventListener("load", function () {
+    setTimeout(function () {
+      document.getElementById("loader-wrapper").style.display = "none";
+      document.getElementById("main-content").style.display = "block";
+    }, 3500); // change time if needed (2000ms = 2 seconds)
+  });
+
+</script>
+</div>
+</body>
+</html>
