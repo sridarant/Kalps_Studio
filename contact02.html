@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact</title>
+
+<style>
+:root{
+  --bg:#0a0f1c;
+  --card:#121a2b;
+  --border:#1f2a44;
+  --accent:#3b82f6;
+  --accent-hover:#2563eb;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Inter,system-ui,Arial;
+  background:linear-gradient(180deg,#0a0f1c,#020617);
+  color:var(--text);
+}
+
+/* NAVBAR */
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:30px 60px;
+  border-bottom:1px solid var(--border);
+  background:rgba(10,15,28,0.8);
+  backdrop-filter:blur(8px);
+  position:sticky;
+  top:0;
+}
+
+nav a{
+  margin-left:20px;
+  color:var(--muted);
+  text-decoration:none;
+  font-size:14px;
+  transition:0.2s;
+}
+
+nav a:hover{color:white}
+
+/* CONTAINER */
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:60px 20px;
+}
+
+/* CARD */
+.card{
+  background:rgba(18,26,43,0.9);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:35px;
+  box-shadow:0 25px 70px rgba(0,0,0,0.5);
+}
+
+/* FORM */
+input, textarea{
+  width:100%;
+  padding:14px;
+  margin-top:14px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#020617;
+  color:white;
+  font-size:14px;
+}
+
+button{
+  width:100%;
+  margin-top:18px;
+  padding:14px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(135deg,var(--accent),#60a5fa);
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+}
+
+/* STATUS */
+.status{
+  margin-top:12px;
+  font-size:14px;
+  color:var(--muted);
+}
+
+/* REPLIES */
+.reply-box{
+  margin-top:20px;
+  background:#0f172a;
+  border-left:4px solid var(--accent);
+  padding:15px;
+  border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <strong>Kalp's Studio</strong>
+  <nav>
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+  </nav>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h1>Contact Us</h1>
+    <p>We usually respond within 24 hours.</p>
+
+    <form id="form">
+      <input type="text" id="name" placeholder="Full Name" required>
+      <input type="email" id="email" placeholder="Email Address" required>
+      <input type="tel" id="phone" placeholder="Phone Number" required>
+      <textarea id="message" rows="5" placeholder="Your Message" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+
+    <div class="status" id="status"></div>
+  </div>
+
+  <div class="card">
+    <h2>Admin Replies</h2>
+    <div id="replies">No replies yet.</div>
+  </div>
+
+</div>
+
+<script>
+const form = document.getElementById("form");
+const statusText = document.getElementById("status");
+
+function escapeHTML(t=""){
+  return String(t)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;");
+}
+
+form.addEventListener("submit",(e)=>{
+  e.preventDefault();
+
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const message = document.getElementById("message").value.trim();
+
+  if(name.length<2 || !email.includes("@") || phone.length<8 || message.length<3){
+    statusText.textContent="❌ Invalid details";
+    return;
+  }
+
+  let messages = JSON.parse(localStorage.getItem("messages")) || [];
+
+  messages.unshift({
+    id:Date.now(),
+    name,
+    email,
+    phone,
+    message,
+    reply:"",
+    read:false,
+    important:false,
+    time:new Date().toLocaleString()
+  });
+
+  localStorage.setItem("messages", JSON.stringify(messages));
+
+  statusText.textContent="✅ Message sent!";
+  form.reset();
+
+  loadReplies();
+});
+
+function loadReplies(){
+
+  const messages = JSON.parse(localStorage.getItem("messages")) || [];
+  const replied = messages.filter(m => m.reply);
+
+  const box = document.getElementById("replies");
+
+  if(replied.length===0){
+    box.innerHTML="No replies yet.";
+    return;
+  }
+
+  box.innerHTML = replied.map(m=>`
+    <div class="reply-box">
+      <b>Your Message:</b><br>
+      ${escapeHTML(m.message)}
+      <br><br>
+      <b>Reply:</b><br>
+      ${escapeHTML(m.reply)}
+      <br><br>
+      <small>${escapeHTML(m.time)}</small>
+    </div>
+  `).join("");
+}
+
+loadReplies();
+setInterval(loadReplies,2000);
+window.addEventListener("storage", loadReplies);
+</script>
+
+</body>
+</html>
