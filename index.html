@@ -217,7 +217,7 @@
             padding: 25px;
             border-radius: 10px;
             text-align: center;
-            width: 300px;
+            width: 600px;
         }
 
         .verifyBox input {
@@ -255,6 +255,7 @@
             <h3>User / Admin Verification</h3>
             <p>Enter 8409 to access usermode.<br> Ad@135 to access admin mode</p>
             <p>Open as two pages and login as user in one and admin inthe other and message through the contact page and see the magic in the admin page!</p>
+            <p><i><strong>Note:</strong> This is only a static website and has no backend or database, however it is reccomended that you do not enter you original credentials</i></p>
             <input id="answer" placeholder="Enter code">
 
             <label>
@@ -270,7 +271,7 @@
         <h3>⚙ Admin Control Panel</h3>
         <button onclick="enableEdit()">Enable Edit Mode</button>
         <button onclick="disableEdit()">Disable Edit Mode</button>
-        <a href="admin.html"
+        <a href="admin.html" target="_blank">Visit Admin page</a>
         <button onclick="logout()">Logout</button>
     </div>
 
@@ -416,7 +417,7 @@
             }, 1500); // delay so loader finishes first
         });
 
-        function closePopup(){
+        function closePopup() {
             document.getElementById("popup").style.display = "none";
         }
     </script>
