@@ -188,7 +188,7 @@
     <input
             class="tracker-input"
             type="text"
-            placeholder="KS-123456789"
+            placeholder="KS - 6767"
             disabled
     >
 
@@ -196,7 +196,7 @@
       Track Package
     </button>
 
-    <a href="package-track - upgradation trial.html" class="tracker-page-btn">
+    <a href="package-track-upgrade" class="tracker-page-btn">
       Open Full Tracker Page &raquo;
     </a>
 
@@ -220,7 +220,7 @@
   /* ================= TRACK ORDER ================= */
 
   function trackOrder(){
-
+    alert("Sorry but this function is under upgradation and will not be available")
     const input = document.getElementById("orderInput").value.trim();
     const result = document.getElementById("result");
 
@@ -228,7 +228,7 @@
 
     if(input.length !== 10){
       result.style.color = "red";
-      result.innerText = "Invalid ID ❌";
+      result.innerText = ""; //Invalid ID ❌
       return;
     }
 
