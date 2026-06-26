@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car Racing Game</title>
+
+<style>
+body {
+  margin: 0;
+  background: #0f172a;
+  font-family: Arial;
+  color: white;
+  text-align: center;
+}
+
+header {
+  padding: 15px;
+  font-size: 24px;
+  background: #1e293b;
+}
+
+canvas {
+  background: #111;
+  display: block;
+  margin: 20px auto;
+  border-radius: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  background: #22c55e;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+/* Footer marquee styling */
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #020617;
+  color: #94a3b8;
+  font-size: 14px;
+  padding: 5px 0;
+  border-top: 1px solid #1e293b;
+}
+</style>
+</head>
+
+<body>
+
+<header>🏎️ Car Racing Game</header>
+
+<canvas id="gameCanvas" width="400" height="600"></canvas>
+<button onclick="restartGame()">Restart</button>
+
+<!-- Marquee Footer -->
+<footer>
+  <marquee behavior="scroll" direction="left">
+    © 2026 Srivats | All Rights Reserved | Built with HTML, CSS & JavaScript 🚀 | DF codes &trade;
+  </marquee>
+</footer>
+
+<script>
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+let keys = {};
+document.addEventListener("keydown", e => keys[e.key] = true);
+document.addEventListener("keyup", e => keys[e.key] = false);
+
+let player, enemies, roadLines, speed, score, gameOver;
+
+function init() {
+  player = { x: 180, y: 500, w: 40, h: 80 };
+  enemies = [];
+  roadLines = [];
+  speed = 5;
+  score = 0;
+  gameOver = false;
+
+  for (let i = 0; i < 10; i++) {
+    roadLines.push({ x: 195, y: i * 60 });
+  }
+}
+
+function spawnEnemy() {
+  let lane = [80, 180, 280];
+  let x = lane[Math.floor(Math.random() * lane.length)];
+  enemies.push({ x, y: -100, w: 40, h: 80 });
+}
+
+function update() {
+  if (gameOver) return;
+
+  if (keys["ArrowLeft"] && player.x > 60) player.x -= 6;
+  if (keys["ArrowRight"] && player.x < 300) player.x += 6;
+
+  for (let line of roadLines) {
+    line.y += speed;
+    if (line.y > canvas.height) line.y = -60;
+  }
+
+  for (let e of enemies) {
+    e.y += speed;
+
+    if (
+      player.x < e.x + e.w &&
+      player.x + player.w > e.x &&
+      player.y < e.y + e.h &&
+      player.y + player.h > e.y
+    ) {
+      gameOver = true;
+    }
+  }
+
+  enemies = enemies.filter(e => e.y < canvas.height);
+
+  score++;
+  speed += 0.002;
+}
+
+function drawCar(x, y, color) {
+  ctx.fillStyle = color;
+  ctx.fillRect(x, y, 40, 80);
+
+  ctx.fillStyle = "black";
+  ctx.fillRect(x + 5, y + 10, 30, 20);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "#333";
+  ctx.fillRect(50, 0, 300, canvas.height);
+
+  ctx.fillStyle = "white";
+  for (let line of roadLines) {
+    ctx.fillRect(line.x, line.y, 10, 40);
+  }
+
+  drawCar(player.x, player.y, "lime");
+
+  for (let e of enemies) {
+    drawCar(e.x, e.y, "red");
+  }
+
+  ctx.fillStyle = "white";
+  ctx.font = "20px Arial";
+  ctx.fillText("Score: " + score, 10, 30);
+  ctx.fillText("Speed: " + speed.toFixed(1), 10, 60);
+
+  if (gameOver) {
+    ctx.font = "40px Arial";
+    ctx.fillText("GAME OVER", 70, 300);
+  }
+}
+
+function loop() {
+  update();
+  draw();
+  requestAnimationFrame(loop);
+}
+
+function restartGame() {
+  init();
+}
+
+init();
+setInterval(spawnEnemy, 1200);
+loop();
+</script>
+
+</body>
+</html>

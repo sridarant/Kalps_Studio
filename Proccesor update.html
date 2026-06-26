@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>System Optimization Engine</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:"Segoe UI Variable","Segoe UI",sans-serif;
+      background:#0b1220;
+      color:white;
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      overflow:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:absolute;
+      width:900px;
+      height:900px;
+      background:radial-gradient(circle, rgba(0,120,215,0.25), transparent 70%);
+      filter:blur(80px);
+    }
+
+    .container{
+      position:relative;
+      width:92%;
+      max-width:880px;
+      padding:55px;
+      border-radius:28px;
+      background:rgba(15,23,42,0.85);
+      border:1px solid rgba(255,255,255,0.08);
+      backdrop-filter:blur(18px);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:40px;
+    }
+
+    .logo{
+      width:44px;
+      height:44px;
+      background:#0078d7;
+      border-radius:10px;
+      display:grid;
+      place-items:center;
+      font-size:22px;
+    }
+
+    .title{
+      font-size:22px;
+      font-weight:600;
+    }
+
+    select, input, button{
+      width:100%;
+      padding:16px;
+      border-radius:12px;
+      border:none;
+      font-size:16px;
+      margin-bottom:12px;
+    }
+
+    select{
+      background:#111827;
+      color:white;
+    }
+
+    input{
+      background:#0f172a;
+      color:white;
+      display:none;
+    }
+
+    button{
+      background:#0078d7;
+      color:white;
+      cursor:pointer;
+    }
+
+    button:hover{
+      background:#0a84f0;
+    }
+
+    .update{
+      display:none;
+      text-align:center;
+    }
+
+    .percent{
+      font-size:64px;
+      font-weight:300;
+      margin-bottom:10px;
+    }
+
+    .status{
+      color:#cbd5e1;
+      margin-bottom:25px;
+      min-height:24px;
+    }
+
+    .bar{
+      width:100%;
+      height:12px;
+      background:rgba(255,255,255,0.1);
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    .fill{
+      width:0%;
+      height:100%;
+      background:linear-gradient(90deg,#00a2ff,#0078d7);
+      transition:0.4s;
+    }
+
+    .popup{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.6);
+      display:none;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .modal{
+      background:#111827;
+      padding:30px;
+      border-radius:18px;
+      width:90%;
+      max-width:420px;
+      text-align:center;
+    }
+
+    .ios{
+      background:linear-gradient(135deg,#0a0f1c,#05070d);
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="brand">
+    <div class="logo">⊞</div>
+    <div class="title">System Optimization Engine</div>
+  </div>
+
+  <select id="deviceSelect" onchange="toggleCustom()">
+
+    <!-- Intel -->
+    <option>Intel® Core™ Ultra 9 285K</option>
+    <option>Intel® Core™ Ultra 7 265K</option>
+    <option>Intel® Core™ Ultra 5 245K</option>
+
+    <option>Intel® Core™ i9-14900KS</option>
+    <option>Intel® Core™ i9-14900K</option>
+    <option>Intel® Core™ i7-14700K</option>
+    <option>Intel® Core™ i5-14600K</option>
+    <option>Intel® Core&trade; i3-14400K</option>
+
+    <option>Intel® Xeon® W9</option>
+    <option>Intel® Xeon® Platinum</option>
+
+    <!-- AMD -->
+    <option>AMD Ryzen™ 9 9950X</option>
+    <option>AMD Ryzen™ 9 9900X</option>
+    <option>AMD Ryzen™ 7 9800X3D</option>
+    <option>AMD Ryzen™ 7 9700X</option>
+    <option>AMD Ryzen™ 5 9600X</option>
+
+    <option>AMD Threadripper™ PRO 7995WX</option>
+    <option>AMD EPYC™ 9754</option>
+
+    <!-- Apple -->
+    <option>Apple M4 Max</option>
+    <option>Apple M4 Pro</option>
+    <option>Apple M3 Ultra</option>
+    <option>Apple M3 Max</option>
+    <option>Apple M2 Ultra</option>
+
+    <!-- Qualcomm -->
+    <option>Snapdragon® X Elite</option>
+    <option>Snapdragon® X Plus</option>
+
+    <!-- ARM -->
+    <option>ARM Cortex™ X4</option>
+    <option>ARM Neoverse™ V2</option>
+
+    <!-- NVIDIA -->
+    <option>NVIDIA Grace CPU Superchip</option>
+
+    <!-- Cloud -->
+    <option>Azure Virtual Processor</option>
+    <option>AWS Graviton4</option>
+    <option>Google Axion ARM CPU</option>
+
+    <!-- Legacy -->
+    <option>Intel® Pentium® Gold</option>
+    <option>Intel® Celeron®</option>
+    <option>AMD Athlon™</option>
+
+    <option value="custom">Custom Device (After 2015 Only)</option>
+
+  </select>
+
+  <input id="customName" placeholder="Device name">
+  <input id="customYear" type="number" placeholder="Release year">
+
+  <button onclick="startUpdate()">Start Optimization</button>
+
+  <div class="update" id="update">
+
+    <div class="percent" id="percent">0%</div>
+
+    <div class="status" id="status">Initializing...</div>
+
+    <div class="bar">
+      <div class="fill" id="fill"></div>
+    </div>
+
+    <div id="deviceName"></div>
+
+  </div>
+
+</div>
+
+<div class="popup" id="popup">
+
+  <div class="modal">
+
+    <h2>Optimization Complete</h2>
+    <p>Your system is now faster and more responsive.</p>
+
+    <button onclick="restartNow()">Reload Website</button>
+
+  </div>
+
+</div>
+
+<script>
+
+  const deviceSelect = document.getElementById("deviceSelect");
+  const customName = document.getElementById("customName");
+  const customYear = document.getElementById("customYear");
+
+  const update = document.getElementById("update");
+  const percent = document.getElementById("percent");
+  const status = document.getElementById("status");
+  const fill = document.getElementById("fill");
+  const deviceName = document.getElementById("deviceName");
+
+  const popup = document.getElementById("popup");
+
+  let progress = 0;
+
+  function toggleCustom(){
+
+    if(deviceSelect.value === "custom"){
+      customName.style.display = "block";
+      customYear.style.display = "block";
+    } else {
+      customName.style.display = "none";
+      customYear.style.display = "none";
+    }
+  }
+
+  function startUpdate(){
+
+    let selected = deviceSelect.value;
+    let label = selected;
+
+    if(selected === "custom"){
+
+      const name = customName.value;
+      const year = parseInt(customYear.value);
+
+      if(!name || !year){
+        alert("Enter device name and year.");
+        return;
+      }
+
+      if(year <= 2015){
+        alert("❌ Only devices AFTER 2015 are allowed.");
+        return;
+      }
+
+      label = name + " (" + year + ")";
+    }
+
+    document.getElementById("deviceSelect").style.display = "none";
+    customName.style.display = "none";
+    customYear.style.display = "none";
+
+    update.style.display = "block";
+    deviceName.innerText = label;
+
+    let messages = [
+      "Analyzing performance...",
+      "Optimizing rendering pipeline...",
+      "Reducing latency...",
+      "Improving execution speed...",
+      "Caching system components...",
+      "Enhancing responsiveness..."
+    ];
+
+    if(selected.includes("Apple") || selected.includes("iPhone")){
+      document.body.classList.add("ios");
+
+      messages = [
+        "Verifying system integrity...",
+        "Checking Secure Enclave...",
+        "Optimizing battery usage...",
+        "Finalizing Apple system update..."
+      ];
+    }
+
+    const updater = setInterval(() => {
+
+      if(progress < 100){
+
+        progress += Math.floor(Math.random() * 3) + 1;
+
+        if(progress > 100) progress = 100;
+
+        percent.innerText = progress + "%";
+        fill.style.width = progress + "%";
+
+        status.innerText =
+                messages[Math.floor(Math.random() * messages.length)];
+
+      } else {
+
+        clearInterval(updater);
+
+        status.innerText = "Optimization complete.";
+
+        setTimeout(() => {
+          popup.style.display = "flex";
+        }, 1200);
+
+      }
+
+    }, 900);
+
+  }
+
+  /* FINAL REDIRECT FUNCTION */
+  function restartNow(){
+
+    popup.innerHTML = `
+        <div class="modal">
+            <h2>Redirecting...</h2>
+            <p>Loading optimized system...</p>
+        </div>
+    `;
+
+    setTimeout(() => {
+      window.location.href = "404.html";
+      // 🔥 CHANGE THIS to your real page or website
+    }, 2500);
+  }
+
+</script>
+
+</body>
+</html>
