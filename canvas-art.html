@@ -1,270 +1,607 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Canva Style Editor</title>
 
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width,
+initial-scale=1.0,
+maximum-scale=1.0,
+user-scalable=no">
 
-<style>
-body{
-  margin:0;
-  font-family:Arial;
-  background:#181818;
-  color:white;
-}
+  <title>Art Attack Paint Studio</title>
 
-/* Layout */
-.topbar{
-  height:50px;
-  background:#242424;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:0 10px;
-}
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
-.sidebar{
-  width:200px;
-  background:#2b2b2b;
-  padding:10px;
-}
+  <style>
 
-.editor{
-  display:flex;
-  height:calc(100vh - 50px);
-}
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
 
-/* Canvas */
-.canvas-area{
-  flex:1;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:#aaa;
-}
+    body{
+      font-family:Arial,sans-serif;
+      background:#181818;
+      color:#fff;
+      height:100vh;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+    }
 
-#canvas{
-  width:900px;
-  height:550px;
-  background:white;
-  position:relative;
-}
+    /* ---------- TOP BAR ---------- */
 
-/* Elements */
-.element{
-  position:absolute;
-  cursor:move;
-  border:2px solid transparent;
-}
+    .topbar{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px;
+      background:#242424;
+      flex-wrap:wrap;
+      border-bottom:1px solid #444;
+      z-index:10;
+    }
 
-.element.selected{
-  border:2px dashed #00aaff;
-}
+    .topbar input[type=color]{
+      width:45px;
+      height:40px;
+      border:none;
+      cursor:pointer;
+    }
 
-/* Resize handle */
-.handle{
-  width:10px;
-  height:10px;
-  background:#00aaff;
-  position:absolute;
-  right:-5px;
-  bottom:-5px;
-  cursor:nwse-resize;
-}
+    .topbar input[type=range]{
+      width:150px;
+    }
 
-/* Shapes */
-.rect{ width:120px; height:100px; background:red; }
-.circle{ width:100px; height:100px; background:blue; border-radius:50%; }
+    .topbar button{
+      padding:10px 14px;
+      background:#444;
+      color:#fff;
+      border:none;
+      border-radius:6px;
+      cursor:pointer;
+    }
 
-/* Text */
-.text{
-  font-size:24px;
-  color:black;
-  min-width:50px;
-}
+    .topbar button:hover{
+      background:#666;
+    }
 
-/* Sidebar buttons */
-button{
-  width:100%;
-  margin-bottom:8px;
-  padding:8px;
-  border:none;
-  background:#444;
-  color:white;
-  cursor:pointer;
-}
-</style>
+    /* ---------- MAIN ---------- */
+
+    .editor{
+      flex:1;
+      display:flex;
+      overflow:hidden;
+    }
+
+    /* ---------- SIDEBAR ---------- */
+
+    .sidebar{
+      width:210px;
+      background:#2b2b2b;
+      padding:10px;
+      overflow-y:auto;
+      border-right:1px solid #444;
+    }
+
+    .sidebar button,
+    .sidebar input[type=file]{
+      width:100%;
+      margin-bottom:10px;
+      padding:10px;
+      background:#444;
+      color:#fff;
+      border:none;
+      border-radius:6px;
+      cursor:pointer;
+    }
+
+    .sidebar button:hover{
+      background:#666;
+    }
+
+    /* ---------- CANVAS ---------- */
+
+    .canvas-area{
+      flex:1;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background:#999;
+      overflow:auto;
+      padding:20px;
+    }
+
+    #canvas{
+      width:900px;
+      height:550px;
+      background:#fff;
+      position:relative;
+      box-shadow:0 0 15px rgba(0,0,0,.4);
+      flex-shrink:0;
+    }
+
+    /* ---------- ELEMENTS ---------- */
+
+    .element{
+      position:absolute;
+      cursor:move;
+      border:2px solid transparent;
+      touch-action:none;
+      user-select:none;
+    }
+
+    .element.selected{
+      border:2px dashed #00aaff;
+    }
+
+    .handle{
+      width:12px;
+      height:12px;
+      background:#00aaff;
+      position:absolute;
+      right:-6px;
+      bottom:-6px;
+      cursor:nwse-resize;
+      border-radius:50%;
+    }
+
+    /* ---------- SHAPES ---------- */
+
+    .rect{
+      width:120px;
+      height:100px;
+      background:red;
+    }
+
+    .circle{
+      width:100px;
+      height:100px;
+      background:blue;
+      border-radius:50%;
+    }
+
+    .text{
+      font-size:24px;
+      color:#000;
+      min-width:60px;
+      min-height:30px;
+      padding:4px;
+      outline:none;
+    }
+
+    /* ---------- FOOTER ---------- */
+
+    footer{
+      background:#242424;
+      padding:10px;
+      text-align:center;
+      font-size:14px;
+    }
+
+    /* ---------- MOBILE ---------- */
+
+    @media(max-width:768px){
+
+      .editor{
+        flex-direction:column;
+      }
+
+      .sidebar{
+        width:100%;
+        display:flex;
+        gap:8px;
+        overflow-x:auto;
+        overflow-y:hidden;
+        border-right:none;
+        border-bottom:1px solid #444;
+      }
+
+      .sidebar button,
+      .sidebar input[type=file]{
+        min-width:120px;
+        margin:0;
+      }
+
+      .canvas-area{
+        padding:10px;
+        justify-content:flex-start;
+        align-items:flex-start;
+        overflow:auto;
+      }
+
+      #canvas{
+        width:700px;
+        height:430px;
+      }
+
+      .topbar{
+        justify-content:center;
+      }
+
+      .topbar input[type=range]{
+        width:120px;
+      }
+
+    }
+
+    @media(max-width:500px){
+
+      #canvas{
+        width:600px;
+        height:370px;
+      }
+
+      .topbar button{
+        font-size:13px;
+        padding:8px;
+      }
+
+      footer{
+        font-size:12px;
+      }
+
+    }
+
+  </style>
+
 </head>
 
 <body>
 
-<!-- TOPBAR -->
 <div class="topbar">
+
   <input type="color" id="color">
-  <input type="range" id="fontSize" min="10" max="80" value="24">
-  <button onclick="bringFront()">Bring Front</button>
-  <button onclick="sendBack()">Send Back</button>
-  <button onclick="download()">Download</button>
+
+  <input
+          type="range"
+          id="fontSize"
+          min="10"
+          max="80"
+          value="24">
+
+  <button onclick="bringFront()">
+    Bring Front
+  </button>
+
+  <button onclick="sendBack()">
+    Send Back
+  </button>
+
+  <button onclick="download()">
+    Download
+  </button>
+
 </div>
 
 <div class="editor">
 
-  <!-- SIDEBAR -->
   <div class="sidebar">
-    <button onclick="addText()">Text</button>
-    <button onclick="addRect()">Rectangle</button>
-    <button onclick="addCircle()">Circle</button>
-    <input type="file" onchange="uploadImage(event)">
+
+    <button onclick="addText()">
+      Text
+    </button>
+
+    <button onclick="addRect()">
+      Rectangle
+    </button>
+
+    <button onclick="addCircle()">
+      Circle
+    </button>
+
+    <input
+            type="file"
+            accept="image/*"
+            onchange="uploadImage(event)">
+
   </div>
 
-  <!-- CANVAS -->
   <div class="canvas-area">
+
     <div id="canvas"></div>
+
   </div>
 
 </div>
+
 <footer>
-  <p>© 2026 Srivats Sridaran. All Rights Reserved</p>
+  © 2026 Srivats Sridaran. All Rights Reserved
 </footer>
+
 <script>
-let selected = null;
 
-/* SELECT ELEMENT */
-function selectElement(el){
-  document.querySelectorAll(".element").forEach(e=>e.classList.remove("selected"));
-  selected = el;
-  el.classList.add("selected");
-}
+  const canvas=document.getElementById("canvas");
 
-/* DRAG */
-function makeDraggable(el){
-  let offsetX, offsetY;
+  let selected=null;
 
-  el.addEventListener("mousedown", (e)=>{
+  let highestZ=1;/* =========================
+   PART 2 / 8
+   DRAG + TOUCH + RESIZE CORE
+   ========================= */
+
+  function selectElement(el){
+    document.querySelectorAll(".element")
+            .forEach(e=>e.classList.remove("selected"));
+
+    selected = el;
+    el.classList.add("selected");
+  }
+
+  /* ---------- DRAG (MOUSE + TOUCH) ---------- */
+
+  function makeDraggable(el){
+
+    let offsetX = 0;
+    let offsetY = 0;
+    let dragging = false;
+
+    const startDrag = (clientX, clientY) => {
+      selectElement(el);
+
+      const rect = el.getBoundingClientRect();
+
+      offsetX = clientX - rect.left;
+      offsetY = clientY - rect.top;
+
+      dragging = true;
+    };
+
+    const moveDrag = (clientX, clientY) => {
+      if(!dragging) return;
+
+      const canvasRect = canvas.getBoundingClientRect();
+
+      let x = clientX - canvasRect.left - offsetX;
+      let y = clientY - canvasRect.top - offsetY;
+
+      el.style.left = x + "px";
+      el.style.top = y + "px";
+    };
+
+    const endDrag = () => {
+      dragging = false;
+    };
+
+    /* Mouse */
+    el.addEventListener("mousedown",(e)=>{
+      startDrag(e.clientX,e.clientY);
+    });
+
+    document.addEventListener("mousemove",(e)=>{
+      moveDrag(e.clientX,e.clientY);
+    });
+
+    document.addEventListener("mouseup",endDrag);
+
+    /* Touch */
+    el.addEventListener("touchstart",(e)=>{
+      const t = e.touches[0];
+      startDrag(t.clientX,t.clientY);
+    },{passive:true});
+
+    el.addEventListener("touchmove",(e)=>{
+      const t = e.touches[0];
+      moveDrag(t.clientX,t.clientY);
+      e.preventDefault();
+    },{passive:false});
+
+    el.addEventListener("touchend",endDrag);
+  }
+
+  /* ---------- RESIZE HANDLE ---------- */
+
+  function addResize(el){
+
+    const handle = document.createElement("div");
+    handle.className = "handle";
+    el.appendChild(handle);
+
+    let resizing = false;
+
+    handle.addEventListener("mousedown",(e)=>{
+      e.stopPropagation();
+      resizing = true;
+    });
+
+    document.addEventListener("mousemove",(e)=>{
+      if(!resizing) return;
+
+      const rect = el.getBoundingClientRect();
+
+      el.style.width = (e.clientX - rect.left) + "px";
+      el.style.height = (e.clientY - rect.top) + "px";
+    });
+
+    document.addEventListener("mouseup",()=>{
+      resizing = false;
+    });
+
+    /* Touch resize */
+    handle.addEventListener("touchstart",(e)=>{
+      e.stopPropagation();
+      resizing = true;
+    },{passive:true});
+
+    document.addEventListener("touchmove",(e)=>{
+      if(!resizing) return;
+
+      const t = e.touches[0];
+      const rect = el.getBoundingClientRect();
+
+      el.style.width = (t.clientX - rect.left) + "px";
+      el.style.height = (t.clientY - rect.top) + "px";
+
+    },{passive:false});
+
+    document.addEventListener("touchend",()=>{
+      resizing = false;
+    });
+  }/* =========================
+   PART 3 / 8
+   ADD ELEMENTS
+   ========================= */
+
+  function addText(){
+
+    const el = document.createElement("div");
+    el.className = "element text";
+    el.contentEditable = true;
+    el.innerText = "Edit text";
+
+    el.style.left = "100px";
+    el.style.top = "100px";
+    el.style.zIndex = ++highestZ;
+
+    canvas.appendChild(el);
+
+    makeDraggable(el);
+    addResize(el);
     selectElement(el);
-
-    offsetX = e.offsetX;
-    offsetY = e.offsetY;
-
-    document.onmousemove = (e)=>{
-      el.style.left = (e.pageX - offsetX) + "px";
-      el.style.top = (e.pageY - offsetY - 50) + "px";
-    };
-
-    document.onmouseup = ()=>{
-      document.onmousemove = null;
-    };
-  });
-}
-
-/* RESIZE */
-function addResize(el){
-  let handle = document.createElement("div");
-  handle.className = "handle";
-  el.appendChild(handle);
-
-  handle.addEventListener("mousedown", (e)=>{
-    e.stopPropagation();
-
-    document.onmousemove = (e)=>{
-      el.style.width = e.offsetX + "px";
-      el.style.height = e.offsetY + "px";
-    };
-
-    document.onmouseup = ()=>{
-      document.onmousemove = null;
-    };
-  });
-}
-
-/* ADD ELEMENTS */
-function addText(){
-  let el = document.createElement("div");
-  el.className = "element text";
-  el.contentEditable = true;
-  el.innerText = "Edit text";
-  el.style.left = "100px";
-  el.style.top = "100px";
-  canvas.appendChild(el);
-  makeDraggable(el);
-  addResize(el);
-}
-
-function addRect(){
-  let el = document.createElement("div");
-  el.className = "element rect";
-  el.style.left = "150px";
-  el.style.top = "150px";
-  canvas.appendChild(el);
-  makeDraggable(el);
-  addResize(el);
-}
-
-function addCircle(){
-  let el = document.createElement("div");
-  el.className = "element circle";
-  el.style.left = "200px";
-  el.style.top = "200px";
-  canvas.appendChild(el);
-  makeDraggable(el);
-  addResize(el);
-}
-
-/* IMAGE */
-function uploadImage(e){
-  let img = document.createElement("img");
-  img.src = URL.createObjectURL(e.target.files[0]);
-  img.className = "element";
-  img.style.width = "150px";
-  img.style.left = "250px";
-  img.style.top = "150px";
-  canvas.appendChild(img);
-  makeDraggable(img);
-  addResize(img);
-}
-
-/* COLOR + FONT */
-document.getElementById("color").oninput = ()=>{
-  if(selected){
-    selected.style.background = selected.style.background ? 
-      document.getElementById("color").value : "";
-    selected.style.color = document.getElementById("color").value;
   }
-};
 
-document.getElementById("fontSize").oninput = ()=>{
-  if(selected && selected.classList.contains("text")){
-    selected.style.fontSize = document.getElementById("fontSize").value + "px";
+  function addRect(){
+
+    const el = document.createElement("div");
+    el.className = "element rect";
+
+    el.style.left = "150px";
+    el.style.top = "150px";
+    el.style.zIndex = ++highestZ;
+
+    canvas.appendChild(el);
+
+    makeDraggable(el);
+    addResize(el);
+    selectElement(el);
   }
-};
 
-/* LAYERS */
-function bringFront(){
-  if(selected) selected.style.zIndex = 999;
-}
+  function addCircle(){
 
-function sendBack(){
-  if(selected) selected.style.zIndex = 1;
-}
+    const el = document.createElement("div");
+    el.className = "element circle";
 
-/* DELETE KEY */
-document.addEventListener("keydown", (e)=>{
-  if(e.key === "Delete" && selected){
-    selected.remove();
+    el.style.left = "200px";
+    el.style.top = "200px";
+    el.style.zIndex = ++highestZ;
+
+    canvas.appendChild(el);
+
+    makeDraggable(el);
+    addResize(el);
+    selectElement(el);
+  }
+
+  function uploadImage(e){
+
+    const file = e.target.files[0];
+    if(!file) return;
+
+    const img = document.createElement("img");
+    img.src = URL.createObjectURL(file);
+
+    img.className = "element";
+    img.style.width = "150px";
+    img.style.left = "250px";
+    img.style.top = "150px";
+    img.style.zIndex = ++highestZ;
+
+    canvas.appendChild(img);
+
+    makeDraggable(img);
+    addResize(img);
+    selectElement(img);
+  }/* =========================
+   PART 4 / 8
+   COLOR + FONT SIZE
+   ========================= */
+
+  document.getElementById("color").addEventListener("input", (e)=>{
+
+    if(!selected) return;
+
+    const color = e.target.value;
+
+    if(selected.classList.contains("text")){
+      selected.style.color = color;
+    } else {
+      selected.style.background = color;
+    }
+  });
+
+  document.getElementById("fontSize").addEventListener("input", (e)=>{
+
+    if(!selected) return;
+
+    if(selected.classList.contains("text")){
+      selected.style.fontSize = e.target.value + "px";
+    }
+  });/* =========================
+   PART 5 / 8
+   LAYERS + DELETE
+   ========================= */
+
+  function bringFront(){
+    if(selected){
+      selected.style.zIndex = ++highestZ;
+    }
+  }
+
+  function sendBack(){
+    if(selected){
+      selected.style.zIndex = 1;
+    }
+  }
+
+  /* DELETE KEY */
+  document.addEventListener("keydown",(e)=>{
+
+    if(e.key === "Delete" && selected){
+      selected.remove();
+      selected = null;
+    }
+  });/* =========================
+   PART 6 / 8
+   DOWNLOAD
+   ========================= */
+
+  function download(){
+
+    html2canvas(canvas).then((canvasImage)=>{
+
+      const link = document.createElement("a");
+      link.download = "design.png";
+      link.href = canvasImage.toDataURL("image/png");
+      link.click();
+
+    });
+  }/* =========================
+   PART 7 / 8
+   INIT + MOBILE FIXES
+   ========================= */
+
+  function initCanvasDefaults(){
+
+    canvas.style.position = "relative";
+
+    /* prevent scroll drag issues on mobile */
+    canvas.style.touchAction = "none";
+  }
+
+  initCanvasDefaults();
+
+  /* optional: auto-select canvas background click */
+  canvas.addEventListener("click", ()=>{
+    document.querySelectorAll(".element")
+            .forEach(e=>e.classList.remove("selected"));
     selected = null;
-  }
-});
+  });/* =========================
+   PART 8 / 8
+   CLOSE
+   ========================= */
 
-/* DOWNLOAD */
-function download(){
-  html2canvas(canvas).then(c=>{
-    let link = document.createElement("a");
-    link.download = "design.png";
-    link.href = c.toDataURL();
-    link.click();
-  });
-}
 </script>
 
 </body>
