@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Server Update</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  background:#111;
+  color:#00ff00;
+  font-family:Consolas,monospace;
+  overflow:hidden;
+}
+
+#loader{
+  position:fixed;
+  inset:0;
+  background:#111;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+.spinner{
+  width:80px;
+  height:80px;
+  border:8px solid #222;
+  border-top:8px solid #00ff00;
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+  from{transform:rotate(0deg);}
+  to{transform:rotate(360deg);}
+}
+
+#main{
+  display:none;
+  padding:20px;
+}
+
+h1{margin-bottom:20px;}
+
+#terminal{
+  height:70vh;
+  border:3px solid #00ff00;
+  background:black;
+  padding:10px;
+  overflow-y:auto;
+  white-space:pre-wrap;
+}
+
+.progress{
+  width:100%;
+  height:20px;
+  border:2px solid #00ff00;
+  margin-top:15px;
+}
+
+.bar{
+  width:0%;
+  height:100%;
+  background:#00ff00;
+}
+
+#status{
+  margin-top:10px;
+}
+.complete{color:cyan;}
+.error{color:red;}
+.warning{color:yellow;}
+</style>
+</head>
+
+<body>
+
+<div id="loader"><div class="spinner"></div></div>
+
+<div id="main">
+<h1>Kalps Studio | Server Update</h1>
+
+<div id="terminal"></div>
+
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div id="status">Preparing...</div>
+</div>
+
+<script>
+
+const terminal = document.getElementById("terminal");
+const bar = document.getElementById("bar");
+const status = document.getElementById("status");
+
+let progress = 0;
+let stage = 0;
+let paused = false;
+let isDownloading = false;
+let isInstalling = false;
+
+const currentVersion = "1.0.0";
+
+/* ================= LOG ================= */
+function log(msg, cls="line"){
+  const div = document.createElement("div");
+  div.className = cls;
+  div.textContent = "> " + msg;
+  terminal.appendChild(div);
+  terminal.scrollTop = terminal.scrollHeight;
+
+  if(terminal.children.length > 150){
+    terminal.removeChild(terminal.firstChild);
+  }
+}
+
+/* ================= INIT ================= */
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("main").style.display = "block";
+    boot();
+  }, 1000);
+});
+
+/* ================= BOOT ================= */
+function boot(){
+  const steps = [
+    "Connecting to update server...",
+    "Checking system...",
+    "Ready"
+  ];
+
+  let i = 0;
+
+  const t = setInterval(() => {
+    log(steps[i]);
+    i++;
+    if(i >= steps.length){
+      clearInterval(t);
+      checkVersion();
+    }
+  }, 600);
+}
+
+/* ================= VERSION ================= */
+function getLatestVersion(){
+  return new Promise((res) => {
+    setTimeout(() => res("1.1.0"), 1000);
+  });
+}
+
+async function checkVersion(){
+  log("Checking updates...");
+  status.textContent = "Checking...";
+
+  const latest = await getLatestVersion();
+
+  log("Current: " + currentVersion);
+  log("Latest: " + latest);
+
+  if(latest !== currentVersion){
+    log("Update available!", "warning");
+    setTimeout(startDownload, 800);
+  } else {
+    log("System up to date", "complete");
+    setTimeout(() => {
+      window.location.href = "settings.html";
+    }, 1500);
+  }
+}
+
+/* ================= DOWNLOAD ================= */
+function startDownload(){
+
+  if(isDownloading) return;
+
+  isDownloading = true;
+  status.textContent = "Downloading...";
+
+  downloadLoop();
+}
+
+function downloadLoop(){
+
+  if(paused) return;
+
+  if(progress >= 100){
+    progress = 100;
+    bar.style.width = "100%";
+
+    isDownloading = false;
+
+    log("Download complete");
+    startInstall();
+    return;
+  }
+
+  progress += Math.floor(Math.random()*7)+2;
+
+  if(progress > 100) progress = 100;
+
+  bar.style.width = progress + "%";
+  status.textContent = "Downloading... " + progress + "%";
+
+  setTimeout(downloadLoop, 400);
+}
+
+/* ================= INSTALL ================= */
+function startInstall(){
+
+  if(isInstalling) return;
+
+  isInstalling = true;
+  stage = 0;
+
+  installLoop();
+}
+
+function installLoop(){
+
+  const steps = [
+    "Extracting files...",
+    "Installing modules...",
+    "Cleaning cache...",
+    "Finalizing..."
+  ];
+
+  if(stage >= steps.length){
+    finishUpdate();
+    return;
+  }
+
+  log(steps[stage], "warning");
+  stage++;
+
+  setTimeout(installLoop, 800);
+}
+
+/* ================= FINISH ================= */
+function finishUpdate(){
+
+  progress = 100;
+  bar.style.width = "100%";
+
+  isDownloading = false;
+  isInstalling = false;
+
+  status.textContent = "Update Complete";
+  status.className = "complete";
+
+  log("SERVER UPDATED ✔", "complete");
+
+  // SHOW BUTTON
+  const btn = document.createElement("button");
+  btn.textContent = "Go to Performance Page";
+  btn.style.marginTop = "20px";
+  btn.style.padding = "10px";
+  btn.style.background = "#000";
+  btn.style.color = "#00ff00";
+  btn.style.border = "1px solid #00ff00";
+  btn.style.cursor = "pointer";
+
+  btn.onclick = () => {
+    window.location.href = "update.html";
+  };
+
+  document.getElementById("main").appendChild(btn);
+
+  setTimeout(() => {
+    redirectBack();
+  }, 1500);
+}
+
+</script>
+
+</body>
+</html>

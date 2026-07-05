@@ -6,258 +6,135 @@
   <title>Settings</title>
 
   <style>
-    /*================ Loader ==================================*/
-    #loader-wrapper {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #111;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-    }
-    .loader {
-      position: relative;
-      transform: rotateZ(45deg);
-      perspective: 1000px;
-      border-radius: 50%;
-      width: 48px;
-      height: 48px;
-      color: #fff;
-    }
-
-    .loader {
-      position: relative;
-      width: 100px;
-      height: 100px;
-    }
-    .loader:before{
-      content: '';
-      position: absolute;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      top: 50%;
-      left: 0;
-      transform: translate(-5px, -50%);
-      background: linear-gradient(to right, #fff 50%, #de3500 50%) no-repeat;
-      background-size: 200% auto;
-      background-position: 100% 0;
-      animation: colorBallMoveX 1.5s linear infinite alternate;
-    }
-    .loader:after{
-      content: '';
-      position: absolute;
-      left: 50%;
-      top: 0;
-      transform: translateX(-50%);
-      width: 2px;
-      height: 100%;
-      background: #de3500;
-    }
-    @keyframes colorBallMoveX {
-      0%  {
-        background-position: 0% 0;
-        transform: translate(-15px, -50%);
-      }
-      15%  , 25% {
-        background-position: 0% 0;
-        transform: translate(0px, -50%);
-      }
-      75% , 85% {
-        background-position: 100% 0;
-        transform: translate(50px, -50%);
-      }
-      100% {
-        background-position: 100% 0;
-        transform: translate(65px, -50%);
-      }
-    }
-
-
     body{
       background:#111;
-      color:#0f0;
+      color:#00ff00;
       font-family:monospace;
       padding:20px;
     }
 
+    /* ================= LOADER ================= */
+    #loader-wrapper{
+      position:fixed;
+      inset:0;
+      background:#111;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      z-index:9999;
+    }
+
+    .loader{
+      width:60px;
+      height:60px;
+      border:6px solid #222;
+      border-top:6px solid #00ff00;
+      border-radius:50%;
+      animation:spin 1s linear infinite;
+    }
+
+    @keyframes spin{
+      to{transform:rotate(360deg);}
+    }
+
+    #main-content{
+      display:none;
+    }
+
+    /* ================= UI ================= */
     #modeDisplay{
+      border:2px solid #00ff00;
+      padding:6px;
       margin-bottom:10px;
-      padding:5px;
-      border:2px solid #0f0;
     }
 
     #console{
       height:300px;
       overflow-y:auto;
-      border:3px solid green;
+      border:3px solid #00ff00;
       padding:10px;
       margin-bottom:10px;
+      background:black;
     }
 
     input{
       width:100%;
       padding:10px;
       background:black;
-      color:#0f0;
-      border:1px solid #0f0;
+      color:#00ff00;
+      border:1px solid #00ff00;
     }
 
-    a{ color:#0f0; }
+    a{color:#00ff00;}
   </style>
 </head>
 
 <body>
+
+<!-- ================= LOADER ================= -->
 <div id="loader-wrapper">
-  <span class="loader"></span>
+  <div class="loader"></div>
 </div>
 
-<div id="main-content" style="display: none;">
+<div id="main-content">
+
   <a href="index.html">← Back</a>
   <h2>⚙ Settings Terminal</h2>
 
   <div id="modeDisplay"></div>
-
   <div id="console"></div>
-  <input id="cmd">
+  <input id="cmd" placeholder="type help...">
 
   <script>
 
     /* ================= STATE ================= */
-
     let settings = {
-      theme: "light",
-      title: "Kalps Studio"
+      theme:"light",
+      title:"Kalps Studio"
     };
 
     let updateInProgress = false;
     let updateProgress = 0;
-    let updateInterval = null;
 
-    /* ================= ROLE SYSTEM ================= */
-
+    /* ================= ROLE SYSTEM (KEEPED) ================= */
     function getRole(){
       return sessionStorage.getItem("role") || "user";
     }
 
     function getPrompt(){
-      return "C://" + getRole().toLowerCase() + "settings/Terminal>";
-    }
-
-    /* ================= INIT ================= */
-
-    function load(){
-      let s = localStorage.getItem("settings");
-      if(s) Object.assign(settings, JSON.parse(s));
-
-      apply();
-      updateInputPrompt();
-      bootMessage();
-    }
-
-    /* ================= APPLY ================= */
-
-    function apply(){
-      document.body.style.color = "#0f0";
-      document.title = settings.title;
-      updateModeDisplay();
-    }
-
-    /* ================= SAVE ================= */
-
-    function save(){
-      localStorage.setItem("settings", JSON.stringify(settings));
-    }
-
-    /* ================= UI ================= */
-
-    function updateModeDisplay(){
-      document.getElementById("modeDisplay").innerHTML =
-              "Mode: " + getRole().toUpperCase() +
-              " | Theme: " + settings.theme.toUpperCase();
-    }
-
-    function updateInputPrompt(){
-      document.getElementById("cmd").placeholder = getPrompt();
+      return "C://" + getRole() + "/settings/>";
     }
 
     /* ================= PRINT ================= */
-
-    function print(msg, isCommand=false){
+    function print(msg){
       const con = document.getElementById("console");
 
-      con.innerHTML += "<div>" + (isCommand ? getPrompt() : "> ") + msg + "</div>";
+      const div = document.createElement("div");
+      div.textContent = "> " + msg;
+
+      con.appendChild(div);
       con.scrollTop = con.scrollHeight;
     }
 
-    /* ================= UPDATE SYSTEM ================= */
+    /* ================= UI ================= */
+    function updateUI(){
+      document.getElementById("modeDisplay").innerText =
+              "Mode: " + getRole().toUpperCase() +
+              " | Theme: " + settings.theme.toUpperCase();
 
-    function fakeScan(callback){
-
-      const scan = [
-        "Running system scan...",
-        "Checking kernel integrity...",
-        "Scanning files... 20%",
-        "Scanning files... 55%",
-        "Scanning files... 80%",
-        "No threats detected",
-        "Update package verified"
-      ];
-
-      let i = 0;
-
-      let interval = setInterval(()=>{
-        print(scan[i]);
-        i++;
-        if(i >= scan.length){
-          clearInterval(interval);
-          callback();
-        }
-      }, 400);
-    }
-
-    function startDownload(){
-
-      updateInProgress = true;
-      updateProgress = 0;
-
-      print("Downloading update package...");
-
-      updateInterval = setInterval(()=>{
-
-        if(updateProgress < 100){
-
-          updateProgress += Math.floor(Math.random()*7)+1;
-          if(updateProgress > 100) updateProgress = 100;
-
-          print("Progress: " + updateProgress + "%");
-
-        } else {
-
-          clearInterval(updateInterval);
-          updateInProgress = false;
-          print("✅ Update complete");
-
-        }
-
-      }, 500);
+      document.title = settings.title;
     }
 
     /* ================= COMMANDS ================= */
+    function run(cmd){
 
-    function run(command){
+      print(cmd);
 
-      print(command, true);
-
-      let p = command.trim().split(" ");
+      let p = cmd.trim().split(" ");
       let role = getRole();
 
       if(p[0] === "help"){
-        print("theme/toggle/title/time/date/clear/update/update --force/update status");
+        print("theme | toggle theme | title | time | date | clear | update | update status | update check | update --force");
         return;
       }
 
@@ -268,19 +145,19 @@
 
       if(p[0] === "theme"){
         settings.theme = p[1];
-        save(); apply();
+        updateUI();
         return;
       }
 
       if(p[0] === "toggle" && p[1] === "theme"){
         settings.theme = settings.theme === "dark" ? "light" : "dark";
-        save(); apply();
+        updateUI();
         return;
       }
 
       if(p[0] === "title"){
         settings.title = p.slice(1).join(" ");
-        save(); apply();
+        updateUI();
         return;
       }
 
@@ -294,98 +171,68 @@
         return;
       }
 
-      /* ================= UPDATE COMMANDS ================= */
-
+      /* ================= UPDATE ================= */
       if(p[0] === "update"){
 
         if(p[1] === "status"){
-          if(!updateInProgress){
-            print("No update running.");
-          } else {
-            print("Update running...");
-            print("Progress: " + updateProgress + "%");
-          }
+          print("Update running: " + updateInProgress);
+          print("Progress: " + updateProgress + "%");
+          return;
+        }
+
+        if(p[1] === "check"){
+          print("Opening update checker...");
+          setTimeout(() => {
+            window.location.href = "update.html";
+          }, 800);
           return;
         }
 
         if(p[1] === "--force"){
-          print("Force update started...");
-          startDownload();
+          print("Force update...");
+          window.location.href = "update.html";
           return;
         }
 
-        print("Starting system scan...");
-        fakeScan(()=>{
-          startDownload();
-        });
-
+        print("Starting update...");
+        window.location.href = "update.html";
         return;
       }
 
-      /* ================= ADMIN ================= */
-
+      /* ================= ADMIN (KEEPED ROLE SYSTEM) ================= */
       if(role === "admin"){
 
-        switch(p[0]){
-
-          case "role":
-            sessionStorage.setItem("role", p[1]);
-            updateModeDisplay();
-            updateInputPrompt();
-            print("Role changed to " + p[1]);
-            break;
-
-          case "set":
-            settings[p[1]] = p.slice(2).join(" ");
-            save(); apply();
-            print("Updated");
-            break;
-
-          case "get":
-            print(settings[p[1]]);
-            break;
-
-          case "delete":
-            delete settings[p[1]];
-            save(); apply();
-            print("Deleted");
-            break;
-
-          case "show":
-            print(JSON.stringify(settings));
-            break;
-
-          case "reset":
-            settings = { theme: "light", title: "Kalps Studio" };
-            save(); apply();
-            print("Reset done");
-            break;
-
-          case "sysinfo":
-            print(navigator.userAgent);
-            break;
-
-          case "wipe":
-            localStorage.clear();
-            sessionStorage.clear();
-            print("Wiped");
-            break;
-
-          case "reload":
-            location.reload();
-            break;
-
-          default:
-            print("Unknown admin command");
+        if(p[0] === "role"){
+          sessionStorage.setItem("role", p[1]);
+          print("Role set to " + p[1]);
+          updateUI();
+          return;
         }
 
-      } else {
-        print("Unknown command");
+        if(p[0] === "set"){
+          settings[p[1]] = p.slice(2).join(" ");
+          updateUI();
+          return;
+        }
+
+        if(p[0] === "get"){
+          print(settings[p[1]]);
+          return;
+        }
+
+        if(p[0] === "reset"){
+          settings = {theme:"light", title:"Kalps Studio"};
+          updateUI();
+          print("Reset done");
+          return;
+        }
+
       }
+
+      print("Unknown command");
     }
 
     /* ================= INPUT ================= */
-
     document.getElementById("cmd").addEventListener("keydown", e=>{
       if(e.key === "Enter"){
         run(e.target.value);
@@ -393,42 +240,27 @@
       }
     });
 
-    /* ================= BOOT ================= */
-
-    function bootMessage(){
-
-      const lines = [
-        "Initializing system...",
-        "Loading settings...",
-        "Starting terminal...",
-        "Welcome " + getRole().toUpperCase(),
-        "Type help"
-      ];
-
-      let i = 0;
-
-      let interval = setInterval(()=>{
-        print(lines[i]);
-        i++;
-        if(i >= lines.length) clearInterval(interval);
-      }, 300);
-    }
-
-    /* ================= START ================= */
-
+    /* ================= LOADER SYSTEM (KEPT + FIXED) ================= */
     window.addEventListener("load", () => {
+
       setTimeout(() => {
-        const loader = document.getElementById("loader-wrapper");
-        const main = document.getElementById("main-content");
 
-        if(loader) loader.style.display = "none";
-        if(main) main.style.display = "block";
+        document.getElementById("loader-wrapper").style.display = "none";
+        document.getElementById("main-content").style.display = "block";
 
-        load(); // start terminal AFTER loader ends
+        print("System loaded...");
+        print("Type help");
+
       }, 1500);
+
     });
 
+    /* ================= INIT ================= */
+    updateUI();
+
   </script>
+
 </div>
+
 </body>
 </html>
