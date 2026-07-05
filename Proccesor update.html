@@ -19,23 +19,58 @@
       background:#0b1220;
       color:white;
       height:100vh;
-      display:flex;
-      justify-content:center;
-      align-items:center;
       overflow:hidden;
     }
 
-    body::before{
-      content:"";
-      position:absolute;
-      width:900px;
-      height:900px;
-      background:radial-gradient(circle, rgba(0,120,215,0.25), transparent 70%);
-      filter:blur(80px);
+    /* ================= UPDATE BANNER ================= */
+
+    #updateBanner{
+      position:fixed;
+      top:0;
+      width:100%;
+      background:linear-gradient(90deg,#0078d7,#00a2ff);
+      padding:12px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
     }
 
+    #updateBanner select,
+    #updateBanner button{
+      padding:10px;
+      border:none;
+      border-radius:8px;
+    }
+
+    #updateBanner select{
+      background:#111827;
+      color:white;
+    }
+
+    #updateBanner button{
+      background:white;
+      color:#0078d7;
+      cursor:pointer;
+      font-weight:bold;
+    }
+
+    #updateText{
+      width:100%;
+      text-align:center;
+      font-size:14px;
+    }
+
+    /* ================= MAIN APP ================= */
+
     .container{
-      position:relative;
+      display:none; /* 🔥 hidden until update check passes */
+      position:absolute;
+      top:60px;
+      left:50%;
+      transform:translateX(-50%);
       width:92%;
       max-width:880px;
       padding:55px;
@@ -59,7 +94,6 @@
       border-radius:10px;
       display:grid;
       place-items:center;
-      font-size:22px;
     }
 
     .title{
@@ -67,34 +101,22 @@
       font-weight:600;
     }
 
-    select, input, button{
+    select,input,button{
       width:100%;
       padding:16px;
+      margin-bottom:12px;
       border-radius:12px;
       border:none;
       font-size:16px;
-      margin-bottom:12px;
     }
 
-    select{
-      background:#111827;
-      color:white;
-    }
-
-    input{
-      background:#0f172a;
-      color:white;
-      display:none;
-    }
+    select{background:#111827;color:white;}
+    input{background:#0f172a;color:white;display:none;}
 
     button{
       background:#0078d7;
       color:white;
       cursor:pointer;
-    }
-
-    button:hover{
-      background:#0a84f0;
     }
 
     .update{
@@ -104,18 +126,14 @@
 
     .percent{
       font-size:64px;
-      font-weight:300;
-      margin-bottom:10px;
     }
 
     .status{
       color:#cbd5e1;
-      margin-bottom:25px;
-      min-height:24px;
+      margin-bottom:20px;
     }
 
     .bar{
-      width:100%;
       height:12px;
       background:rgba(255,255,255,0.1);
       border-radius:999px;
@@ -123,16 +141,15 @@
     }
 
     .fill{
-      width:0%;
       height:100%;
+      width:0%;
       background:linear-gradient(90deg,#00a2ff,#0078d7);
-      transition:0.4s;
     }
 
     .popup{
       position:fixed;
       inset:0;
-      background:rgba(0,0,0,0.6);
+      background:rgba(0,0,0,0.7);
       display:none;
       justify-content:center;
       align-items:center;
@@ -142,13 +159,7 @@
       background:#111827;
       padding:30px;
       border-radius:18px;
-      width:90%;
-      max-width:420px;
       text-align:center;
-    }
-
-    .ios{
-      background:linear-gradient(135deg,#0a0f1c,#05070d);
     }
 
   </style>
@@ -156,7 +167,33 @@
 
 <body>
 
-<div class="container">
+<!-- ================= UPDATE CHECK SCREEN ================= -->
+<div id="updateBanner">
+
+  <div id="updateText">
+    🔔 Check for system update to continue
+  </div>
+
+  <select id="osSelect">
+    <option value="">Select OS</option>
+    <option>Windows</option>
+    <option>macOS</option>
+    <option>Linux</option>
+    <option>Android</option>
+    <option>iOS</option>
+  </select>
+
+  <select id="chipSelect">
+    <option value="">Processor</option>
+  </select>
+
+  <button onclick="checkUpdate()">Check Update</button>
+
+</div>
+
+<!-- ================= MAIN SYSTEM (LOCKED FIRST) ================= -->
+
+<div class="container" id="app">
 
   <div class="brand">
     <div class="logo">⊞</div>
@@ -164,61 +201,107 @@
   </div>
 
   <select id="deviceSelect" onchange="toggleCustom()">
-
     <!-- Intel -->
+
     <option>Intel® Core™ Ultra 9 285K</option>
+
     <option>Intel® Core™ Ultra 7 265K</option>
+
     <option>Intel® Core™ Ultra 5 245K</option>
 
+
+
     <option>Intel® Core™ i9-14900KS</option>
+
     <option>Intel® Core™ i9-14900K</option>
+
     <option>Intel® Core™ i7-14700K</option>
+
     <option>Intel® Core™ i5-14600K</option>
+
     <option>Intel® Core&trade; i3-14400K</option>
 
+
+
     <option>Intel® Xeon® W9</option>
+
     <option>Intel® Xeon® Platinum</option>
 
+
+
     <!-- AMD -->
+
     <option>AMD Ryzen™ 9 9950X</option>
+
     <option>AMD Ryzen™ 9 9900X</option>
+
     <option>AMD Ryzen™ 7 9800X3D</option>
+
     <option>AMD Ryzen™ 7 9700X</option>
+
     <option>AMD Ryzen™ 5 9600X</option>
 
+
+
     <option>AMD Threadripper™ PRO 7995WX</option>
+
     <option>AMD EPYC™ 9754</option>
 
+
+
     <!-- Apple -->
+
     <option>Apple M4 Max</option>
+
     <option>Apple M4 Pro</option>
+
     <option>Apple M3 Ultra</option>
+
     <option>Apple M3 Max</option>
+
     <option>Apple M2 Ultra</option>
 
+
+
     <!-- Qualcomm -->
+
     <option>Snapdragon® X Elite</option>
     <option>Snapdragon® X Plus</option>
 
+
+
     <!-- ARM -->
+
     <option>ARM Cortex™ X4</option>
+
     <option>ARM Neoverse™ V2</option>
 
+
+
     <!-- NVIDIA -->
+
     <option>NVIDIA Grace CPU Superchip</option>
 
+
+
     <!-- Cloud -->
+
     <option>Azure Virtual Processor</option>
+
     <option>AWS Graviton4</option>
+
     <option>Google Axion ARM CPU</option>
 
+
+
     <!-- Legacy -->
+
     <option>Intel® Pentium® Gold</option>
+
     <option>Intel® Celeron®</option>
+
     <option>AMD Athlon™</option>
-
-    <option value="custom">Custom Device (After 2015 Only)</option>
-
+    <option value="custom">Custom Device</option>
   </select>
 
   <input id="customName" placeholder="Device name">
@@ -229,7 +312,6 @@
   <div class="update" id="update">
 
     <div class="percent" id="percent">0%</div>
-
     <div class="status" id="status">Initializing...</div>
 
     <div class="bar">
@@ -242,140 +324,128 @@
 
 </div>
 
+<!-- ================= POPUP ================= -->
+
 <div class="popup" id="popup">
-
   <div class="modal">
-
     <h2>Optimization Complete</h2>
-    <p>Your system is now faster and more responsive.</p>
-
-    <button onclick="restartNow()">Reload Website</button>
-
+    <button onclick="location.reload(index.html)">Restart</button>
   </div>
-
 </div>
 
 <script>
 
-  const deviceSelect = document.getElementById("deviceSelect");
-  const customName = document.getElementById("customName");
-  const customYear = document.getElementById("customYear");
+  /* ================= UPDATE LOGIC ================= */
 
-  const update = document.getElementById("update");
-  const percent = document.getElementById("percent");
-  const status = document.getElementById("status");
-  const fill = document.getElementById("fill");
-  const deviceName = document.getElementById("deviceName");
+  const osSelect = document.getElementById("osSelect");
+  const chipSelect = document.getElementById("chipSelect");
 
-  const popup = document.getElementById("popup");
+  osSelect.addEventListener("change", () => {
 
-  let progress = 0;
+    chipSelect.innerHTML = '<option value="">Processor</option>';
+
+    let chips = ["Any"];
+
+    if(osSelect.value==="Windows") chips=["Intel","AMD"];
+    if(osSelect.value==="macOS") chips=["Apple Silicon","Intel"];
+    if(osSelect.value==="Linux") chips=["AMD","Intel","ARM"];
+    if(osSelect.value==="Android") chips=["Snapdragon","MediaTek"];
+    if(osSelect.value==="iOS") chips=["A-Series"];
+
+    chips.forEach(c=>{
+      let opt=document.createElement("option");
+      opt.textContent=c;
+      chipSelect.appendChild(opt);
+    });
+
+  });
+
+  function checkUpdate(){
+
+    const os=osSelect.value;
+    const chip=chipSelect.value;
+
+    if(!os||!chip){
+      alert("Select OS and processor");
+      return;
+    }
+
+    // 🔥 ALWAYS allow update
+    document.getElementById("updateText").innerHTML =
+            "✅ Update available. Unlocking system...";
+
+    setTimeout(()=>{
+
+      document.getElementById("updateBanner").style.display="none";
+      document.getElementById("app").style.display="block";
+
+    },1200);
+
+  }
+
+  /* ================= MAIN ENGINE ================= */
+
+  const deviceSelect=document.getElementById("deviceSelect");
+  const customName=document.getElementById("customName");
+  const customYear=document.getElementById("customYear");
+
+  const update=document.getElementById("update");
+  const percent=document.getElementById("percent");
+  const status=document.getElementById("status");
+  const fill=document.getElementById("fill");
+  const deviceName=document.getElementById("deviceName");
+
+  const popup=document.getElementById("popup");
+
+  let progress=0;
 
   function toggleCustom(){
-
-    if(deviceSelect.value === "custom"){
-      customName.style.display = "block";
-      customYear.style.display = "block";
+    if(deviceSelect.value==="custom"){
+      customName.style.display="block";
+      customYear.style.display="block";
     } else {
-      customName.style.display = "none";
-      customYear.style.display = "none";
+      customName.style.display="none";
+      customYear.style.display="none";
     }
   }
 
   function startUpdate(){
 
-    let selected = deviceSelect.value;
-    let label = selected;
+    update.style.display="block";
 
-    if(selected === "custom"){
+    let label=deviceSelect.value;
 
-      const name = customName.value;
-      const year = parseInt(customYear.value);
-
-      if(!name || !year){
-        alert("Enter device name and year.");
-        return;
-      }
-
-      if(year <= 2015){
-        alert("❌ Only devices AFTER 2015 are allowed.");
-        return;
-      }
-
-      label = name + " (" + year + ")";
+    if(label==="custom"){
+      label=customName.value+" ("+customYear.value+")";
     }
 
-    document.getElementById("deviceSelect").style.display = "none";
-    customName.style.display = "none";
-    customYear.style.display = "none";
+    deviceName.innerText=label;
 
-    update.style.display = "block";
-    deviceName.innerText = label;
-
-    let messages = [
-      "Analyzing performance...",
-      "Optimizing rendering pipeline...",
-      "Reducing latency...",
-      "Improving execution speed...",
-      "Caching system components...",
-      "Enhancing responsiveness..."
+    let messages=[
+      "Optimizing system...",
+      "Boosting performance...",
+      "Cleaning cache...",
+      "Finalizing..."
     ];
 
-    if(selected.includes("Apple") || selected.includes("iPhone")){
-      document.body.classList.add("ios");
+    const timer=setInterval(()=>{
 
-      messages = [
-        "Verifying system integrity...",
-        "Checking Secure Enclave...",
-        "Optimizing battery usage...",
-        "Finalizing Apple system update..."
-      ];
-    }
+      if(progress<100){
 
-    const updater = setInterval(() => {
+        progress+=Math.floor(Math.random()*4)+1;
 
-      if(progress < 100){
+        percent.innerText=progress+"%";
+        fill.style.width=progress+"%";
 
-        progress += Math.floor(Math.random() * 3) + 1;
-
-        if(progress > 100) progress = 100;
-
-        percent.innerText = progress + "%";
-        fill.style.width = progress + "%";
-
-        status.innerText =
-                messages[Math.floor(Math.random() * messages.length)];
+        status.innerText=messages[Math.floor(Math.random()*messages.length)];
 
       } else {
-
-        clearInterval(updater);
-
-        status.innerText = "Optimization complete.";
-
-        setTimeout(() => {
-          popup.style.display = "flex";
-        }, 1200);
-
+        clearInterval(timer);
+        popup.style.display="flex";
       }
 
-    }, 900);
+    },500);
 
-  }
-
-  /* FINAL REDIRECT FUNCTION */
-  function restartNow(){
-
-    popup.innerHTML = `
-        <div class="modal">
-            <h2>Redirecting...</h2>
-            <p>Loading optimized system...</p>
-        </div>
-    `;
-
-    setTimeout(() => {
-      window.location.href = "404.html";
-      // 🔥 CHANGE THIS to your real page or website
-    }, 2500);
   }
 
 </script>

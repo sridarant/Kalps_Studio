@@ -194,12 +194,74 @@
             }
 
         }
+        /* ===========================
+           UPDATE BANNER
+        =========================== */
 
+        #updateBanner{
+            position:sticky;
+            top:0;
+            z-index:10000;
+            background:linear-gradient(90deg,#ff9800,#ff5722);
+            color:#fff;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:15px;
+            padding:12px 20px;
+            font-size:15px;
+            box-shadow:0 2px 10px rgba(0,0,0,.25);
+            animation:slideDown .5s ease;
+        }
+
+        #updateBanner span{
+            flex:1;
+        }
+
+        #updateBanner button{
+            border:none;
+            background:#fff;
+            color:#ff5722;
+            padding:7px 14px;
+            border-radius:6px;
+            cursor:pointer;
+            font-weight:bold;
+        }
+
+        #updateBanner button:hover{
+            background:#f1f1f1;
+        }
+
+        @keyframes slideDown{
+            from{
+                transform:translateY(-100%);
+                opacity:0;
+            }
+            to{
+                transform:translateY(0);
+                opacity:1;
+            }
+        }
+
+        @media(max-width:600px){
+            #updateBanner{
+                flex-direction:column;
+                text-align:center;
+            }
+        }
     </style>
 </head>
 
 <body>
+<!-- UPDATE BANNER -->
+<div id="updateBanner">
+    <span>
+        📢 <strong>Website Update:</strong>
+        Upgrade you website to reduce load on your processor and improve processor and website speed
+    </span>
 
+    <button onclick="closeBanner()">Dismiss</button>
+</div>
 <div id="loader-wrapper">
     <h2 style="color:white;">Loading...</h2>
 </div>
@@ -210,7 +272,7 @@
 
         <h3>User / Admin Verification</h3>
 
-        <p>Enter 8409 (user) or Ad@135 (admin)</p>
+        <p>Enter 8409 (user) or Ad@135 (admin)<br> Open admin in one page and use the contact page to see the magic<br><br><i><strong>Note:</strong> This is a static website with no database however it is still reccomended that you don't use your original credentials</i></p>
 
         <input id="answer" placeholder="Enter code">
 
