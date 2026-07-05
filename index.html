@@ -134,23 +134,54 @@
             padding:15px;
         }
 
-        /* VERIFY */
         #verifyOverlay{
             position:fixed;
             inset:0;
-            background:rgba(0,0,0,0.9);
+            background:rgba(0,0,0,0.85);
+
             display:flex;
             justify-content:center;
             align-items:center;
-            padding:20px;
+
+            z-index:9999;
         }
 
         .verifyBox{
-            background:#fff;
-            padding:20px;
-            border-radius:10px;
-            max-width:400px;
+            background:nlack;
+            color:#00ff00;
+            padding:25px;
+            border:2px solid #00ff00;
+            width:90%;
+            max-width:420px;
+
+            text-align:center;
+            border-radius:8px;
+        }
+
+        .verifyBox input{
             width:100%;
+            padding:10px;
+            margin-top:10px;
+
+            background:black;
+            color:#00ff00;
+            border:1px solid #00ff00;
+        }
+
+        .verifyBox button{
+            margin-top:15px;
+            width:100%;
+            padding:10px;
+
+            background:black;
+            color:#00ff00;
+            border:1px solid #00ff00;
+            cursor:pointer;
+        }
+
+        .verifyBox label{
+            display:block;
+            margin-top:10px;
         }
 
         /* ADMIN */
@@ -194,6 +225,15 @@
             }
 
         }
+        button{
+            padding:12px 24px;
+            background:linear-gradient(135deg,#6366f1,#8b5cf6);
+            color:white;
+            text-decoration:none;
+            border-radius:12px;
+            font-weight:600;
+            box-shadow:0 4px 12px rgba(99,102,241,.25);
+        }
         /* ===========================
            UPDATE BANNER
         =========================== */
@@ -229,7 +269,8 @@
         }
 
         #updateBanner button:hover{
-            background:#f1f1f1;
+            background:lightblue;
+            text:white;
         }
 
         @keyframes slideDown{
@@ -262,19 +303,52 @@
 
     <button onclick="closeBanner()">Dismiss</button>
 </div>
-<div id="loader-wrapper">
-    <h2 style="color:white;">Loading...</h2>
+<!-- LOADER 1 (Verification Phase) -->
+<div id="loader1" style="
+    position:fixed;
+    inset:0;
+    background:#111;
+    color:pink;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:99991;
+">
+    <h2>Kalps Studio</h2>
+</div>
+
+<!-- LOADER 2 (Final Load) -->
+<div id="loader2" style="
+    position:fixed;
+    inset:0;
+    background:#000;
+    color:#fff;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+">
+    <h2>🚀 Loading Webpage...</h2>
 </div>
 
 <!-- VERIFY -->
 <div id="verifyOverlay">
     <div class="verifyBox">
 
-        <h3>User / Admin Verification</h3>
+        <h3 style="text-align:center;">User / Admin Verification</h3>
 
-        <p>Enter 8409 (user) or Ad@135 (admin)<br> Open admin in one page and use the contact page to see the magic<br><br><i><strong>Note:</strong> This is a static website with no database however it is still reccomended that you don't use your original credentials</i></p>
+        <p>
+            Enter 8409 (user) or Ad@135 (admin)<br>
+            Open admin in one page and use the contact page to see the magic
+            <br><br>
+            <i><strong>Note:</strong> This is a static website with no database however it is still recommended that you don't use your original credentials</i>
+        </p>
+
+        <br><br>
 
         <input id="answer" placeholder="Enter code">
+
+        <br><br>
 
         <label>
             <input type="checkbox" id="robot">
@@ -304,7 +378,7 @@
         <a href="#services">Services</a>
         <a href="#portfolio">Portfolio</a>
         <a href="#contact">Contact</a>
-        <a id="dashboardLink" href="dashboard.html">Dashboard</a>
+        <a id="dashboardLink" href="dashboard.html">Dashboard&raquo;</a>
     </nav>
 </header>
 
@@ -347,9 +421,9 @@
     <h2>Contact</h2>
 
     <form>
-        <input placeholder="Name">
-        <input placeholder="Email">
-        <textarea placeholder="Message"></textarea>
+        <input placeholder="Name"><br>
+        <input placeholder="Email"><br>
+        <textarea placeholder="Message"></textarea><br>
         <button>Send</button>
     </form>
 </section>
@@ -404,14 +478,29 @@
         sessionStorage.clear();
         location.reload();
     }
-
     /* LOADER */
-    window.addEventListener("load",()=>{
-        setTimeout(()=>{
-            document.getElementById("loader-wrapper").style.display="none";
-            document.getElementById("verifyOverlay").style.display="flex";
-        },1500);
-    });
+    window.addEventListener("load", () => {
+
+        // STEP 1 → FIRST LOADER (Verification phase)
+        setTimeout(() => {
+
+            document.getElementById("loader1").style.display = "none";
+
+            // STEP 2 → SECOND LOADER (Final load)
+            document.getElementById("loader2").style.display = "flex";
+
+            setTimeout(() => {
+
+                document.getElementById("loader2").style.display = "none";
+
+                // STEP 3 → SHOW VERIFY POPUP AFTER BOTH LOADERS
+                document.getElementById("verifyOverlay").style.display = "flex";
+
+            }, 1800);
+
+        }, 1500);
+
+    });;
 
 </script>
 
