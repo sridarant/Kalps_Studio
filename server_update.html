@@ -107,15 +107,19 @@ const currentVersion = "1.0.0";
 
 /* ================= LOG ================= */
 function log(msg, cls="line"){
-  const div = document.createElement("div");
-  div.className = cls;
-  div.textContent = "> " + msg;
-  terminal.appendChild(div);
-  terminal.scrollTop = terminal.scrollHeight;
+    const pre = document.createElement("pre");
+    pre.className = cls;
+    pre.style.margin = "0";
+    pre.style.whiteSpace = "pre-wrap";
+    pre.style.fontFamily = "inherit";
+    pre.textContent = msg;
 
-  if(terminal.children.length > 150){
-    terminal.removeChild(terminal.firstChild);
-  }
+    terminal.appendChild(pre);
+    terminal.scrollTop = terminal.scrollHeight;
+
+    if(terminal.children.length > 150){
+        terminal.removeChild(terminal.firstChild);
+    }
 }
 
 /* ================= INIT ================= */
@@ -129,22 +133,42 @@ window.addEventListener("load", () => {
 
 /* ================= BOOT ================= */
 function boot(){
-  const steps = [
-    "Connecting to update server...",
-    "Checking system...",
-    "Ready"
-  ];
 
-  let i = 0;
+    log(`> access://settings
 
-  const t = setInterval(() => {
-    log(steps[i]);
-    i++;
-    if(i >= steps.length){
-      clearInterval(t);
-      checkVersion();
-    }
-  }, 600);
+decrypting configuration...
+
+01010011 01011001 01010011 01010100 01000101 01001101
+
+[████████████████████████████] 100%
+
+CONFIG_LOADED
+SESSION_VERIFIED
+PERMISSIONS_GRANTED
+MODULES_ONLINE
+
+──────────────────────────────
+
+$ git status
+
+On branch production
+Your workspace is clean.
+
+──────────────────────────────
+
+$ npm run studio
+
+✔ Loading Interface
+✔ Initializing Components
+✔ Connecting Services
+✔ Rendering Experience
+
+Application ready.
+
+▌`);
+
+    setTimeout(checkVersion, 1200);
+
 }
 
 /* ================= VERSION ================= */

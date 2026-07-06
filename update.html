@@ -162,6 +162,229 @@
       text-align:center;
     }
 
+    /* Responsive styling */
+    /* ================= RESPONSIVE ================= */
+
+    @media (max-width: 900px){
+
+      body{
+        overflow:auto;
+      }
+
+      #updateBanner{
+        position:fixed;
+        inset:0;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        background:linear-gradient(135deg,#050b18,#0f172a);
+        z-index:9999;
+        padding:20px;
+      }
+
+      #updateBanner select,
+      #updateBanner button{
+        width:100%;
+      }
+
+      .container{
+        position:relative;
+        top:0;
+        left:0;
+        transform:none;
+        width:95%;
+        margin:20px auto;
+        padding:28px;
+        border-radius:18px;
+      }
+
+      .brand{
+        flex-direction:column;
+        text-align:center;
+        margin-bottom:25px;
+      }
+
+      .logo{
+        margin:auto;
+      }
+
+      .title{
+        font-size:20px;
+      }
+
+      .percent{
+        font-size:52px;
+      }
+
+      select,
+      input,
+      button{
+        font-size:16px;
+        padding:15px;
+      }
+    }
+
+    @media (max-width:600px){
+
+      .container{
+        width:100%;
+        margin:0;
+        border-radius:0;
+        min-height:100vh;
+        padding:20px;
+      }
+
+      .title{
+        font-size:18px;
+      }
+
+      .percent{
+        font-size:42px;
+      }
+
+      .logo{
+        width:46px;
+        height:46px;
+        font-size:11px;
+      }
+
+      .modal{
+        width:90%;
+        padding:20px;
+      }
+
+      select,
+      input,
+      button{
+        font-size:15px;
+        padding:14px;
+      }
+    }
+    /*Update card*/
+    .update-card{
+
+      width:100%;
+      max-width:520px;
+
+      background:rgba(15,23,42,.88);
+
+      border:1px solid rgba(255,255,255,.08);
+
+      backdrop-filter:blur(24px);
+
+      border-radius:28px;
+
+      padding:40px;
+
+      box-shadow:
+              0 20px 60px rgba(0,0,0,.45),
+              0 0 60px rgba(0,120,215,.18);
+
+      animation:cardIn .5s ease;
+    }
+
+    .update-icon{
+
+      width:80px;
+      height:80px;
+
+      margin:auto;
+
+      border-radius:20px;
+
+      background:linear-gradient(135deg,#0078d7,#00a2ff);
+
+      display:grid;
+      place-items:center;
+
+      font-size:38px;
+
+      margin-bottom:22px;
+    }
+
+    .subtitle{
+
+      color:#b6c3d7;
+
+      margin:10px 0 30px;
+
+      text-align:center;
+
+      line-height:1.5;
+    }
+
+    #updateText{
+
+      text-align:center;
+
+      margin-bottom:25px;
+
+      color:#8ec5ff;
+
+      font-size:15px;
+    }
+
+    @keyframes cardIn{
+
+      from{
+
+        opacity:0;
+        transform:translateY(20px) scale(.96);
+
+      }
+
+      to{
+
+        opacity:1;
+        transform:none;
+
+      }
+
+    }#updateBanner select{
+
+       background:#0b1220;
+
+       border:1px solid rgba(255,255,255,.08);
+
+       color:white;
+
+       transition:.25s;
+
+     }
+
+    #updateBanner select:focus{
+
+      outline:none;
+
+      border-color:#00a2ff;
+
+      box-shadow:0 0 0 4px rgba(0,162,255,.15);
+
+    }#updateBanner button{
+
+       background:linear-gradient(135deg,#00a2ff,#0078d7);
+
+       color:white;
+
+       font-weight:600;
+
+       transition:.25s;
+
+     }
+
+    #updateBanner button:hover{
+
+      transform:translateY(-2px);
+
+      box-shadow:0 10px 25px rgba(0,162,255,.35);
+
+    }
+
+    #updateBanner button:active{
+
+      transform:scale(.98);
+
+    }
   </style>
 </head>
 
@@ -170,29 +393,44 @@
 <!-- ================= UPDATE CHECK SCREEN ================= -->
 <div id="updateBanner">
 
-  <div id="updateText">
-    🔔 Check for Web update to continue
+  <div class="update-card">
+
+    <div class="update-icon">⚡</div>
+
+    <h1>System Update Check</h1>
+
+    <p class="subtitle">
+      Verify your device before launching the Optimization Engine.
+    </p>
+
+    <div id="updateText">
+      Ready to check for updates.
+    </div>
+
+    <select id="osSelect">
+      <option>Windows</option>
+      <option>macOS</option>
+      <option>Linux</option>
+      <option>Phone</option>
+      <option>Android</option>
+      <option>iOS</option>
+    </select>
+
+    <select id="chipSelect">
+      <option value="">Processor</option>
+    </select>
+
+    <button onclick="checkUpdate()">Check Update</button>
+
+    <div class="check-progress">
+      <div id="checkFill"></div>
+    </div>
+
   </div>
-
-  <select id="osSelect">
-    <option value="">Select OS</option>
-    <option>Windows</option>
-    <option>macOS</option>
-    <option>Linux</option>
-    <option>Android</option>
-    <option>iOS</option>
-  </select>
-
-  <select id="chipSelect">
-    <option value="">Processor</option>
-  </select>
-
-  <button onclick="checkUpdate()">Check Update</button>
 
 </div>
 
-<!-- ================= MAIN SYSTEM (LOCKED FIRST) ================= -->
-
+<!-- ================= MAIN SYSTEM ================= -->
 <div class="container" id="app">
 
   <div class="brand">
@@ -200,108 +438,204 @@
     <div class="title">WEB Optimization Engine</div>
   </div>
 
+  <!-- DEVICE SELECT -->
   <select id="deviceSelect" onchange="toggleCustom()">
-    <!-- Intel -->
+
+    <!-- ================= DESKTOP CPUs ================= -->
 
     <option>Intel® Core™ Ultra 9 285K</option>
-
     <option>Intel® Core™ Ultra 7 265K</option>
-
     <option>Intel® Core™ Ultra 5 245K</option>
 
-
-
     <option>Intel® Core™ i9-14900KS</option>
-
     <option>Intel® Core™ i9-14900K</option>
-
     <option>Intel® Core™ i7-14700K</option>
-
     <option>Intel® Core™ i5-14600K</option>
-
-    <option>Intel® Core&trade; i3-14400K</option>
-
-
+    <option>Intel® Core™ i3-14400K</option>
 
     <option>Intel® Xeon® W9</option>
-
     <option>Intel® Xeon® Platinum</option>
 
-
-
-    <!-- AMD -->
-
     <option>AMD Ryzen™ 9 9950X</option>
-
     <option>AMD Ryzen™ 9 9900X</option>
-
     <option>AMD Ryzen™ 7 9800X3D</option>
-
     <option>AMD Ryzen™ 7 9700X</option>
-
     <option>AMD Ryzen™ 5 9600X</option>
 
-
-
     <option>AMD Threadripper™ PRO 7995WX</option>
-
     <option>AMD EPYC™ 9754</option>
 
-
-
-    <!-- Apple -->
-
     <option>Apple M4 Max</option>
-
     <option>Apple M4 Pro</option>
-
     <option>Apple M3 Ultra</option>
-
     <option>Apple M3 Max</option>
-
     <option>Apple M2 Ultra</option>
-
-
-
-    <!-- Qualcomm -->
 
     <option>Snapdragon® X Elite</option>
     <option>Snapdragon® X Plus</option>
 
-
-
-    <!-- ARM -->
-
     <option>ARM Cortex™ X4</option>
-
     <option>ARM Neoverse™ V2</option>
-
-
-
-    <!-- NVIDIA -->
 
     <option>NVIDIA Grace CPU Superchip</option>
 
-
-
-    <!-- Cloud -->
-
     <option>Azure Virtual Processor</option>
-
     <option>AWS Graviton4</option>
-
     <option>Google Axion ARM CPU</option>
 
-
-
-    <!-- Legacy -->
-
     <option>Intel® Pentium® Gold</option>
-
     <option>Intel® Celeron®</option>
-
     <option>AMD Athlon™</option>
+
+    <!-- ================= PHONES ================= -->
+
+    <optgroup label="📱 Apple">
+      <option>iPhone 16 Pro Max</option>
+      <option>iPhone 16 Pro</option>
+      <option>iPhone 16 Plus</option>
+      <option>iPhone 16</option>
+      <option>iPhone 15 Pro Max</option>
+      <option>iPhone 15 Pro</option>
+      <option>iPhone 15 Plus</option>
+      <option>iPhone 15</option>
+    </optgroup>
+
+    <optgroup label="📱 Samsung">
+      <option>Galaxy S25 Ultra</option>
+      <option>Galaxy S25+</option>
+      <option>Galaxy S25</option>
+      <option>Galaxy S24 Ultra</option>
+      <option>Galaxy Z Fold6</option>
+      <option>Galaxy Z Flip6</option>
+      <option>Galaxy A56</option>
+      <option>Galaxy A36</option>
+    </optgroup>
+
+    <optgroup label="📱 Google">
+      <option>Pixel 9 Pro XL</option>
+      <option>Pixel 9 Pro</option>
+      <option>Pixel 9</option>
+      <option>Pixel 8 Pro</option>
+      <option>Pixel Fold</option>
+    </optgroup>
+
+    <optgroup label="📱 OnePlus">
+      <option>OnePlus 13</option>
+      <option>OnePlus 13R</option>
+      <option>OnePlus 12</option>
+      <option>OnePlus Open</option>
+      <option>Nord 4</option>
+    </optgroup>
+
+    <optgroup label="📱 Xiaomi">
+      <option>Xiaomi 15 Ultra</option>
+      <option>Xiaomi 15</option>
+      <option>Xiaomi 14 Ultra</option>
+      <option>Redmi Note 14 Pro+</option>
+      <option>Redmi Turbo 4</option>
+    </optgroup>
+
+    <optgroup label="📱 Nothing">
+      <option>Nothing Phone (3)</option>
+      <option>Nothing Phone (3a)</option>
+      <option>Nothing Phone (2)</option>
+      <option>CMF Phone 2 Pro</option>
+    </optgroup>
+
+    <optgroup label="📱 Motorola">
+      <option>Edge 60 Ultra</option>
+      <option>Edge 60 Pro</option>
+      <option>Razr 60 Ultra</option>
+      <option>Moto G Power</option>
+    </optgroup>
+
+    <optgroup label="📱 Sony">
+      <option>Xperia 1 VII</option>
+      <option>Xperia 5 V</option>
+      <option>Xperia 10 VI</option>
+    </optgroup>
+
+    <optgroup label="📱 ASUS">
+      <option>ROG Phone 9 Pro</option>
+      <option>ROG Phone 9</option>
+      <option>Zenfone 12 Ultra</option>
+    </optgroup>
+
+    <optgroup label="📱 Huawei">
+      <option>Pura 80 Ultra</option>
+      <option>Pura 80 Pro</option>
+      <option>Mate X6</option>
+      <option>Mate 70 Pro</option>
+    </optgroup>
+
+    <optgroup label="📱 Honor">
+      <option>Magic7 Pro</option>
+      <option>Magic V3</option>
+      <option>Honor 400 Pro</option>
+    </optgroup>
+
+    <optgroup label="📱 OPPO">
+      <option>Find X8 Ultra</option>
+      <option>Find X8 Pro</option>
+      <option>Reno14 Pro</option>
+      <option>Reno14</option>
+    </optgroup>
+
+    <optgroup label="📱 Vivo">
+      <option>X200 Ultra</option>
+      <option>X200 Pro</option>
+      <option>V50 Pro</option>
+      <option>V50</option>
+    </optgroup>
+
+    <optgroup label="📱 Realme">
+      <option>GT 7 Pro</option>
+      <option>GT 7</option>
+      <option>Realme 14 Pro+</option>
+      <option>Realme Narzo 80</option>
+    </optgroup>
+
+    <optgroup label="📱 POCO">
+      <option>POCO F7 Ultra</option>
+      <option>POCO F7 Pro</option>
+      <option>POCO X7 Pro</option>
+      <option>POCO M7</option>
+    </optgroup>
+
+    <optgroup label="📱 Infinix">
+      <option>GT 30 Pro</option>
+      <option>Note 50 Pro+</option>
+      <option>Zero Flip</option>
+    </optgroup>
+
+    <optgroup label="📱 Tecno">
+      <option>Phantom Ultimate 2</option>
+      <option>Camon 40 Premier</option>
+      <option>Pova 7 Ultra</option>
+    </optgroup>
+
+    <optgroup label="📱 Nubia">
+      <option>RedMagic 10 Pro</option>
+      <option>RedMagic Nova</option>
+      <option>Z70 Ultra</option>
+    </optgroup>
+
+    <optgroup label="📱 Lenovo">
+      <option>Legion Y90</option>
+      <option>ThinkPhone 25</option>
+      <option>Legion Halo</option>
+    </optgroup>
+
+    <optgroup label="📱 HMD / Nokia">
+      <option>HMD Skyline</option>
+      <option>HMD Pulse Pro</option>
+      <option>Nokia XR21</option>
+      <option>Nokia G60</option>
+    </optgroup>
+
+    <!-- ONLY ONE CUSTOM -->
     <option value="custom">Custom Device</option>
+
   </select>
 
   <input id="customName" placeholder="Device name">
@@ -310,7 +644,6 @@
   <button onclick="startUpdate()">Start Optimization</button>
 
   <div class="update" id="update">
-
     <div class="percent" id="percent">0%</div>
     <div class="status" id="status">Initializing...</div>
 
@@ -319,13 +652,11 @@
     </div>
 
     <div id="deviceName"></div>
-
   </div>
 
 </div>
 
 <!-- ================= POPUP ================= -->
-
 <div class="popup" id="popup">
   <div class="modal">
     <h2>Optimization Complete</h2>
@@ -333,6 +664,7 @@
   </div>
 </div>
 
+</body>
 <script>
 
   /* ================= UPDATE LOGIC ================= */
@@ -344,17 +676,86 @@
 
     chipSelect.innerHTML = '<option value="">Processor</option>';
 
-    let chips = ["Any"];
+    let chips = [];
 
-    if(osSelect.value==="Windows") chips=["Intel","AMD"];
-    if(osSelect.value==="macOS") chips=["Apple Silicon","Intel"];
-    if(osSelect.value==="Linux") chips=["AMD","Intel","ARM"];
-    if(osSelect.value==="Android") chips=["Snapdragon","MediaTek"];
-    if(osSelect.value==="iOS") chips=["A-Series"];
+    switch(osSelect.value){
 
-    chips.forEach(c=>{
-      let opt=document.createElement("option");
-      opt.textContent=c;
+      case "Windows":
+        chips = [
+          "Intel",
+          "AMD",
+          "Qualcomm Snapdragon X",
+          "Any"
+        ];
+        break;
+
+      case "macOS":
+        chips = [
+          "Apple Silicon",
+          "Intel"
+        ];
+        break;
+
+      case "Linux":
+        chips = [
+          "Intel",
+          "AMD",
+          "ARM",
+          "RISC-V"
+        ];
+        break;
+
+      case "Phone":
+        chips = [
+          "Apple",
+          "Samsung",
+          "Google",
+          "OnePlus",
+          "Xiaomi",
+          "Nothing",
+          "Motorola",
+          "Sony",
+          "ASUS",
+          "Huawei",
+          "Honor",
+          "OPPO",
+          "Vivo",
+          "Realme",
+          "POCO",
+          "Infinix",
+          "Tecno",
+          "Nubia",
+          "Lenovo",
+          "HMD / Nokia"
+        ];
+        break;
+
+      case "Android":
+        chips = [
+          "Snapdragon",
+          "MediaTek",
+          "Tensor",
+          "Exynos",
+          "Dimensity"
+        ];
+        break;
+
+      case "iOS":
+        chips = [
+          "A18 Pro",
+          "A18",
+          "A17 Pro",
+          "A16 Bionic"
+        ];
+        break;
+
+      default:
+        chips = [];
+    }
+
+    chips.forEach(c => {
+      const opt = document.createElement("option");
+      opt.textContent = c;
       chipSelect.appendChild(opt);
     });
 

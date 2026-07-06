@@ -134,7 +134,7 @@
       let role = getRole();
 
       if(p[0] === "help"){
-        print("theme | toggle theme | title | time | date | clear | update | update status | update check | update --force");
+        print("theme | toggle theme | title | time | date | clear | update | update status | update check | update --force | update server");
         return;
       }
 
@@ -184,6 +184,14 @@
           print("Opening update checker...");
           setTimeout(() => {
             window.location.href = "update.html";
+          }, 800);
+          return;
+        }
+
+        if(p[1] === "server"){
+          print("Opening server updates...");
+          setTimeout(() => {
+            window.location.href = "server_update.html";
           }, 800);
           return;
         }
@@ -247,9 +255,99 @@
 
         document.getElementById("loader-wrapper").style.display = "none";
         document.getElementById("main-content").style.display = "block";
+        function print(msg){
+          const con = document.getElementById("console");
 
-        print("System loaded...");
-        print("Type help");
+          const pre = document.createElement("pre");
+          pre.style.margin = "0";
+          pre.style.whiteSpace = "pre-wrap";
+          pre.style.fontFamily = "inherit";
+          pre.textContent = msg;
+
+          con.appendChild(pre);
+          con.scrollTop = con.scrollHeight;
+        }
+        print(`root@kalpstudio:~$ boot --secure --ui=settings
+
+[00:00.012] Loading kernel ........................................... OK
+[00:00.031] Reading configuration .................................... OK
+[00:00.049] Verifying user identity .................................. VERIFIED
+[00:00.073] Initializing creative engine .............................. READY
+[00:00.095] Mounting local workspace .................................. COMPLETE
+[00:00.116] Synchronizing cloud preferences ........................... COMPLETE
+[00:00.131] Encrypting communication channel .......................... AES-256
+[00:00.147] Checking system integrity ................................. PASSED
+[00:00.162] Loading plugins .......................................... 17/17
+[00:00.188] Rendering interface ....................................... READY
+
+──────────────────────────────────────────────────────────────────────────────
+
+matrix://identity
+
+01101011 01100001 01101100 01110000
+01110011 00101101 01110011 01110100
+01110101 01100100 01101001 01101111
+
+DECRYPTING.................................................... COMPLETE
+
+> ACCESS LEVEL      : ADMINISTRATOR
+> SESSION TOKEN     : VERIFIED
+> SECURITY PROFILE  : GREEN
+> WORKSPACE         : KALP'S STUDIO
+
+──────────────────────────────────────────────────────────────────────────────
+
+SYSTEM SETTINGS
+
+Theme               : Dark
+Accent              : Amber
+Language            : English
+Notifications       : Enabled
+Auto Save           : Enabled
+Cloud Sync          : Active
+Offline Cache       : Healthy
+Rendering Engine    : GPU Accelerated
+Memory Usage        : 182 MB
+Network Latency     : 08 ms
+Build               : v3.7.12
+
+──────────────────────────────────────────────────────────────────────────────
+
+$ system.scan
+
+✓ User Preferences Loaded
+✓ Environment Variables Loaded
+✓ Creative Assets Verified
+✓ API Connections Healthy
+✓ Storage Integrity Passed
+✓ Background Services Running
+✓ AI Assistance Available
+
+No anomalies detected.
+
+──────────────────────────────────────────────────────────────────────────────
+
+$ git status
+
+On branch production
+Your workspace is clean.
+
+$ npm run settings
+
+✔ Loading Components
+✔ Compiling Interface
+✔ Injecting Theme
+✔ Applying Permissions
+✔ Starting Background Services
+
+Application ready.
+
+──────────────────────────────────────────────────────────────────────────────
+
+root@kalpstudio:~$ _`);
+        print("READY_")
+        print("case sensitive terminal")
+        print("root@kalpstudio:~$ _Ready_ for_use._")
 
       }, 1500);
 
