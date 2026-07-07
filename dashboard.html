@@ -15,25 +15,157 @@
 <style>
 /*======================navbar=====================*/
 
+/* ================= NAVBAR ================= */
+
 .navbar{
-    width:100%;
-    background:#555;
+
+    position:sticky;
+    top:0;
+
     display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:14px 40px;
+
+    background:rgba(15,23,42,.75);
+
+    backdrop-filter:blur(18px);
+
+    border-bottom:1px solid rgba(255,255,255,.08);
+
+    z-index:1000;
+
+}
+
+.logo{
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    font-size:24px;
+    font-weight:bold;
+
+    color:#fff;
+
+}
+
+.logo span{
+
+    color:#f97316;
+
+}
+
+.nav-links{
+
+    display:flex;
+    align-items:center;
+    gap:8px;
+
     flex-wrap:wrap;
-    justify-content:center;
+
 }
 
-.navbar a{
-    padding:14px 18px;
+.nav-links a{
+
+    display:flex;
+    align-items:center;
+    gap:8px;
+
     color:white;
+
     text-decoration:none;
-    font-size:16px;
+
+    padding:10px 16px;
+
+    border-radius:10px;
+
+    transition:.3s;
+
+    font-size:15px;
+
 }
 
-.navbar a:hover{
-    background:black;
+.nav-links a:hover{
+
+    background:rgba(249,115,22,.15);
+
+    color:#f97316;
+
+    transform:translateY(-2px);
+
 }
 
+.nav-links a.active{
+
+    background:#f97316;
+
+    color:white;
+
+}
+
+.nav-links a i{
+
+    font-size:15px;
+
+}
+@media (max-width:900px){
+
+    .navbar{
+
+        flex-direction:column;
+
+        gap:20px;
+
+        padding:20px;
+
+    }
+
+    .nav-links{
+
+        justify-content:center;
+
+    }
+
+}
+
+@media (max-width:600px){
+
+    .nav-links{
+
+        width:100%;
+        display:grid;
+
+        grid-template-columns:1fr 1fr;
+
+        gap:10px;
+
+    }
+
+    .nav-links a{
+
+        justify-content:center;
+
+    }
+
+    .logo{
+
+        font-size:22px;
+
+    }
+
+}
+
+@media (max-width:420px){
+
+    .nav-links{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
 
 /*================ Loader ==================================*/
 #loader-wrapper {
@@ -177,37 +309,100 @@ header h2{
 }
 
 /* ================= QUIZ BANNER ================= */
-.quiz-banner{
-    width:100%;
-    padding:25px;
-    overflow:hidden;
+/*.quiz-banner{*/
+/*    width:100%;*/
+/*    padding:25px;*/
+/*    overflow:hidden;*/
+/*}*/
+
+/*.quiz-content{*/
+/*    width:100%;*/
+/*}*/
+
+/*.quiz-banner::after{*/
+/*    content:"";*/
+/*    position:absolute;*/
+/*    top:-50%;*/
+/*    left:-50%;*/
+/*    width:200%;*/
+/*    height:200%;*/
+/*    background: radial-gradient(circle, rgba(249,115,22,0.25), transparent 60%);*/
+/*    animation: glow 6s linear infinite;*/
+/*}*/
+
+/*@keyframes glow{*/
+/*    0%{transform:rotate(0deg);}*/
+/*    100%{transform:rotate(360deg);}*/
+/*}*/
+
+/*.quiz-content{*/
+/*    position:relative;*/
+/*    z-index:2;*/
+/*}*/
+.questionCard{
+    background:rgba(255,255,255,.05);
+    backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:20px;
+    padding:35px;
+    max-width:850px;
+    margin:auto;
+    animation:fade .35s;
+}
+.option{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    margin:14px 0;
+
+    padding:18px;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    border:2px solid transparent;
+
+    background:rgba(255,255,255,.05);
+
 }
 
+.option:hover{
+
+    transform:translateX(8px);
+
+    background:rgba(249,115,22,.12);
+
+}
+
+.option.selected{
+
+    border-color:#f97316;
+
+    background:rgba(249,115,22,.18);
+
+}
+.quizButtons{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-top:30px;
+
+    gap:20px;
+
+}
 .quiz-content{
-    width:100%;
+    max-width:900px;
+    margin:auto;
 }
-
-.quiz-banner::after{
-    content:"";
-    position:absolute;
-    top:-50%;
-    left:-50%;
-    width:200%;
-    height:200%;
-    background: radial-gradient(circle, rgba(249,115,22,0.25), transparent 60%);
-    animation: glow 6s linear infinite;
-}
-
-@keyframes glow{
-    0%{transform:rotate(0deg);}
-    100%{transform:rotate(360deg);}
-}
-
-.quiz-content{
-    position:relative;
-    z-index:2;
-}
-
 /* ================= BUTTON ================= */
 button{
     width:auto;
@@ -248,10 +443,21 @@ button{
     margin-top:10px;
 }
 
-input{
+input[type=text]{
     width:100%;
     max-width:100%;
     font-size:16px;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #ccc;
+}
+
+input[type=radio]{
+    width:20px;
+    height:20px;
+    accent-color:#f97316;
+    flex-shrink:0;
+    cursor:pointer;
 }
 
 button:hover{
@@ -352,6 +558,19 @@ button:hover{
         border-top:1px solid rgba(255,255,255,.08);
     }
 
+    @keyframes fade{
+
+        from{
+            opacity:0;
+            transform:translateY(20px);
+        }
+
+        to{
+            opacity:1;
+            transform:translateY(0);
+        }
+
+    }
 }
 img,
  video,
@@ -360,6 +579,216 @@ img,
      height:auto;
      display:block;
  }
+/*           Progress          */
+.progress{
+    width:100%;
+    height:12px;
+    background:rgba(255,255,255,.1);
+    border-radius:20px;
+    overflow:hidden;
+    margin:20px 0;
+}
+
+#progressBar{
+    width:0%;
+    height:100%;
+    background:linear-gradient(90deg,#f97316,#fb923c);
+    transition:.5s;
+}
+/*              membership              */
+.membership-banner{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:40px;
+
+    margin-bottom:30px;
+    padding:30px;
+
+    border-radius:20px;
+
+    background:
+            linear-gradient(135deg,
+            rgba(249,115,22,.18),
+            rgba(59,130,246,.18));
+
+    border:1px solid rgba(255,255,255,.12);
+
+    backdrop-filter:blur(16px);
+
+    box-shadow:0 20px 40px rgba(0,0,0,.25);
+
+}
+
+.membership-info{
+
+    flex:1;
+
+}
+
+.badge{
+
+    display:inline-block;
+
+    background:#f97316;
+
+    color:white;
+
+    padding:6px 14px;
+
+    border-radius:20px;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    margin-bottom:15px;
+
+}
+
+.membership-info h2{
+
+    font-size:32px;
+
+    margin-bottom:12px;
+
+}
+
+.membership-info p{
+
+    color:#ddd;
+
+    line-height:1.7;
+
+    margin-bottom:20px;
+
+}
+
+.membership-features{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+
+}
+
+.membership-features span{
+
+    background:rgba(255,255,255,.08);
+
+    padding:10px 14px;
+
+    border-radius:30px;
+
+    font-size:14px;
+
+}
+
+.membership-action{
+
+    text-align:center;
+
+    min-width:220px;
+
+}
+
+.price{
+
+    margin-bottom:20px;
+
+}
+
+.old-price{
+
+    color:#aaa;
+
+    text-decoration:line-through;
+
+    font-size:18px;
+
+}
+
+.price h1{
+
+    font-size:52px;
+
+    color:#fff;
+
+    margin:5px 0;
+
+}
+
+.price small{
+
+    color:#ccc;
+
+}
+
+.upgrade-btn{
+
+    display:inline-block;
+
+    padding:14px 28px;
+
+    border-radius:12px;
+
+    background:#f97316;
+
+    color:white;
+
+    text-decoration:none;
+
+    font-weight:bold;
+
+    transition:.3s;
+
+}
+
+.upgrade-btn:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:0 12px 25px rgba(249,115,22,.45);
+
+}
+@media (max-width:768px){
+
+    .membership-banner{
+
+        flex-direction:column;
+
+        text-align:center;
+
+    }
+
+    .membership-info h2{
+
+        font-size:26px;
+
+    }
+
+    .membership-features{
+
+        justify-content:center;
+
+    }
+
+    .membership-action{
+
+        width:100%;
+
+    }
+
+    .upgrade-btn{
+
+        width:100%;
+
+    }
+
+}
 </style>
 </head>
 
@@ -370,30 +799,100 @@ img,
 
 <div id="main-content" style="display: none;">
 <!-- ================= HEADER ================= -->
-<div class="navbar">
-  <a class="active" href="Index.html"><i class="fa fa-fw fa-home"></i> Home</a>
-  <a href="shop.html">📦 Shop</a>
-  <a href="cart.html">🛍️ Cart</a>
-  <a href="checkout.html">💳 Checkout</a>
-  <a href="privacy.html">🛡️Privacy Policy</a>
-  <a href="contact.html">✉ Contact us</a>
-  <a href="about.html">ℹ️About us</a>
-    <a href="game.html">🎮 Games</a>
-</div>
+    <nav class="navbar">
+
+        <div class="logo">
+            🎨 <span>Kalps Studio</span>
+        </div>
+
+        <div class="nav-links">
+            <a class="active" href="Index.html">
+                <i class="fa fa-home"></i> Home
+            </a>
+
+            <a href="shop.html">
+                <i class="fa fa-shopping-bag"></i> Shop
+            </a>
+
+            <a href="cart.html">
+                <i class="fa fa-shopping-cart"></i> Cart
+            </a>
+
+            <a href="checkout.html">
+                <i class="fa fa-credit-card"></i> Checkout
+            </a>
+
+            <a href="game.html">
+                <i class="fa fa-gamepad"></i> Games
+            </a>
+
+            <a href="about.html">
+                <i class="fa fa-info-circle"></i> About
+            </a>
+
+            <a href="contact.html">
+                <i class="fa fa-envelope"></i> Contact
+            </a>
+
+            <a href="privacy.html">
+                <i class="fa fa-shield"></i> Privacy
+            </a>
+        </div>
+
+    </nav>
 <header>
-    <h2>Kalps Studio Dashboard</h2>
+    <h1><b><strong><u>Dashboard</u></strong></b></h1>
 </header>
 <div class="container">
 
-<div class="quiz-banners">
-	<p>Upgrade to Beta for many more features. 24 days free! <a href="plans.html">Learn more.</a>
-</div>
+
     <!-- WELCOME -->
     <div class="welcome">
         <h2>Welcome to Your Creative Dashboard</h2>
         <p>Explore tools, quizzes, and analytics</p>
     </div>
+    <div class="membership-banner">
 
+        <div class="membership-info">
+
+            <span class="badge">⭐ LIMITED OFFER</span>
+
+            <h2>Unlock Kalps Studio Gold</h2>
+
+            <p>
+                Get <strong>24 days FREE</strong> and enjoy premium tools,
+                unlimited quizzes, advanced analytics, exclusive games,
+                and early access to upcoming features.
+            </p>
+
+            <div class="membership-features">
+                <span>🚀 Unlimited Quizzes</span>
+                <span>📊 Analytics Dashboard</span>
+                <span>🎮 Exclusive Games</span>
+                <span>✨ Early Beta Access</span>
+            </div>
+
+        </div>
+
+        <div class="membership-action">
+
+            <div class="price">
+
+                <span class="old-price">₹499</span>
+
+                <h1>₹369</h1>
+
+                <small>Only ₹1/day</small>
+
+            </div>
+
+            <a href="plans.html" class="upgrade-btn">
+                Upgrade Now →
+            </a>
+
+        </div>
+
+    </div>
     <!-- ================= QUIZ BANNER ================= -->
     <div class="quiz-banner" id="quizBanner">
 
@@ -401,7 +900,35 @@ img,
 
 			<h2>🧠 Creative Quiz Challenge</h2>
 			<p>Answer the questions below</p>
+            <div class="progress">
 
+                <div id="progressBar"></div>
+
+            </div>
+
+            <p id="progressText"></p>
+            <div class="questionCard">
+
+                <h2 id="questionTitle"></h2>
+
+                <div id="options"></div>
+
+            </div>
+            <div class="quizButtons">
+
+                <button onclick="previousQuestion()">
+
+                    ⬅ Previous
+
+                </button>
+
+                <button onclick="nextQuestion()" id="nextBtn">
+
+                    Next ➜
+
+                </button>
+
+            </div>
             <div id="quizContainer" class="quiz-grid"></div>
 
 				<div style="margin-top:15px;">
@@ -439,7 +966,7 @@ img,
 		<label for card number>Card Number :</label>
         <input type="text" id="cardNumber" placeholder="1234-5678-9012-3456" maxlength="19">
 		<label for Name on Card>Name on Card :</label>
-        <input id="name" placeholder="Srivats Sridaran">
+        <input type="text" id="name" placeholder="Srivats Sridaran"><br><br>
 
         <button onclick="payNow()">Pay Securely</button>
 
@@ -448,7 +975,9 @@ img,
     </div>
 
 </div>
-
+<footer>
+    <p> &copy; Srivats Sridaran. All rights reserved</p>
+</footer>
 <!-- ================= JS ================= -->
 <script>
 //Card input
@@ -496,7 +1025,7 @@ const allQuestions = [
   {q:"AI stands for?", options:["Artificial Intelligence","Auto Input","Active Info"], answer:"Artificial Intelligence"},
   {q:"RAM is for?", options:["Memory","CPU","Disk"], answer:"Memory"}
 ];
-
+/*
 let currentIndex = 0;
 let answers = {};
 
@@ -557,33 +1086,139 @@ function prevSet(){
     loadQuestions();
   }
 }
+*/
+let current = 0;
 
-function saveAnswers(){
-  document.querySelectorAll("input[type=radio]:checked").forEach(el=>{
-    let qNum = el.name.replace("q","");
-    answers[qNum] = el.value;
-  });
+let answers = new Array(allQuestions.length).fill(null);
+
+function showQuestion(){
+
+    const q = allQuestions[current];
+
+    document.getElementById("questionTitle").innerHTML=
+
+        `Question ${current+1} of ${allQuestions.length}<br><br>${q.q}`;
+
+    const options=document.getElementById("options");
+
+    options.innerHTML="";
+
+    q.options.forEach(option=>{
+
+        const div=document.createElement("div");
+
+        div.className="option";
+
+        if(answers[current]==option)
+
+            div.classList.add("selected");
+
+        div.innerHTML=`
+
+<input
+type="radio"
+name="question${current}"
+${answers[current]==option?"checked":""}
+>
+
+<span>${option}</span>
+
+`
+        document.querySelector(".quizButtons button").style.visibility =
+            current===0 ? "hidden" : "visible";
+
+        const next=document.getElementById("nextBtn");
+
+        next.innerHTML =
+            current===allQuestions.length-1
+                ?
+                "Finish Quiz 🎉"
+                :
+                "Next ➜";
+;
+
+        div.onclick=()=>{
+
+            answers[current]=option;
+
+            showQuestion();
+
+        };
+
+        options.appendChild(div);
+
+    });
+
+    updateProgress();
+
 }
+
+function updateProgress(){
+
+    let percent=((current+1)/allQuestions.length)*100;
+
+    document.getElementById("progressBar").style.width=percent+"%";
+
+    document.getElementById("progressText").innerHTML=
+
+        `Question ${current+1} / ${allQuestions.length}`;
+
+}
+
+function nextQuestion(){
+
+    if(current<allQuestions.length-1){
+
+        current++;
+
+        showQuestion();
+
+    }
+
+    else{
+
+        submitQuiz();
+
+    }
+
+}
+
+function previousQuestion(){
+
+    if(current>0){
+
+        current--;
+
+        showQuestion();
+
+    }
+
+}
+
 
 function submitQuiz(){
-  saveAnswers();
 
-  let score = 0;
+    let score = 0;
 
-  allQuestions.forEach((q, i)=>{
-    if(answers[i] === q.answer){
-      score++;
-    }
-  });
+    allQuestions.forEach((q,i)=>{
 
-  document.getElementById("paymentPage").style.display = "flex";
-  document.getElementById("status").innerText = "";
+        if(answers[i]===q.answer){
 
-  window.finalScore = score; // store globally
+            score++;
+
+        }
+
+    });
+
+    window.finalScore = score;
+
+    document.getElementById("paymentPage").style.display="flex";
+
+    document.getElementById("status").innerHTML="";
+
 }
 
-// load first 5
-loadQuestions();
+showQuestion();
 
 /* ================= PAYMENT FLOW ================= */
 function payNow(){
