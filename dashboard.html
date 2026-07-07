@@ -3,6 +3,7 @@
 
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
 
@@ -14,33 +15,23 @@
 <style>
 /*======================navbar=====================*/
 
-.navbar {
-  width: 100%;
-  background-color: #555;
-  overflow: auto;
+.navbar{
+    width:100%;
+    background:#555;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
 }
 
-.navbar a {
-  float: left;
-  padding: 12px;
-  color: white;
-  text-decoration: none;
-  font-size: 17px;
+.navbar a{
+    padding:14px 18px;
+    color:white;
+    text-decoration:none;
+    font-size:16px;
 }
 
-.navbar a:hover {
-  background-color: #000;
-}
-
-.active {
-  background-color: #04AA6D;
-}
-
-@media screen and (max-width: 500px) {
-  .navbar a {
-    float: none;
-    display: block;
-  }
+.navbar a:hover{
+    background:black;
 }
 
 
@@ -156,18 +147,24 @@ body::before{
 
 /* ================= HEADER ================= */
 header{
-    padding:20px 40px;
+    padding:20px;
     display:flex;
     justify-content:space-between;
     align-items:center;
-    background:rgba(255,255,255,0.04);
-    backdrop-filter: blur(12px);
-    border-bottom:1px solid rgba(255,255,255,0.08);
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+header h2{
+    font-size:1.8rem;
 }
 
 /* ================= MAIN ================= */
 .container{
-    padding:40px;
+    width:100%;
+    max-width:1200px;
+    margin:auto;
+    padding:30px;
 }
 
 /* WELCOME */
@@ -181,13 +178,13 @@ header{
 
 /* ================= QUIZ BANNER ================= */
 .quiz-banner{
+    width:100%;
     padding:25px;
-    background: linear-gradient(135deg, rgba(249,115,22,0.15), rgba(59,130,246,0.15));
-    border:1px solid rgba(255,255,255,0.1);
-    border-radius:16px;
-    backdrop-filter: blur(12px);
-    position:relative;
     overflow:hidden;
+}
+
+.quiz-content{
+    width:100%;
 }
 
 .quiz-banner::after{
@@ -213,12 +210,10 @@ header{
 
 /* ================= BUTTON ================= */
 button{
-    padding:10px 16px;
-    background:#f97316;
-    border:none;
-    color:white;
-    cursor:pointer;
-    border-radius:8px;
+    width:auto;
+    min-height:44px;
+    padding:12px 20px;
+    font-size:16px;
 }
 
 /* ================= PAYMENT PAGE ================= */
@@ -233,11 +228,12 @@ button{
 }
 
 .payBox{
-    width:380px;
-    background:white;
-    color:black;
+    width:min(95%,420px);
+    background:#fff;
+    color:#111;
     padding:25px;
     border-radius:16px;
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
 }
 
 .planCard{
@@ -254,10 +250,8 @@ button{
 
 input{
     width:100%;
-    padding:10px;
-    margin:8px 0;
-    border-radius:8px;
-    border:1px solid #ddd;
+    max-width:100%;
+    font-size:16px;
 }
 
 button:hover{
@@ -271,6 +265,101 @@ button:hover{
   max-height: 500px;
   overflow-y: auto;
 }
+/* ================= MOBILE ================= */
+
+@media (max-width:768px){
+
+    header{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    header h2{
+        font-size:1.5rem;
+    }
+
+    .container{
+        padding:20px;
+    }
+
+    .welcome,
+    .quiz-banner{
+        padding:18px;
+    }
+
+    .quiz-banner h2{
+        font-size:22px;
+    }
+
+    .quiz-banner p{
+        font-size:15px;
+    }
+
+    .planCard h1{
+        font-size:28px;
+    }
+
+    button{
+        width:100%;
+    }
+
+    #gearBtn{
+        bottom:15px;
+        right:15px;
+    }
+
+}
+
+/* ================= SMALL PHONES ================= */
+
+@media (max-width:480px){
+
+    .container{
+        padding:15px;
+    }
+
+    header h2{
+        font-size:1.25rem;
+    }
+
+    .quiz-banner h2{
+        font-size:20px;
+    }
+
+    .quiz-banner p{
+        font-size:14px;
+    }
+
+    .welcome h2{
+        font-size:22px;
+    }
+
+    .planCard{
+        padding:12px;
+    }
+
+    .planCard h1{
+        font-size:24px;
+    }
+
+    .payBox{
+        padding:18px;
+    }
+
+    .navbar a{
+        width:100%;
+        text-align:center;
+        border-top:1px solid rgba(255,255,255,.08);
+    }
+
+}
+img,
+ video,
+ iframe{
+     max-width:100%;
+     height:auto;
+     display:block;
+ }
 </style>
 </head>
 
@@ -294,7 +383,6 @@ button:hover{
 <header>
     <h2>Kalps Studio Dashboard</h2>
 </header>
-<span class="loader"></span>
 <div class="container">
 
 <div class="quiz-banners">
@@ -314,7 +402,7 @@ button:hover{
 			<h2>🧠 Creative Quiz Challenge</h2>
 			<p>Answer the questions below</p>
 
-			<div id="quizContainer"></div>
+            <div id="quizContainer" class="quiz-grid"></div>
 
 				<div style="margin-top:15px;">
 			</div>
@@ -413,28 +501,45 @@ let currentIndex = 0;
 let answers = {};
 
 function loadQuestions(){
-  let container = document.getElementById("quizContainer");
-  container.innerHTML = "";
 
-  let slice = allQuestions.slice(currentIndex, currentIndex + 5);
+    const container=document.getElementById("quizContainer");
 
-  slice.forEach((q, i) => {
-    let qIndex = currentIndex + i;
+    container.innerHTML="";
 
-    let html = `<p>${qIndex+1}. ${q.q}</p>`;
+    const slice=allQuestions.slice(currentIndex,currentIndex+5);
 
-    q.options.forEach(opt => {
-      html += `
-        <label>
-          <input type="radio" name="q${qIndex}" value="${opt}"
-          ${answers[qIndex] === opt ? "checked" : ""}>
-          ${opt}
-        </label>
-      `;
+    slice.forEach((q,i)=>{
+
+        const index=currentIndex+i;
+
+        let html=`
+        <div class="question-card">
+            <h3>${index+1}. ${q.q}</h3>
+        `;
+
+        q.options.forEach(option=>{
+
+            html+=`
+            <label class="option">
+                <input
+                    type="radio"
+                    name="q${index}"
+                    value="${option}"
+                    ${answers[index]===option?"checked":""}
+                >
+
+                <span>${option}</span>
+
+            </label>
+            `;
+        });
+
+        html+="</div>";
+
+        container.innerHTML+=html;
+
     });
 
-    container.innerHTML += html + "<br>";
-  });
 }
 
 function nextSet(){
@@ -485,7 +590,7 @@ function payNow(){
 
     let status = document.getElementById("status");
 
-    if(!document.getElementById("card").value ||
+    if(!document.getElementById("cardNumber").value ||
        !document.getElementById("name").value){
         status.innerText = "Please fill payment details";
         alert("Sorry, Function is unavailabe, please navigate to the plans page")
@@ -526,7 +631,7 @@ function showResult(){
     let msg =
     `🎉 Membership Unlocked!
 
-Your Score: ${score}/2
+Your Score: ${window.finalScore}/${allQuestions.length}
 Membership Status: Gold Membership`;
 
     alert(msg);
