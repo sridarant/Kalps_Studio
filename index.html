@@ -18,11 +18,16 @@
             font-family:'Poppins',sans-serif;
         }
 
+        html{
+            scroll-behavior:smooth;
+        }
+        
         body{
             line-height:1.6;
             background:#fff;
             color:#333;
             overflow-x:hidden;
+            top-padding:60px;
         }
 
         /* LOADER */
@@ -191,8 +196,43 @@
             background:rgba(0,0,0,.35);
             backdrop-filter:blur(8px);
         }
+        .hero button{
+            padding:12px 28px;
+            border:none;
+            border-radius:12px;
+            background:linear-gradient(135deg,#6366f1,#8b5cf6);
+            color:#fff;
+            font-weight:600;
+            cursor:pointer;
+            transition:.3s;
+        }
+
+        .hero button:hover{
+            transform:translateY(-2px);
+            box-shadow:0 8px 20px rgba(99,102,241,.35);
+        }
 
         /* HEADER */
+        /*header{*/
+        /*    position:sticky;*/
+        /*    top:60px;*/
+        /*    top:60px;*/
+        /*    z-index:1000;*/
+
+        /*    display:flex;*/
+        /*    justify-content:space-between;*/
+        /*    align-items:center;*/
+
+        /*    padding:18px 45px;*/
+
+        /*    background:rgba(17,17,17,.82);*/
+
+        /*    backdrop-filter:blur(18px);*/
+
+        /*    border-bottom:1px solid rgba(255,255,255,.08);*/
+
+        /*    box-shadow:0 8px 25px rgba(0,0,0,.18);*/
+        /*}*/
         header{
             position:sticky;
             top:0;
@@ -201,15 +241,14 @@
             display:flex;
             justify-content:space-between;
             align-items:center;
+            flex-wrap:wrap;
 
-            padding:18px 45px;
+            padding:16px 8%;
 
-            background:rgba(17,17,17,.82);
-
+            background:rgba(17,17,17,.9);
             backdrop-filter:blur(18px);
 
             border-bottom:1px solid rgba(255,255,255,.08);
-
             box-shadow:0 8px 25px rgba(0,0,0,.18);
         }
 
@@ -354,22 +393,22 @@
         }
 
         /* MOBILE */
-        @media(max-width:600px){
+        /*@media(max-width:600px){*/
 
-            header{
-                flex-direction:column;
-                text-align:center;
-            }
+        /*    header{*/
+        /*        flex-direction:column;*/
+        /*        text-align:center;*/
+        /*    }*/
 
-            .cards{
-                flex-direction:column;
-            }
+        /*    .cards{*/
+        /*        flex-direction:column;*/
+        /*    }*/
 
-            .hero{
-                height:50vh;
-            }
+        /*    .hero{*/
+        /*        height:50vh;*/
+        /*    }*/
 
-        }
+        /*}*/
         button{
             padding:12px 24px;
             background:linear-gradient(135deg,#6366f1,#8b5cf6);
@@ -378,6 +417,25 @@
             border-radius:12px;
             font-weight:600;
             box-shadow:0 4px 12px rgba(99,102,241,.25);
+        }
+        @media (max-width:768px){
+
+            header{
+                flex-direction:column;
+                gap:18px;
+                text-align:center;
+            }
+
+            nav{
+                width:100%;
+                justify-content:center;
+                gap:10px;
+            }
+
+            nav a{
+                padding:10px 14px;
+                font-size:14px;
+            }
         }
         /* ===========================
            UPDATE BANNER
@@ -496,20 +554,39 @@
             align-self:center;
         }
         /*          navbar     */
+        /*nav{*/
+
+        /*    display:flex;*/
+
+        /*    gap:10px;*/
+
+        /*    align-items:center;*/
+
+        /*}*/
         nav{
-
             display:flex;
-
-            gap:10px;
-
             align-items:center;
-
+            gap:12px;
+            flex-wrap:wrap;
         }
 
+        /*nav a{*/
+
+        /*    color:#f5f5f5;*/
+
+        /*    text-decoration:none;*/
+
+        /*    padding:10px 18px;*/
+
+        /*    border-radius:10px;*/
+
+        /*    transition:.25s;*/
+
+        /*    font-weight:500;*/
+
+        /*}*/
         nav a{
-
-            color:#f5f5f5;
-
+            color:#fff;
             text-decoration:none;
 
             padding:10px 18px;
@@ -519,7 +596,7 @@
             transition:.25s;
 
             font-weight:500;
-
+            white-space:nowrap;
         }
 
         nav a:hover{
@@ -531,25 +608,35 @@
             transform:translateY(-2px);
 
         }
-
         #dashboardLink{
-
             background:linear-gradient(135deg,#6366f1,#8b5cf6);
-
-            color:white;
-
-            padding:11px 20px;
-
+            color:#fff;
             box-shadow:0 8px 20px rgba(99,102,241,.35);
-
         }
 
         #dashboardLink:hover{
+            transform:translateY(-2px);
+            box-shadow:0 12px 24px rgba(99,102,241,.45);
+        }
 
-            transform:translateY(-3px);
+        /*             section          */
+        section{
+            padding:70px 10%;
+        }
 
-            box-shadow:0 12px 28px rgba(99,102,241,.5);
+        section h2{
+            text-align:center;
+            margin-bottom:30px;
+            font-size:2rem;
+        }
 
+        section p{
+            max-width:800px;
+            margin:auto;
+            text-align:center;
+        }
+        section{
+            scroll-margin-top:100px;
         }
     </style>
 </head>
@@ -673,7 +760,13 @@
 </header>
 
 <div class="hero">
-    <h2>Creative Art & Design Studio</h2>
+    <div>
+        <h2>Creative Art & Design Studio</h2>
+        <br>
+        <a href="#portfolio">
+            <button>View Portfolio</button>
+        </a>
+    </div>
 </div>
 
 <section id="about">
@@ -724,7 +817,8 @@
 
         <textarea rows="6" placeholder="Tell us about your project..." required></textarea>
 
-        <button onclick="window.location.href='contact.html'">
+        <button type="button"
+                onclick="window.location.href='contact.html'">
             Contact Us
         </button>
 
@@ -757,25 +851,37 @@
         else if(ans==="Ad@135"){
             sessionStorage.setItem("role","admin");
             document.getElementById("adminPanel").style.display="block";
+
+            document.querySelectorAll("h1,h2,h3,p").forEach(el=>{
+                el.contentEditable=true;
+            });
         }
         else{
             alert("Wrong code");
             return;
         }
 
-        document.getElementById("verifyOverlay").style.display="none";
+        document.querySelectorAll("h1,h2,h3,p").forEach(el=>{
+            el.contentEditable=true;
+        });
 
+        document.getElementById("verifyOverlay").style.display = "none";
     }
 
     /* EDIT MODE */
     function enableEdit(){
-        document.body.contentEditable=true;
-        document.body.style.outline="2px dashed red";
+        document.querySelectorAll("h1,h2,h3,p").forEach(el=>{
+            el.contentEditable = true;
+        });
     }
 
     function disableEdit(){
-        document.body.contentEditable=false;
-        document.body.style.outline="none";
+        document.querySelectorAll("h1,h2,h3,p").forEach(el=>{
+            el.contentEditable = false;
+        });
+    }
+    if(sessionStorage.getItem("role")==="admin"){
+        document.getElementById("adminPanel").style.display="block";
     }
 
     function logout(){
@@ -785,26 +891,26 @@
     /* LOADER */
     window.addEventListener("load", () => {
 
-        // STEP 1 → FIRST LOADER (Verification phase)
+        if(localStorage.getItem("updateBannerClosed") === "true"){
+            document.getElementById("updateBanner").style.display="none";
+        }
+
         setTimeout(() => {
 
-            document.getElementById("loader1").style.display = "none";
+            document.getElementById("loader1").style.display="none";
 
-            // STEP 2 → SECOND LOADER (Final load)
-            document.getElementById("loader2").style.display = "flex";
+            document.getElementById("loader2").style.display="flex";
 
             setTimeout(() => {
 
-                document.getElementById("loader2").style.display = "none";
+                document.getElementById("loader2").style.display="none";
+                document.getElementById("verifyOverlay").style.display="flex";
 
-                // STEP 3 → SHOW VERIFY POPUP AFTER BOTH LOADERS
-                document.getElementById("verifyOverlay").style.display = "flex";
+            },1800);
 
-            }, 1800);
+        },1500);
 
-        }, 1500);
-
-    });;
+    });
 
     function closeBanner(){
         const banner = document.getElementById("updateBanner");
@@ -817,16 +923,7 @@
             banner.style.display="none";
         },400);
     }
-
-    /* AUTO HIDE IF PREVIOUSLY CLOSED */
-    window.addEventListener("load", () => {
-        if(localStorage.getItem("updateBannerClosed") === "true"){
-            const banner = document.getElementById("updateBanner");
-            if(banner){
-                banner.style.display = "none";
-            }
-        }
-    });
+    
 </script>
 
 </body>

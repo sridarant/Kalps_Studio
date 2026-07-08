@@ -98,11 +98,77 @@
 
         }
 
+        /*             device check              */
+        #deviceCheck{
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,.85);
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            z-index:9999;
+        }
+
+        .deviceBox{
+            width:min(90%,450px);
+            padding:30px;
+            background:white;
+            border-radius:18px;
+            text-align:center;
+            color:#222;
+        }
+
+        .deviceBox h2{
+            margin-bottom:15px;
+        }
+
+        .deviceBox p{
+            margin-bottom:25px;
+            line-height:1.6;
+        }
+
+        .deviceBox button{
+            width:100%;
+            padding:14px;
+            margin:8px 0;
+            border:none;
+            border-radius:12px;
+            cursor:pointer;
+            font-size:16px;
+            font-weight:bold;
+        }
+
+        .deviceBox button:first-of-type{
+            background:#28a745;
+            color:white;
+        }
+
+        .deviceBox button:last-of-type{
+            background:#dc3545;
+            color:white;
+        }
+
     </style>
 </head>
 
 <body>
+<div id="deviceCheck">
+    <div class="deviceBox">
 
+        <h2>🎮 Device Verification</h2>
+
+        <p>
+            These games are designed for laptops and desktop computers.
+            <br><br>
+            Are you using a desktop or laptop?
+        </p>
+
+        <button onclick="enterGames()">✅ Yes, I'm using a Desktop/Laptop</button>
+
+        <button onclick="mobileUser()">📱 No, I'm using a Mobile/Tablet</button>
+
+    </div>
+</div>
 <div class="container">
 
     <h1>🎮 Game Hub</h1>
@@ -128,6 +194,15 @@
     </div>
 
 </div>
+<script>
+    function enterGames(){
+        document.getElementById("deviceCheck").style.display = "none";
+    }
 
+    function mobileUser(){
+        alert("These games are currently available only on laptops and desktop computers.");
+        window.location.href = "dashboard.html";
+    }
+</script>
 </body>
 </html>
