@@ -1,0 +1,3797 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Kalps Studio UPI Payment</title>
+
+    <style>
+        /* =====================================
+           RESET
+        ===================================== */
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Inter,Arial,sans-serif;
+        }
+
+
+        :root{
+
+            --green:#0f9d58;
+            --blue:#4285f4;
+            --dark:#202124;
+            --gray:#5f6368;
+            --bg:#f6f8fc;
+
+        }
+
+
+
+        /* =====================================
+           BODY
+        ===================================== */
+
+
+        body{
+
+            min-height:100vh;
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+            background:
+
+                    linear-gradient(
+                            160deg,
+                            #f8fbff,
+                            #e8f0fe
+                    );
+
+        }
+
+
+
+
+        /* =====================================
+           APP CONTAINER
+        ===================================== */
+
+
+        .app{
+
+            width:100%;
+
+            max-width:480px;
+
+            height:100vh;
+
+            min-height:100dvh;
+
+            background:var(--bg);
+
+            position:relative;
+
+            overflow:hidden;
+
+        }
+
+
+
+
+
+        /* =====================================
+           MULTI SCREEN SYSTEM
+        ===================================== */
+
+
+        .screen{
+
+            position:absolute;
+
+            inset:0;
+
+            width:100%;
+
+            height:100%;
+
+            display:none;
+
+            background:var(--bg);
+
+            overflow:hidden;
+
+            animation:screenFade .3s ease;
+
+        }
+
+
+
+        .screen.active{
+
+            display:block;
+
+        }
+
+
+
+        @keyframes screenFade{
+
+            from{
+
+                opacity:0;
+
+                transform:translateY(15px);
+
+            }
+
+
+            to{
+
+                opacity:1;
+
+                transform:translateY(0);
+
+            }
+
+        }
+
+
+
+
+
+        /* =====================================
+           CURVED TOP BACKGROUND
+        ===================================== */
+
+
+        .screen::before,
+        .top-bg{
+
+            content:"";
+
+            position:absolute;
+
+            top:0;
+
+            left:0;
+
+            width:100%;
+
+            height:280px;
+
+
+            background:
+
+                    linear-gradient(
+                            145deg,
+                            #e8f0fe,
+                            #ffffff
+                    );
+
+
+            border-radius:
+
+                    0 0 50% 50%;
+
+        }
+
+
+
+
+
+        /* =====================================
+           CONTENT LAYER
+        ===================================== */
+
+
+        .screen .header,
+        .screen .heading,
+        .screen .payment-sheet,
+        .header,
+        .heading{
+
+            position:relative;
+
+            z-index:2;
+
+        }
+
+
+
+
+
+        /* =====================================
+           HEADER
+        ===================================== */
+
+
+        .header{
+
+            padding:
+
+                    25px 22px;
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+        }
+
+
+
+
+
+        .circle-btn{
+
+            width:46px;
+
+            height:46px;
+
+            border-radius:50%;
+
+            background:white;
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+            font-size:22px;
+
+            cursor:pointer;
+
+            box-shadow:
+
+                    0 5px 20px rgba(0,0,0,.1);
+
+            transition:.2s;
+
+        }
+
+
+
+        .circle-btn:hover{
+
+            transform:scale(1.08);
+
+        }
+
+
+
+
+
+        .profile{
+
+            width:48px;
+
+            height:48px;
+
+            border-radius:50%;
+
+
+            background:
+
+                    linear-gradient(
+                            135deg,
+                            #4285f4,
+                            #34a853
+                    );
+
+
+            color:white;
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+            font-weight:800;
+
+        }
+
+
+
+
+
+        /* =====================================
+           HEADING
+        ===================================== */
+
+
+        .heading{
+
+            padding:
+
+                    10px 24px 20px;
+
+        }
+
+
+
+        .heading h4{
+
+            color:var(--gray);
+
+            font-size:15px;
+
+        }
+
+
+
+        .heading h1{
+
+            margin-top:8px;
+
+            font-size:34px;
+
+            font-weight:800;
+
+        }
+
+
+
+
+
+
+        /* =====================================
+           PAYMENT SHEET
+        ===================================== */
+
+
+        .payment-sheet{
+
+
+            position:absolute;
+
+            bottom:0;
+
+            left:0;
+
+
+            width:100%;
+
+
+            height:75vh;
+
+
+            background:white;
+
+
+            overflow-y:auto;
+
+
+            padding:
+
+                    25px 22px 120px;
+
+
+
+            border-radius:
+
+                    35px 35px 0 0;
+
+
+
+            box-shadow:
+
+                    0 -15px 40px rgba(0,0,0,.08);
+
+
+        }
+
+
+
+        .handle{
+
+            width:45px;
+
+            height:5px;
+
+            background:#ddd;
+
+            border-radius:20px;
+
+            margin:auto;
+
+        }
+
+
+
+
+
+        .payment-sheet::-webkit-scrollbar{
+
+            width:6px;
+
+        }
+
+
+
+        .payment-sheet::-webkit-scrollbar-thumb{
+
+            background:#ddd;
+
+            border-radius:10px;
+
+        }
+
+
+
+
+
+
+        /* =====================================
+           RECEIVER CARD
+        ===================================== */
+
+
+        .receiver{
+
+            margin-top:22px;
+
+            padding:16px;
+
+            border-radius:24px;
+
+            background:#f8faff;
+
+            display:flex;
+
+            align-items:center;
+
+            gap:15px;
+
+        }
+
+
+
+
+
+        .receiver-avatar{
+
+            width:60px;
+
+            height:60px;
+
+            border-radius:50%;
+
+
+            background:
+
+                    linear-gradient(
+                            135deg,
+                            #4285f4,
+                            #7baaf7
+                    );
+
+
+            color:white;
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+            font-size:22px;
+
+            font-weight:800;
+
+        }
+
+
+
+
+
+        .receiver-info h2{
+
+            font-size:18px;
+
+        }
+
+
+
+        .receiver-info p{
+
+            color:#5f6368;
+
+            margin-top:5px;
+
+        }
+
+
+        /* =====================================
+           FORM SECTION
+        ===================================== */
+
+
+        .form-section{
+
+            margin-top:22px;
+
+            padding:18px;
+
+            background:#f8faff;
+
+            border-radius:22px;
+
+            border:1px solid #edf0f5;
+
+        }
+
+
+
+        .form-section h3{
+
+            font-size:16px;
+
+            margin-bottom:10px;
+
+        }
+
+
+
+
+
+        label{
+
+            display:block;
+
+            margin-top:12px;
+
+            color:#5f6368;
+
+            font-size:13px;
+
+        }
+
+
+
+
+
+        input,
+        select{
+
+            width:100%;
+
+            height:45px;
+
+            margin-top:6px;
+
+            padding:0 14px;
+
+            background:white;
+
+            border-radius:14px;
+
+            border:1px solid #e1e5eb;
+
+            outline:none;
+
+            font-size:15px;
+
+        }
+
+
+
+
+
+        input:focus,
+        select:focus{
+
+            border-color:#4285f4;
+
+        }
+
+
+
+
+
+        /* =====================================
+           AMOUNT
+        ===================================== */
+
+
+        .amount-box{
+
+            margin-top:22px;
+
+            text-align:center;
+
+        }
+
+
+
+
+
+        .amount-label{
+
+            color:#5f6368;
+
+        }
+
+
+
+
+
+        .amount-input{
+
+            margin-top:10px;
+
+            width:100%;
+
+            border:none;
+
+            background:transparent;
+
+            text-align:center;
+
+            font-size:42px;
+
+            font-weight:800;
+
+        }
+
+
+
+
+
+        /* =====================================
+           BANK CARD
+        ===================================== */
+
+
+        .method-title{
+
+            margin-top:22px;
+
+            color:#5f6368;
+
+        }
+
+
+
+
+
+        .bank-card{
+
+            margin-top:12px;
+
+            padding:16px;
+
+            background:#f8f9fa;
+
+            border-radius:22px;
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+            transition:.25s;
+
+            cursor:pointer;
+
+        }
+
+
+
+
+
+        .bank-card:hover{
+
+            transform:translateY(-3px);
+
+            box-shadow:
+
+                    0 10px 25px rgba(0,0,0,.08);
+
+        }
+
+
+
+
+
+        .bank-left{
+
+            display:flex;
+
+            align-items:center;
+
+            gap:14px;
+
+        }
+
+
+
+
+
+        .bank-icon{
+
+            width:45px;
+
+            height:45px;
+
+            border-radius:14px;
+
+            background:#e8f0fe;
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            font-weight:700;
+
+        }
+
+
+
+
+
+        .bank-name{
+
+            font-weight:700;
+
+        }
+
+
+
+
+
+        .bank-number{
+
+            margin-top:5px;
+
+            color:#5f6368;
+
+            font-size:13px;
+
+        }
+
+
+
+
+
+        .check{
+
+            color:var(--green);
+
+            font-size:24px;
+
+        }
+
+
+
+
+
+
+        /* =====================================
+           BUTTONS
+        ===================================== */
+
+
+        .pay-btn{
+
+            margin-top:25px;
+
+            width:100%;
+
+            height:60px;
+
+            border:none;
+
+            border-radius:50px;
+
+
+            background:
+
+                    linear-gradient(
+                            135deg,
+                            #0f9d58,
+                            #34a853
+                    );
+
+
+            color:white;
+
+            font-size:18px;
+
+            font-weight:700;
+
+            cursor:pointer;
+
+            transition:.25s;
+
+        }
+
+
+
+
+
+        .pay-btn:hover{
+
+            transform:translateY(-2px);
+
+            box-shadow:
+
+                    0 12px 28px rgba(15,157,88,.25);
+
+        }
+
+
+
+
+
+        .actions{
+
+            display:flex;
+
+            gap:12px;
+
+            margin-top:15px;
+
+        }
+
+
+
+
+
+        .action-btn{
+
+            flex:1;
+
+            height:50px;
+
+            border:none;
+
+            border-radius:18px;
+
+            background:#f1f3f4;
+
+            font-weight:600;
+
+            cursor:pointer;
+
+            transition:.2s;
+
+        }
+
+
+
+
+
+        .action-btn:hover{
+
+            background:#e8f0fe;
+
+        }
+
+
+
+
+
+
+        /* =====================================
+           QR BUTTON
+        ===================================== */
+
+
+        .qr-btn{
+
+            position:absolute;
+
+            right:22px;
+
+            bottom:95px;
+
+
+            width:65px;
+
+            height:65px;
+
+
+            border-radius:50%;
+
+
+            background:white;
+
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+
+            font-size:28px;
+
+
+            cursor:pointer;
+
+
+            box-shadow:
+
+                    0 10px 30px rgba(0,0,0,.2);
+
+        }
+
+
+
+
+
+
+        /* =====================================
+           BOTTOM NAVIGATION
+        ===================================== */
+
+
+        .bottom-nav{
+
+            position:absolute;
+
+            bottom:0;
+
+            left:0;
+
+            width:100%;
+
+            height:78px;
+
+
+            background:white;
+
+
+            display:flex;
+
+            justify-content:space-around;
+
+            align-items:center;
+
+        }
+
+
+
+
+
+        .nav-item{
+
+            text-align:center;
+
+            color:#5f6368;
+
+            font-size:12px;
+
+            cursor:pointer;
+
+        }
+
+
+
+
+
+        .nav-item span{
+
+            display:block;
+
+            font-size:24px;
+
+        }
+
+
+
+
+
+        .nav-item.active{
+
+            color:#0f9d58;
+
+        }
+
+
+
+
+
+
+
+        /* =====================================
+           QR SCREEN
+        ===================================== */
+
+
+        .qr-wrapper{
+
+            text-align:center;
+
+        }
+
+
+
+
+
+        .qr-wrapper img{
+
+            width:220px;
+
+            height:220px;
+
+            margin:20px auto;
+
+            display:block;
+
+
+            background:white;
+
+            padding:12px;
+
+
+            border-radius:20px;
+
+
+            box-shadow:
+
+                    0 10px 30px rgba(0,0,0,.12);
+
+        }
+
+
+
+
+
+        .qr-title{
+
+            font-size:18px;
+
+            font-weight:700;
+
+        }
+
+
+
+
+
+        .qr-subtitle{
+
+            margin-top:8px;
+
+            color:#5f6368;
+
+        }
+
+
+
+
+
+
+        /* =====================================
+           RECEIPT
+        ===================================== */
+
+
+        .receipt{
+
+            margin-top:20px;
+
+            padding:20px;
+
+            background:#f8faff;
+
+            border-radius:22px;
+
+        }
+
+
+
+
+
+        .receipt-row{
+
+            display:flex;
+
+            justify-content:space-between;
+
+            margin-bottom:18px;
+
+        }
+
+
+
+
+
+        .receipt-row:last-child{
+
+            margin-bottom:0;
+
+        }
+
+
+
+
+
+        .receipt-label{
+
+            color:#5f6368;
+
+        }
+
+
+
+
+
+        .receipt-value{
+
+            font-weight:700;
+
+        }
+
+
+
+
+
+
+        /* =====================================
+           HELP SCREEN
+        ===================================== */
+
+
+        .help-item{
+
+            background:#f8faff;
+
+            border-radius:20px;
+
+            padding:18px;
+
+            margin-bottom:15px;
+
+            cursor:pointer;
+
+            transition:.25s;
+
+        }
+
+
+
+
+
+        .help-item:hover{
+
+            background:#edf4ff;
+
+        }
+
+
+
+
+
+        .help-item h3{
+
+            font-size:16px;
+
+        }
+
+
+
+
+
+        .help-item p{
+
+            margin-top:8px;
+
+            color:#5f6368;
+
+            line-height:1.5;
+
+        }
+
+
+
+
+
+
+        /* =====================================
+           SETTINGS
+        ===================================== */
+
+
+        .setting-row{
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+            padding:18px 0;
+
+            border-bottom:
+
+                    1px solid #eceff3;
+
+        }
+
+
+
+
+
+        .setting-row:last-child{
+
+            border-bottom:none;
+
+        }
+
+
+
+
+
+        .setting-title{
+
+            font-weight:600;
+
+        }
+
+
+
+
+
+        .setting-sub{
+
+            color:#5f6368;
+
+            font-size:13px;
+
+        }
+
+
+        /* =====================================
+           ACTIVITY SCREEN
+        ===================================== */
+
+
+        .activity-date{
+
+            margin:25px 0 12px;
+
+            color:#5f6368;
+
+            font-size:14px;
+
+            font-weight:700;
+
+        }
+
+
+
+
+
+        .activity-card{
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+            background:#f8faff;
+
+            border-radius:20px;
+
+            padding:18px;
+
+            margin-bottom:14px;
+
+        }
+
+
+
+
+
+        .activity-left{
+
+            display:flex;
+
+            align-items:center;
+
+            gap:14px;
+
+        }
+
+
+
+
+
+        .activity-icon{
+
+            width:48px;
+
+            height:48px;
+
+            border-radius:15px;
+
+            background:#e8f0fe;
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+            font-size:22px;
+
+        }
+
+
+
+
+
+        .activity-name{
+
+            font-weight:700;
+
+        }
+
+
+
+
+
+        .activity-time{
+
+            color:#5f6368;
+
+            margin-top:4px;
+
+            font-size:13px;
+
+        }
+
+
+
+
+
+        .activity-amount{
+
+            color:#0f9d58;
+
+            font-size:18px;
+
+            font-weight:800;
+
+        }
+
+
+
+
+
+
+
+        /* =====================================
+           SUCCESS PAGE
+        ===================================== */
+
+
+        .success-page{
+
+            height:100%;
+
+            display:flex;
+
+            flex-direction:column;
+
+            justify-content:center;
+
+            align-items:center;
+
+            text-align:center;
+
+        }
+
+
+
+
+
+        .success-circle{
+
+            width:100px;
+
+            height:100px;
+
+
+            border-radius:50%;
+
+
+            background:#0f9d58;
+
+
+            color:white;
+
+
+            display:flex;
+
+
+            justify-content:center;
+
+
+            align-items:center;
+
+
+            font-size:50px;
+
+        }
+
+
+
+
+
+        .success-page .success-circle{
+
+            margin-bottom:30px;
+
+        }
+
+
+
+
+
+        .success-page h1{
+
+            font-size:32px;
+
+            margin-bottom:15px;
+
+        }
+
+
+
+
+
+        .success-page p{
+
+            color:#5f6368;
+
+            max-width:280px;
+
+            line-height:1.6;
+
+        }
+
+
+
+
+
+
+
+
+        /* =====================================
+           FLOAT ANIMATIONS
+        ===================================== */
+
+
+        .pay-btn,
+        .action-btn,
+        .circle-btn,
+        .qr-btn{
+
+            transition:.25s;
+
+        }
+
+
+
+
+
+        .qr-btn:hover{
+
+            transform:scale(1.08);
+
+        }
+
+
+
+
+
+        .action-btn:hover{
+
+            transform:translateY(-2px);
+
+        }
+
+
+
+
+
+
+
+        /* =====================================
+           TOAST MESSAGE
+        ===================================== */
+
+
+        .toast{
+
+            position:fixed;
+
+            left:50%;
+
+            bottom:30px;
+
+
+            transform:
+
+                    translateX(-50%);
+
+
+            background:#202124;
+
+
+            color:white;
+
+
+            padding:12px 20px;
+
+
+            border-radius:14px;
+
+
+            font-size:14px;
+
+
+            z-index:99999;
+
+
+            box-shadow:
+
+                    0 8px 25px rgba(0,0,0,.25);
+
+
+            animation:
+
+                    toastIn .25s ease;
+
+        }
+
+
+
+
+
+        @keyframes toastIn{
+
+
+            from{
+
+                opacity:0;
+
+                transform:
+
+                        translate(-50%,20px);
+
+            }
+
+
+            to{
+
+                opacity:1;
+
+                transform:
+
+                        translate(-50%,0);
+
+            }
+
+
+        }
+
+
+
+
+
+
+
+
+        /* =====================================
+           SCREEN SCROLLBAR
+        ===================================== */
+
+
+        .screen .payment-sheet::-webkit-scrollbar{
+
+            width:6px;
+
+        }
+
+
+
+
+
+        .screen .payment-sheet::-webkit-scrollbar-thumb{
+
+            background:#d7dce4;
+
+            border-radius:10px;
+
+        }
+
+
+
+
+
+
+
+
+        /* =====================================
+           MOBILE RESPONSIVE
+        ===================================== */
+
+
+        @media(max-width:480px){
+
+
+            body{
+
+                align-items:flex-start;
+
+            }
+
+
+
+            .app{
+
+                width:100%;
+
+                height:100dvh;
+
+            }
+
+
+
+
+            .heading h1{
+
+                font-size:30px;
+
+            }
+
+
+
+
+
+            .payment-sheet{
+
+                height:76vh;
+
+            }
+
+
+
+
+
+            .screen .payment-sheet{
+
+                height:76vh;
+
+            }
+
+
+
+
+
+            .qr-wrapper img{
+
+                width:190px;
+
+                height:190px;
+
+            }
+
+
+
+
+
+            .success-page h1{
+
+                font-size:27px;
+
+            }
+
+
+
+        }
+
+
+
+
+
+
+        /* =====================================
+           SMALL DEVICES
+        ===================================== */
+
+
+        @media(max-width:360px){
+
+
+            .receiver-avatar{
+
+                width:50px;
+
+                height:50px;
+
+            }
+
+
+
+            .heading h1{
+
+                font-size:26px;
+
+            }
+
+
+
+            .amount-input{
+
+                font-size:34px;
+
+            }
+
+
+
+        }
+    </style>
+</head>
+
+
+<body>
+
+
+
+
+
+
+            <main class="app">
+
+
+                    <!-- ================= HOME SCREEN ================= -->
+
+                    <section id="homeScreen" class="screen active">
+
+
+                        <div class="top-bg"></div>
+
+
+                        <div class="header">
+
+                            <div class="circle-btn">
+                                ☰
+                            </div>
+
+
+                            <div class="profile">
+                                KS
+                            </div>
+
+
+                        </div>
+
+
+
+
+                        <div class="heading">
+
+                            <h4>
+                                Paying To
+                            </h4>
+
+                            <h1>
+                                Kalps Studio
+                            </h1>
+
+                        </div>
+
+
+
+
+
+
+                        <div class="payment-sheet">
+
+
+                            <div class="handle"></div>
+
+
+
+
+
+                            <div class="receiver">
+
+
+                                <div class="receiver-avatar">
+                                    KS
+                                </div>
+
+
+                                <div class="receiver-info">
+
+                                    <h2>
+                                        Kalps Studio
+                                    </h2>
+
+                                    <p>
+                                        kalpsstudio@upi
+                                    </p>
+
+                                </div>
+
+
+                            </div>
+
+
+
+
+
+
+                            <div class="form-section">
+
+
+                                <h3>
+                                    Customer Details
+                                </h3>
+
+
+
+                                <label>
+                                    Full Name
+                                </label>
+
+                                <input id="customerName"
+                                       placeholder="Enter name">
+
+
+
+
+
+                                <label>
+                                    Mobile Number
+                                </label>
+
+                                <input id="mobile"
+                                       maxlength="10"
+                                       placeholder="Mobile number">
+
+
+
+
+
+
+                                <label>
+                                    Email
+                                </label>
+
+                                <input id="email"
+                                       placeholder="Email address">
+
+
+
+                            </div>
+
+
+
+
+
+
+
+                            <div class="form-section">
+
+
+                                <h3>
+                                    Bank Details
+                                </h3>
+
+
+                                <select id="bank">
+
+                                    <option>
+                                        Select Bank
+                                    </option>
+
+                                    <option>
+                                        HDFC Bank
+                                    </option>
+
+                                    <option>
+                                        ICICI Bank
+                                    </option>
+
+                                    <option>
+                                        State Bank of India
+                                    </option>
+
+                                    <option>
+                                        Axis Bank
+                                    </option>
+
+
+                                </select>
+
+
+
+
+                                <input id="accountHolder"
+                                       placeholder="Account Holder Name">
+
+
+                                <input id="accountNumber"
+                                       placeholder="Account Number">
+
+
+                                <input id="ifsc"
+                                       placeholder="IFSC Code">
+
+
+
+                            </div>
+
+
+
+
+
+
+
+                            <div class="amount-box">
+
+
+                                <div class="amount-label">
+                                    Enter Amount
+                                </div>
+
+
+                                <input
+                                        id="amountInput"
+                                        class="amount-input"
+                                        type="number"
+                                        placeholder="₹0">
+
+
+                            </div>
+
+
+
+
+
+
+
+                            <button
+                                    id="payBtn"
+                                    class="pay-btn">
+
+                                Pay Kalps Studio
+
+                            </button>
+
+
+
+
+
+
+                            <div class="actions">
+
+
+                                <button
+                                        id="scheduleBtn"
+                                        class="action-btn">
+
+                                    📅 Schedule
+
+                                </button>
+
+
+
+                                <button
+                                        id="shareBtn"
+                                        class="action-btn">
+
+                                    ↗ Share
+
+                                </button>
+
+
+                            </div>
+
+
+
+
+
+                        </div>
+
+
+
+
+
+
+
+                        <div
+                                id="qrBtn"
+                                class="qr-btn">
+
+                            ▣
+
+                        </div>
+
+
+
+
+
+
+
+
+                        <nav class="bottom-nav">
+
+
+                            <div class="nav-item active">
+
+<span>
+🏠
+</span>
+
+                                Home
+
+                            </div>
+
+
+
+                            <div class="nav-item">
+
+<span>
+📜
+</span>
+
+                                Activity
+
+                            </div>
+
+
+
+
+                            <div class="nav-item">
+
+<span>
+❓
+</span>
+
+                                Help
+
+                            </div>
+
+
+
+
+
+                            <div class="nav-item">
+
+<span>
+⚙️
+</span>
+
+                                Settings
+
+                            </div>
+
+
+                        </nav>
+
+
+
+                    </section>
+
+
+
+
+
+
+
+
+
+
+                    <!-- ================= ACTIVITY SCREEN ================= -->
+
+
+                    <section id="activityScreen" class="screen">
+
+
+                        <div class="header">
+
+
+                            <div class="circle-btn back-home">
+                                ←
+                            </div>
+
+
+                            <div class="profile">
+                                KS
+                            </div>
+
+
+                        </div>
+
+
+
+
+
+                        <div class="heading">
+
+                            <h4>
+                                Payment History
+                            </h4>
+
+                            <h1>
+                                Activity
+                            </h1>
+
+                        </div>
+
+
+
+
+
+
+                        <div class="payment-sheet">
+
+
+                            <div class="handle"></div>
+
+
+
+                            <div class="activity-card">
+
+                                <div class="activity-left">
+
+                                    <div class="activity-icon">
+                                        ✓
+                                    </div>
+
+
+                                    <div>
+
+                                        <div class="activity-name">
+                                            Kalps Studio
+                                        </div>
+
+
+                                        <div class="activity-time">
+                                            Today
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="activity-amount">
+                                    ₹499
+                                </div>
+
+
+                            </div>
+
+
+
+
+
+                            <div class="activity-card">
+
+                                <div class="activity-left">
+
+                                    <div class="activity-icon">
+                                        ✓
+                                    </div>
+
+
+                                    <div>
+
+                                        <div class="activity-name">
+                                            Design Service
+                                        </div>
+
+
+                                        <div class="activity-time">
+                                            Yesterday
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="activity-amount">
+                                    ₹999
+                                </div>
+
+
+                            </div>
+
+
+
+                        </div>
+
+
+                    </section>
+
+
+
+
+
+
+
+
+                    <!-- ================= SCHEDULE SCREEN ================= -->
+
+
+                    <section id="scheduleScreen" class="screen">
+
+
+                        <div class="header">
+
+                            <div class="circle-btn back-home">
+                                ←
+                            </div>
+
+
+                            <div class="profile">
+                                KS
+                            </div>
+
+
+                        </div>
+
+
+
+
+                        <div class="heading">
+
+                            <h4>
+                                Future Payments
+                            </h4>
+
+
+                            <h1>
+                                Schedule
+                            </h1>
+
+
+                        </div>
+
+
+
+
+
+
+
+                        <div class="payment-sheet">
+
+
+                            <div class="handle"></div>
+
+
+
+                            <div class="form-section">
+
+                                <h3>
+                                    Schedule Payment
+                                </h3>
+
+
+                                <label>
+                                    Date
+                                </label>
+
+                                <input type="date"
+                                       id="scheduleDate">
+
+
+                                <label>
+                                    Time
+                                </label>
+
+                                <input type="time"
+                                       id="scheduleTime">
+
+
+                                <label>
+                                    Amount
+                                </label>
+
+                                <input
+                                        id="scheduleAmount"
+                                        placeholder="₹0">
+
+
+
+                            </div>
+
+
+
+
+
+
+                            <button
+                                    id="confirmScheduleBtn"
+                                    class="pay-btn">
+
+                                Schedule Payment
+
+                            </button>
+
+
+
+
+                        </div>
+
+
+
+                    </section>
+
+                <!-- ================= QR SCREEN ================= -->
+
+                <section id="qrScreen" class="screen">
+
+
+                    <div class="header">
+
+                        <div class="circle-btn back-home">
+                            ←
+                        </div>
+
+
+                        <div class="profile">
+                            KS
+                        </div>
+
+                    </div>
+
+
+
+
+                    <div class="heading">
+
+                        <h4>
+                            Scan & Pay
+                        </h4>
+
+
+                        <h1>
+                            QR Payment
+                        </h1>
+
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="payment-sheet">
+
+
+                        <div class="handle"></div>
+
+
+
+                        <div class="form-section qr-wrapper">
+
+
+                            <h3>
+                                Scan QR Code
+                            </h3>
+
+
+
+                            <img
+                                    class="qr-image"
+                                    src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=upi://pay?pa=kalpsstudio@upi%26pn=Kalps%20Studio%26cu=INR">
+
+
+                            <h3>
+                                Kalps Studio
+                            </h3>
+
+
+                            <p>
+                                kalpsstudio@upi
+                            </p>
+
+
+
+                        </div>
+
+
+
+
+
+
+                        <input
+                                id="qrAmount"
+                                placeholder="Enter amount">
+
+
+
+
+
+                        <button
+                                id="downloadQRBtn"
+                                class="pay-btn">
+
+                            Download QR
+
+                        </button>
+
+
+
+
+
+
+                        <div class="actions">
+
+
+                            <button
+                                    id="shareQRBtn"
+                                    class="action-btn">
+
+                                Share QR
+
+                            </button>
+
+
+                            <button
+                                    class="action-btn back-home">
+
+                                Back
+
+                            </button>
+
+
+                        </div>
+
+
+
+                    </div>
+
+
+
+                </section>
+
+
+
+
+
+
+
+
+
+
+                <!-- ================= SHARE RECEIPT SCREEN ================= -->
+
+
+                <section id="shareScreen" class="screen">
+
+
+                    <div class="header">
+
+
+                        <div class="circle-btn back-home">
+                            ←
+                        </div>
+
+
+                        <div class="profile">
+                            KS
+                        </div>
+
+
+                    </div>
+
+
+
+
+
+
+                    <div class="heading">
+
+                        <h4>
+                            Payment Receipt
+                        </h4>
+
+
+                        <h1>
+                            Share
+                        </h1>
+
+
+                    </div>
+
+
+
+
+
+
+                    <div class="payment-sheet">
+
+
+                        <div class="handle"></div>
+
+
+
+
+
+                        <div class="success-circle">
+
+                            ✓
+
+                        </div>
+
+
+
+
+                        <h1 style="
+text-align:center;
+margin-top:20px;">
+
+                            Payment Successful
+
+                        </h1>
+
+
+
+
+
+
+                        <div class="receipt">
+
+
+
+                            <div class="receipt-row">
+
+                                <div class="receipt-label">
+                                    Receiver
+                                </div>
+
+
+                                <div class="receipt-value">
+                                    Kalps Studio
+                                </div>
+
+
+                            </div>
+
+
+
+
+
+                            <div class="receipt-row">
+
+                                <div class="receipt-label">
+                                    UPI ID
+                                </div>
+
+
+                                <div class="receipt-value">
+                                    kalpsstudio@upi
+                                </div>
+
+
+                            </div>
+
+
+
+
+
+                            <div class="receipt-row">
+
+                                <div class="receipt-label">
+                                    Amount
+                                </div>
+
+
+                                <div
+                                        class="receipt-value"
+                                        id="receiptAmount">
+
+                                    ₹0
+
+                                </div>
+
+
+                            </div>
+
+
+
+
+
+
+                            <div class="receipt-row">
+
+                                <div class="receipt-label">
+                                    Transaction
+                                </div>
+
+
+                                <div
+                                        class="receipt-value"
+                                        id="receiptID">
+
+                                    KALPS000000
+
+                                </div>
+
+
+                            </div>
+
+
+
+
+
+
+                        </div>
+
+
+
+
+
+
+                        <button
+                                id="shareReceiptBtn"
+                                class="pay-btn">
+
+                            Share Receipt
+
+                        </button>
+
+
+
+
+
+                    </div>
+
+
+
+                </section>
+
+
+
+
+
+
+
+
+
+                <!-- ================= HELP SCREEN ================= -->
+
+
+                <section id="helpScreen" class="screen">
+
+
+                    <div class="header">
+
+
+                        <div class="circle-btn back-home">
+
+                            ←
+
+                        </div>
+
+
+
+                        <div class="profile">
+
+                            KS
+
+                        </div>
+
+
+                    </div>
+
+
+
+
+
+
+                    <div class="heading">
+
+
+                        <h4>
+                            Support
+                        </h4>
+
+
+                        <h1>
+                            Help
+                        </h1>
+
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="payment-sheet">
+
+
+                        <div class="handle"></div>
+
+
+
+
+
+                        <div class="help-item">
+
+
+                            <h3>
+                                ❓ Payment Failed
+                            </h3>
+
+
+                            <p>
+                                Learn how to solve failed payments.
+                            </p>
+
+
+                        </div>
+
+
+
+
+
+
+                        <div class="help-item">
+
+
+                            <h3>
+                                💰 Refund
+                            </h3>
+
+
+                            <p>
+                                Check refund information.
+                            </p>
+
+
+                        </div>
+
+
+
+
+
+
+
+                        <div class="help-item">
+
+
+                            <h3>
+                                🔒 Security
+                            </h3>
+
+
+                            <p>
+                                Learn about secure payments.
+                            </p>
+
+
+                        </div>
+
+
+
+
+
+
+
+                        <button
+                                id="contactSupportBtn"
+                                class="pay-btn">
+
+                            Contact Support
+
+                        </button>
+
+
+
+
+
+                    </div>
+
+
+
+                </section>
+
+
+
+
+
+
+
+
+
+                <!-- ================= SETTINGS SCREEN ================= -->
+
+
+                <section id="settingsScreen" class="screen">
+
+
+                    <div class="header">
+
+
+                        <div class="circle-btn back-home">
+
+                            ←
+
+                        </div>
+
+
+                        <div class="profile">
+
+                            KS
+
+                        </div>
+
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="heading">
+
+
+                        <h4>
+                            Preferences
+                        </h4>
+
+
+                        <h1>
+                            Settings
+                        </h1>
+
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="payment-sheet">
+
+
+                        <div class="handle"></div>
+
+
+
+
+
+                        <div class="form-section">
+
+
+                            <h3>
+                                Profile
+                            </h3>
+
+
+                            <input value="Kalps User">
+
+
+                            <input value="user@email.com">
+
+
+                            <input value="9876543210">
+
+
+                        </div>
+
+
+
+
+
+
+                        <div class="form-section">
+
+
+                            <h3>
+                                Options
+                            </h3>
+
+
+
+                            <div class="setting-row">
+
+
+<span>
+Notifications
+</span>
+
+
+                                <input type="checkbox"
+                                       checked>
+
+
+                            </div>
+
+
+
+
+
+                            <div class="setting-row">
+
+
+<span>
+Theme
+</span>
+
+
+                                <select>
+
+                                    <option>
+                                        Light
+                                    </option>
+
+
+                                    <option>
+                                        Dark
+                                    </option>
+
+
+                                </select>
+
+
+                            </div>
+
+
+
+
+                        </div>
+
+
+
+
+
+
+                        <button
+                                id="saveSettingsBtn"
+                                class="pay-btn">
+
+                            Save Settings
+
+                        </button>
+
+
+
+                    </div>
+
+
+
+
+                </section>
+
+
+
+
+
+
+
+
+
+                <!-- ================= SUCCESS SCREEN ================= -->
+
+
+                <section id="successScreen" class="screen">
+
+
+                    <div class="payment-sheet success-page">
+
+
+                        <div class="success-circle">
+
+                            ✓
+
+                        </div>
+
+
+
+
+
+                        <h1>
+
+                            Payment Successful
+
+                        </h1>
+
+
+
+
+
+                        <p>
+
+                            Your payment has been completed.
+
+                        </p>
+
+
+
+
+
+
+
+                        <div class="receipt">
+
+
+
+                            <div class="receipt-row">
+
+
+                                <div class="receipt-label">
+
+                                    Amount
+
+                                </div>
+
+
+                                <div
+                                        class="receipt-value"
+                                        id="successAmount">
+
+                                    ₹0
+
+                                </div>
+
+
+                            </div>
+
+
+
+
+
+
+
+                            <div class="receipt-row">
+
+
+                                <div class="receipt-label">
+
+                                    Transaction ID
+
+                                </div>
+
+
+                                <div
+                                        class="receipt-value"
+                                        id="successTransaction">
+
+                                    KALPS000000
+
+                                </div>
+
+
+                            </div>
+
+
+
+
+
+
+                            <div class="receipt-row">
+
+
+                                <div class="receipt-label">
+
+                                    Status
+
+                                </div>
+
+
+                                <div class="receipt-value"
+                                     style="color:#0f9d58">
+
+                                    Completed
+
+                                </div>
+
+
+                            </div>
+
+
+
+
+
+                        </div>
+
+
+
+
+
+
+
+                        <button
+                                id="newPaymentBtn"
+                                class="pay-btn">
+
+                            New Payment
+
+                        </button>
+
+
+
+
+
+
+                    </div>
+
+
+
+                </section>
+            </main>
+
+
+
+
+<script>
+
+
+    // ===============================
+    // TOAST MESSAGE
+    // ===============================
+
+
+    function showMessage(message){
+
+        let old =
+            document.querySelector(".toast");
+
+
+        if(old){
+            old.remove();
+        }
+
+
+        let toast =
+            document.createElement("div");
+
+
+        toast.className="toast";
+
+        toast.innerHTML=message;
+
+
+        document.body.appendChild(toast);
+
+
+
+        setTimeout(()=>{
+
+            toast.remove();
+
+        },2500);
+
+    }
+
+
+
+
+
+
+
+    // ===============================
+    // TRANSACTION ID
+    // ===============================
+
+
+    function createTransactionID(){
+
+        return "KALPS" +
+            Math.floor(
+                Math.random()*900000+100000
+            );
+
+    }
+
+
+
+
+
+
+
+    // ===============================
+    // VALIDATION
+    // ===============================
+
+
+    function validateForm(){
+
+
+        let name =
+            document
+                .getElementById("customerName")
+                .value
+                .trim();
+
+
+
+        let mobile =
+            document
+                .getElementById("mobile")
+                .value
+                .trim();
+
+
+
+        let amount =
+            document
+                .getElementById("amountInput")
+                .value;
+
+
+
+        if(name===""){
+
+            showMessage(
+                "Enter your name"
+            );
+
+            return false;
+
+        }
+
+
+
+
+        if(mobile.length!==10){
+
+            showMessage(
+                "Enter valid mobile number"
+            );
+
+            return false;
+
+        }
+
+
+
+
+
+        if(!amount || amount<=0){
+
+            showMessage(
+                "Enter amount"
+            );
+
+            return false;
+
+        }
+
+
+
+        return true;
+
+    }
+
+
+
+
+
+
+
+    // ===============================
+    // SCREEN SYSTEM
+    // ===============================
+
+
+    function openScreen(id){
+
+
+        document
+            .querySelectorAll(".screen")
+            .forEach(screen=>{
+
+
+                screen.classList.remove(
+                    "active"
+                );
+
+
+            });
+
+
+
+
+
+        document
+            .getElementById(id)
+            .classList.add(
+            "active"
+        );
+
+    }
+
+
+
+
+
+    function goHome(){
+
+        openScreen(
+            "homeScreen"
+        );
+
+
+    }
+
+
+
+
+
+
+
+    // ===============================
+    // BACK BUTTONS
+    // ===============================
+
+
+    document
+        .querySelectorAll(".back-home")
+        .forEach(button=>{
+
+
+            button.onclick=()=>{
+
+                goHome();
+
+            };
+
+
+        });
+
+
+
+
+
+
+
+    // ===============================
+    // BOTTOM NAVIGATION
+    // ===============================
+
+
+    document
+        .querySelectorAll(".nav-item")
+        .forEach(item=>{
+
+
+            item.onclick=()=>{
+
+
+                document
+                    .querySelectorAll(".nav-item")
+                    .forEach(nav=>{
+
+                        nav.classList.remove(
+                            "active"
+                        );
+
+                    });
+
+
+
+                item.classList.add(
+                    "active"
+                );
+
+
+
+                let page =
+                    item.innerText.trim();
+
+
+
+                if(page.includes("Home")){
+
+                    openScreen(
+                        "homeScreen"
+                    );
+
+                }
+
+
+
+                if(page.includes("Activity")){
+
+                    openScreen(
+                        "activityScreen"
+                    );
+
+                }
+
+
+
+                if(page.includes("Help")){
+
+                    openScreen(
+                        "helpScreen"
+                    );
+
+                }
+
+
+
+                if(page.includes("Settings")){
+
+                    openScreen(
+                        "settingsScreen"
+                    );
+
+                }
+
+
+
+            };
+
+
+        });
+
+
+
+
+
+
+
+
+    // ===============================
+    // MAIN PAYMENT
+    // ===============================
+
+
+    document
+        .getElementById("payBtn")
+        .onclick=()=>{
+
+
+        if(!validateForm()){
+
+            return;
+
+        }
+
+
+
+        let amount =
+            document
+                .getElementById("amountInput")
+                .value;
+
+
+
+
+        document
+            .getElementById("successAmount")
+            .innerHTML =
+            "₹"+amount;
+
+
+
+
+        document
+            .getElementById("successTransaction")
+            .innerHTML =
+            createTransactionID();
+
+
+
+
+        document
+            .getElementById("receiptAmount")
+            .innerHTML =
+            "₹"+amount;
+
+
+
+
+        document
+            .getElementById("receiptID")
+            .innerHTML =
+            createTransactionID();
+
+
+
+
+
+        openScreen(
+            "successScreen"
+        );
+
+
+
+    };
+
+
+
+
+
+
+
+
+
+    // ===============================
+    // NEW PAYMENT
+    // ===============================
+
+
+    document
+        .getElementById("newPaymentBtn")
+        .onclick=()=>{
+
+
+        document
+            .getElementById("amountInput")
+            .value="";
+
+
+        openScreen(
+            "homeScreen"
+        );
+
+
+    };
+
+
+
+
+
+
+
+    // ===============================
+    // SCHEDULE
+    // ===============================
+
+
+    document
+        .getElementById("scheduleBtn")
+        .onclick=()=>{
+
+
+        openScreen(
+            "scheduleScreen"
+        );
+
+
+    };
+
+
+
+
+
+    document
+        .getElementById("confirmScheduleBtn")
+        .onclick=()=>{
+
+
+        showMessage(
+            "📅 Payment Scheduled"
+        );
+
+
+    };
+
+
+
+
+
+
+
+    // ===============================
+    // QR SCREEN
+    // ===============================
+
+
+    document
+        .getElementById("qrBtn")
+        .onclick=()=>{
+
+
+        openScreen(
+            "qrScreen"
+        );
+
+
+    };
+
+
+
+
+
+    document
+        .getElementById("downloadQRBtn")
+        .onclick=()=>{
+
+
+        showMessage(
+            "QR Download Started"
+        );
+
+
+    };
+
+
+
+
+
+    document
+        .getElementById("shareQRBtn")
+        .onclick=()=>{
+
+
+        showMessage(
+            "QR Shared"
+        );
+
+
+    };
+
+
+
+
+
+
+
+
+    // ===============================
+    // SHARE RECEIPT
+    // ===============================
+
+
+    document
+        .getElementById("shareBtn")
+        .onclick=()=>{
+
+
+        openScreen(
+            "shareScreen"
+        );
+
+
+    };
+
+
+
+
+
+
+
+    document
+        .getElementById("shareReceiptBtn")
+        .onclick=async()=>{
+
+
+        try{
+
+
+            await navigator.share({
+
+                title:
+                    "Kalps Studio Payment",
+
+                text:
+                    "Payment Receipt"
+
+            });
+
+
+        }
+
+        catch(e){
+
+
+            showMessage(
+                "Sharing cancelled"
+            );
+
+
+        }
+
+
+    };
+
+
+
+
+
+
+
+
+    // ===============================
+    // HELP
+    // ===============================
+
+
+    document
+        .getElementById("contactSupportBtn")
+        .onclick=()=>{
+
+
+        showMessage(
+            "Support contacted"
+        );
+
+
+    };
+
+
+
+
+
+
+
+
+    // ===============================
+    // SETTINGS
+    // ===============================
+
+
+    document
+        .getElementById("saveSettingsBtn")
+        .onclick=()=>{
+
+
+        showMessage(
+            "✓ Settings saved"
+        );
+
+
+    };
+
+
+
+
+
+
+
+
+    // ===============================
+    // START APP
+    // ===============================
+
+
+    openScreen(
+        "homeScreen"
+    );
+
+
+    console.log(
+        "Kalps Studio App Loaded"
+    );
+
+</script>
+
+
+</body>
+
+</html>
