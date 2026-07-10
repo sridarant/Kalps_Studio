@@ -1474,6 +1474,7 @@
             .planCard{
 
                 padding:12px;
+                background-color:black;
 
             }
 
@@ -1676,40 +1677,41 @@
         <button class="menu-toggle" onclick="toggleMenu()">
             ☰
         </button>
-        <div class="nav-links" id="navLinks">
-            <a class="active" href="Index.html">
-                <i class="fa fa-home"></i> Home
-            </a>
+            <div class="nav-links" id="navLinks">
+                <a class="active" href="Index.html">
+                    <i class="fa fa-home"></i> Home
+                </a>
 
-            <a href="shop.html">
-                <i class="fa fa-shopping-bag"></i> Shop
-            </a>
+                <a href="shop.html">
+                    <i class="fa fa-shopping-bag"></i> Shop
+                </a>
 
-            <a href="cart.html">
-                <i class="fa fa-shopping-cart"></i> Cart
-            </a>
+                <a href="cart.html">
+                    <i class="fa fa-shopping-cart"></i> Cart
+                </a>
 
-            <a href="checkout.html">
-                <i class="fa fa-credit-card"></i> Checkout
-            </a>
+                <a href="checkout.html">
+                    <i class="fa fa-credit-card"></i> Checkout
+                </a>
 
-            <a href="about.html">
-                <i class="fa fa-info-circle"></i> About
-            </a>
+                <a href="about.html">
+                    <i class="fa fa-info-circle"></i> About
+                </a>
 
-            <a href="contact.html">
-                <i class="fa fa-envelope"></i> Contact
-            </a>
+                <a href="contact.html">
+                    <i class="fa fa-envelope"></i> Contact
+                </a>
 
-            <a href="privacy.html">
-                <i class="fa fa-shield"></i> Privacy
-            </a>
+                <a href="privacy.html">
+                    <i class="fa fa-shield"></i> Privacy
+                </a>
 
-            <a href="game.html">
-                <i class="fa fa-gamepad"></i> More
-            </a>
+                <a href="game.html">
+                    <i class="fa fa-gamepad"></i> More
+                </a>
 
-        </div>
+            </div>
+
 
     </nav>
     <header>
@@ -1727,7 +1729,7 @@
 
             <div class="membership-info">
 
-                <span class="badge">⭐ LIMITED OFFER</span>
+                <span class="badge">LIMITED TIME OFFER</span>
 
                 <h2>Unlock Kalps Studio Gold</h2>
 
@@ -1738,10 +1740,10 @@
                 </p>
 
                 <div class="membership-features">
-                    <span>🚀 Unlimited Quizzes</span>
-                    <span>📊 Analytics Dashboard</span>
-                    <span>🎮 Exclusive Games</span>
-                    <span>✨ Early Beta Access</span>
+                    <span>Unlimited Quizzes</span>
+                    <span>Analytics Dashboard</span>
+                    <span>Exclusive Games</span>
+                    <span>Early Beta Access</span>
                 </div>
 
             </div>
@@ -1759,7 +1761,7 @@
                 </div>
 
                 <a href="plans.html" class="upgrade-btn">
-                    Upgrade Now →
+                    Upgrade Now &raquo;
                 </a>
 
             </div>
@@ -2195,10 +2197,17 @@ Membership Status: Gold Membership`;
         window.addEventListener("scroll", () => {
             document.getElementById("quizBanner").style.transform = "scale(1)";
         });
+
+        //Menu
+
+        function toggleMenu() {
+            const nav = document.getElementById("navLinks");
+            nav.classList.toggle("show");
+        }
     </script>
 
 
-    <a href="setting.html" id="gearBtn">⚙ Settings</a>
+    <a href="#setting.html" id="gearBtn" onclick="alert('This function is currently unavailable')">⚙ Settings</a>
 
     <style>
         #gearBtn{
