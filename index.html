@@ -638,6 +638,186 @@
         section{
             scroll-margin-top:100px;
         }
+
+        /* ================= FOOTER ================= */
+
+        .footer{
+
+            margin-top:70px;
+
+            background:
+                    linear-gradient(135deg,#0f172a,#020617);
+
+            border-top:1px solid rgba(255,255,255,.08);
+
+            color:#ddd;
+
+            padding:45px 8% 20px;
+
+        }
+
+        .footer-content{
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:flex-start;
+
+            flex-wrap:wrap;
+
+            gap:35px;
+
+        }
+
+        .footer-brand h2{
+
+            color:#fff;
+
+            margin-bottom:12px;
+
+            font-size:28px;
+
+        }
+
+        .footer-brand span{
+
+            color:#f97316;
+
+        }
+
+        .footer-brand p{
+
+            color:#a8b3cf;
+
+            line-height:1.7;
+
+            max-width:320px;
+
+        }
+
+        .footer-links{
+
+            display:flex;
+
+            flex-direction:column;
+
+            gap:12px;
+
+        }
+
+        .footer-links a{
+
+            color:#ddd;
+
+            text-decoration:none;
+
+            transition:.3s;
+
+        }
+
+        .footer-links a:hover{
+
+            color:#f97316;
+
+            transform:translateX(6px);
+
+        }
+
+        .footer-social{
+
+            display:flex;
+
+            gap:15px;
+
+        }
+
+        .footer-social a{
+
+            width:48px;
+
+            height:48px;
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+            text-decoration:none;
+
+            border-radius:50%;
+
+            background:rgba(255,255,255,.05);
+
+            color:white;
+
+            font-size:20px;
+
+            transition:.35s;
+
+        }
+
+        .footer-social a:hover{
+
+            background:#f97316;
+
+            transform:translateY(-5px) scale(1.1);
+
+            box-shadow:0 12px 25px rgba(249,115,22,.35);
+
+        }
+
+        .footer hr{
+
+            margin:35px 0 20px;
+
+            border:none;
+
+            height:1px;
+
+            background:rgba(255,255,255,.08);
+
+        }
+
+        .footer-bottom{
+
+            text-align:center;
+
+            color:#9ca3af;
+
+            font-size:14px;
+
+        }
+
+        /* Mobile */
+
+        @media(max-width:768px){
+
+            .footer-content{
+
+                flex-direction:column;
+
+                text-align:center;
+
+                align-items:center;
+
+            }
+
+            .footer-brand p{
+
+                max-width:100%;
+
+            }
+
+            .footer-links{
+
+                align-items:center;
+
+            }
+
+        }
+
     </style>
 </head>
 
@@ -925,6 +1105,38 @@
     }
     
 </script>
+<footer class="footer">
 
+    <div class="footer-content">
+
+        <div class="footer-brand">
+            <h2>🎨 Kalps <span>Studio</span></h2>
+            <p>Creative Design • Innovation • Future Ready</p>
+        </div>
+
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="shop.html">Shop</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="privacy.html">Privacy</a>
+        </div>
+
+        <div class="footer-social">
+            <a href="#"><i class="fa fa-instagram"></i></a>
+            <a href="#"><i class="fa fa-facebook"></i></a>
+            <a href="https://www.youtube.com/watch?v=qJs3nv7QJYg&list=PL6ZO9BI-BdnrPpKWwW53BY0KhcKtjiAG9"><i class="fa fa-youtube-play"></i></a>
+            <a href="#"><i class="fa fa-github"></i></a>
+        </div>
+
+    </div>
+
+    <hr>
+
+    <div class="footer-bottom">
+        © 2026 <strong>Srivats Sridaran</strong> • All Rights Reserved
+    </div>
+
+</footer>
 </body>
 </html>
