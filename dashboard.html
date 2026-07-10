@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti"></script>
 
 
-<head>
     <meta charset="UTF-8">
     <title>Kalps Studio Dashboard</title>
 
@@ -27,84 +27,128 @@
             justify-content:space-between;
             align-items:center;
 
-            padding:18px 50px;
+            padding:16px 30px;
 
-            background:rgba(15,23,42,.75);
-            backdrop-filter:blur(20px);
+            background:rgba(15,23,42,.85);
+            backdrop-filter:blur(18px);
+            -webkit-backdrop-filter:blur(18px);
 
             border-bottom:1px solid rgba(255,255,255,.08);
-
-            box-shadow:
-                    0 15px 35px rgba(0,0,0,.35);
         }
 
         .logo{
-
             display:flex;
             align-items:center;
             gap:10px;
 
             font-size:24px;
-            font-weight:bold;
-
+            font-weight:700;
             color:#fff;
-
         }
 
         .logo span{
-
             color:#f97316;
-
         }
 
-        .nav-links{
+        /* Desktop Menu */
 
+        .nav-links{
             display:flex;
             align-items:center;
-            gap:8px;
-
-            flex-wrap:wrap;
-
+            gap:10px;
         }
 
         .nav-links a{
-
-            color:white;
-
+            color:#fff;
             text-decoration:none;
 
             padding:12px 18px;
 
             border-radius:12px;
 
-            transition:.35s;
-
-            font-weight:500;
+            transition:.3s;
         }
 
         .nav-links a:hover{
-
-            background:rgba(249,115,22,.18);
-
+            background:rgba(249,115,22,.15);
             color:#ff9838;
-
-            transform:translateY(-3px);
-
-            box-shadow:0 10px 20px rgba(249,115,22,.25);
         }
 
         .nav-links .active{
-
             background:linear-gradient(135deg,#ff7b00,#ff5100);
-
-            box-shadow:0 12px 30px rgba(255,123,0,.35);
         }
 
-        .nav-links a i{
+        /* Hamburger */
 
-            font-size:15px;
+        .menu-toggle{
+            display:none;
+            border:none;
+            background:none;
+            color:white;
+            font-size:30px;
+            cursor:pointer;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width:768px){
+
+            .navbar{
+                padding:15px 20px;
+                flex-wrap:wrap;
+            }
+
+            .menu-toggle{
+                display:block;
+            }
+
+            .nav-links{
+
+                display:flex;
+                flex-direction:column;
+
+                width:100%;
+
+                max-height:0;
+                overflow:hidden;
+
+                opacity:0;
+
+                margin-top:15px;
+
+                transition:
+                        max-height .35s ease,
+                        opacity .35s ease;
+            }
+
+            .nav-links.show{
+
+                max-height:600px;
+
+                opacity:1;
+            }
+
+            .nav-links a{
+
+                width:100%;
+
+                text-align:center;
+
+                padding:14px;
+
+                border-radius:10px;
+
+                background:rgba(255,255,255,.04);
+            }
+
+            .nav-links a:hover{
+
+                background:rgba(249,115,22,.18);
+
+            }
 
         }
+
         @media (max-width:900px){
 
             .navbar{
@@ -125,31 +169,40 @@
 
         }
 
+
         @media (max-width:600px){
 
-            .nav-links{
-
-                width:100%;
-                display:grid;
-
-                grid-template-columns:1fr 1fr;
-
-                gap:10px;
-
+            .menu-toggle{
+                display:block;
+                background:none;
+                border:none;
+                color:white;
+                font-size:28px;
+                cursor:pointer;
+                box-shadow:none;
             }
 
+            .nav-links{
+                display:none;
+                width:100%;
+                margin-top:15px;
+                grid-template-columns:1fr;
+            }
+
+            .nav-links.show{
+                display:flex;
+                flex-direction:column;
+            }
             .nav-links a{
 
                 justify-content:center;
 
             }
 
-            .logo{
+            .logo {
 
-                font-size:22px;
-
+                font-size: 22px;
             }
-
         }
 
         @media (max-width:420px){
@@ -2163,6 +2216,10 @@ ${answers[current]==option?"checked":""}
                 }, 1500);
 
             }, 1200);
+            confetti({
+                particleCount:150,
+                spread:80
+            });
         }
 
         /* ================= RESULT ================= */
