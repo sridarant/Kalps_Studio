@@ -1129,7 +1129,7 @@
 
     </div>
 
-</div> <!-- ========================= SECOND LOADER ========================= --> <div id="loader2">
+</div><!-- ========================= SECOND LOADER ========================= --> <div id="loader2">
     <div style="text-align:center">
 
         <div class="loaderSpinner"></div>
@@ -1526,91 +1526,131 @@
 </footer> <!-- SETTINGS -->
 <a href="setting.html" id="gearBtn" title="Settings">Settings</a>
 </body>
-<script> /* ========================= VERIFICATION ========================= */
-function verifyUser() {
-    const answer = document.getElementById("answer").value.trim();
-    const robot = document.getElementById("robot").checked;
-    if (!robot) { alert("Please confirm that you're not a robot.");
-        return;
+<script>
+    /* ========================= VERIFICATION ========================= */
+    function verifyUser() {
+        const answer = document.getElementById("answer").value.trim();
+        const robot = document.getElementById("robot").checked;
+        if (!robot) {
+            alert("Please confirm that you're not a robot.");
+            return;
+        }
+        if (answer === "8409") {
+            sessionStorage.setItem("role", "user");
+        }
+        else if (answer === "Ad@135") {
+            sessionStorage.setItem("role", "admin");
+            showAdminPanel();
+            enableEdit();
+        }
+        else {
+            alert("Incorrect access code.");
+            return;
+        }
+        document.getElementById("verifyOverlay").style.display = "none";
     }
-    if (answer === "8409") { sessionStorage.setItem( "role", "user" );
-    }
-    else if (answer === "Ad@135") { sessionStorage.setItem( "role", "admin" );
-        showAdminPanel();
-        enableEdit();
-    }
-    else {
-        alert("Incorrect access code.");
-        return;
-    }
-    document .getElementById("verifyOverlay") .style.display = "none"; }
-/* ========================= ADMIN ========================= */
-function showAdminPanel() {
-    document .getElementById("adminPanel").style.display = "flex";
-}
-function enableEdit() {
-    document .querySelectorAll("h1, h2, h3, p") .forEach(element => { element.contentEditable = true;
-        element.style.outline = "1px dashed #6366f1";
-    });
-} function disableEdit() {
-    document .querySelectorAll("h1, h2, h3, p") .forEach(element => { element.contentEditable = false;
-        element.style.outline = "none";
-    }); }
-function logout() {
-    sessionStorage.clear();
-    location.reload();
-}
-/* ========================= CONTACT ========================= */
-function openContactPage(event) {
-    event.preventDefault();
-    window.location.href = "contact.html";
-} /* ========================= UPDATE BANNER ========================= */
-function closeBanner() {
-    const banner = document.getElementById("updateBanner");
-    banner.classList.add("hidden");
-    localStorage.setItem( "updateBannerClosed", "true" );
-}
-/* ========================= PAGE LOAD ========================= */
-window.addEventListener( "load", () => {
-    /* ========================= RESTORE BANNER ========================= */
-    if ( localStorage.getItem( "updateBannerClosed" ) === "true" ) {
-        document .getElementById("updateBanner") .style.display = "none";
-    }
-    /* ========================= RESTORE ADMIN ========================= */
-    if ( sessionStorage.getItem("role") === "admin" ) { showAdminPanel();
-    }
-    /* ========================= LOADER ========================= */
-    setTimeout(() => {
 
-        document
-            .getElementById("loader1")
-            .style.display = "none";
+    /* ========================= ADMIN ========================= */
+    function showAdminPanel() {
+        document.getElementById("adminPanel").style.display = "flex";
+    }
+    function enableEdit() {
+        document.querySelectorAll("h1, h2, h3, p").forEach(element => {
+            element.contentEditable = true;
+            element.style.outline = "1px dashed #6366f1";
+        });
+    }
+    function disableEdit() {
+        document.querySelectorAll("h1, h2, h3, p").forEach(element => {
+            element.contentEditable = false;
+            element.style.outline = "none";
+        });
+    }
+    function logout() {
+        sessionStorage.clear();
+        location.reload();
+    }
 
-        document
-            .getElementById("loader2")
-            .style.display = "flex";
+    /* ========================= CONTACT ========================= */
+    function openContactPage(event) {
+        event.preventDefault();
+        window.location.href = "contact.html";
+    }
 
+    /* ========================= UPDATE BANNER ========================= */
+    function closeBanner() {
+        const banner = document.getElementById("updateBanner");
+        banner.classList.add("hidden");
+        localStorage.setItem("updateBannerClosed", "true");
+    }
+
+    /* ========================= PAGE LOAD & INITIALIZATION ========================= */
+    document.addEventListener("DOMContentLoaded", () => {
+        /* ========================= RESTORE BANNER ========================= */
+        if (localStorage.getItem("updateBannerClosed") === "true") {
+            const banner = document.getElementById("updateBanner");
+            if (banner) banner.style.display = "none";
+        }
+
+        /* ========================= RESTORE ADMIN ========================= */
+        if (sessionStorage.getItem("role") === "admin") {
+            showAdminPanel();
+        }
+
+        /* ========================= LOADER SEQUENCE ========================= */
+        console.log("Script started successfully.");
 
         setTimeout(() => {
+            const l1 = document.getElementById("loader1");
+            const l2 = document.getElementById("loader2");
 
-            document
-                .getElementById("loader2")
-                .style.display = "none";
+            if (l1) {
+                l1.style.display = "none";
+                console.log("Loader 1 hidden.");
+            } else {
+                console.error("Error: Could not find HTML element with id='loader1'");
+            }
 
-            document
-                .getElementById("verifyOverlay")
-                .style.display = "flex";
+            if (l2) {
+                l2.style.display = "flex";
+                console.log("Loader 2 shown.");
+            } else {
+                console.error("Error: Could not find HTML element with id='loader2'");
+            }
 
-        }, 1400);
+            setTimeout(() => {
+                const vo = document.getElementById("verifyOverlay");
+                const currentRole = sessionStorage.getItem("role");
 
-    }, 1500);
+                if (l2) {
+                    l2.style.display = "none";
+                    console.log("Loader 2 hidden.");
+                }
 
-});
+                // Only show the verification overlay if the user isn't logged in already
+                if (vo && currentRole !== "admin" && currentRole !== "user") {
+                    vo.style.display = "flex";
+                    console.log("Verify Overlay shown.");
+                } else if (vo) {
+                    console.log("User already verified, skipping overlay.");
+                } else {
+                    console.error("Error: Could not find HTML element with id='verifyOverlay'");
+                }
+            }, 1400);
 
-/* ========================= ENTER KEY ========================= */
-document .getElementById("answer") .addEventListener( "keydown", event => {
-    if (event.key === "Enter") {
-        verifyUser(); } } );
+        }, 1500);
+
+        /* ========================= ENTER KEY ========================= */
+        const answerInput = document.getElementById("answer");
+        if (answerInput) {
+            answerInput.addEventListener("keydown", event => {
+                if (event.key === "Enter") {
+                    verifyUser();
+                }
+            });
+        }
+    });
 </script>
+
 </body>
 </html>
