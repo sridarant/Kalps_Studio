@@ -1,1142 +1,1616 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Kalps Studio</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
+    <title>Kalps Studio | Creative Art & Design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* =========================
+        RESET
+        ========================= */
 
-        /* RESET */
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:'Poppins',sans-serif;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        html{
-            scroll-behavior:smooth;
-        }
-        
-        body{
-            line-height:1.6;
-            background:#fff;
-            color:#333;
-            overflow-x:hidden;
-            top-padding:60px;
+        html {
+            scroll-behavior: smooth;
         }
 
-        /* LOADER */
-        #loader1{
+        body {
+            font-family: "Poppins", sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
-            position:fixed;
+        button,
+        input,
+        textarea {
+            font-family: inherit;
+        }
 
-            inset:0;
+        /* =========================
+        UPDATE BANNER
+        ========================= */
+
+        #updateBanner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+
+            z-index: 10000;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 20px;
+
+            padding: 12px 7%;
+
+            background: linear-gradient(
+                    90deg,
+                    #ff9800,
+                    #ff5722
+            );
+
+            color: white;
+
+            box-shadow: 0 5px 25px rgba(0, 0, 0, .25);
+
+            transition: .4s ease;
+        }
+
+        #updateBanner.hidden {
+            transform: translateY(-120%);
+            opacity: 0;
+        }
+
+        .updateContent {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .updateContent strong {
+            font-size: 14px;
+        }
+
+        .updateContent span {
+            font-size: 12px;
+            opacity: .9;
+        }
+
+        #updateBanner button {
+            border: none;
+
+            background: white;
+            color: #f4511e;
+
+            padding: 8px 15px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            font-weight: 600;
+
+            transition: .25s;
+        }
+
+        #updateBanner button:hover {
+            transform: scale(1.05);
+        }
+
+        /* =========================
+        LOADER
+        ========================= */
+
+        #loader1 {
+            position: fixed;
+            inset: 0;
+
+            z-index: 99999;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background: radial-gradient(
+                    circle at center,
+                    #1e293b,
+                    #020617 70%
+            );
+
+            color: white;
+        }
+
+        .loaderContent {
+            text-align: center;
+
+            animation: fadeIn 1s ease;
+        }
+
+        .logoCircle {
+            width: 120px;
+            height: 120px;
+
+            margin: auto;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 50%;
+
+            font-size: 55px;
+
+            background: linear-gradient(
+                    135deg,
+                    #ff9800,
+                    #ff5722
+            );
+
+            box-shadow:
+                    0 0 25px rgba(255, 152, 0, .5),
+                    0 0 70px rgba(255, 87, 34, .2);
+
+            animation: pulse 2s infinite;
+        }
+
+        .loaderContent h1 {
+            margin-top: 25px;
+
+            font-size: clamp(
+                    30px,
+                    6vw,
+                    44px
+            );
+
+            letter-spacing: 1px;
+        }
+
+        .loaderTag {
+            margin: 10px 0 28px;
+
+            color: #cbd5e1;
+        }
+
+        .loadingLine {
+            width: min(260px, 80vw);
+            height: 6px;
+
+            margin: auto;
+
+            overflow: hidden;
+
+            border-radius: 50px;
+
+            background: rgba(255, 255, 255, .12);
+        }
+
+        .loadingFill {
+            width: 40%;
+            height: 100%;
+
+            background: linear-gradient(
+                    90deg,
+                    #ff9800,
+                    #fb923c
+            );
+
+            animation: loading 1.8s infinite;
+        }
+
+        .copyright {
+            margin-top: 35px;
+
+            font-size: 12px;
+
+            color: #94a3b8;
+        }
+
+        /* =========================
+        FINAL LOADER
+        ========================= */
+
+        #loader2 {
+            position: fixed;
+            inset: 0;
+
+            z-index: 99998;
+
+            display: none;
+
+            justify-content: center;
+            align-items: center;
+
+            background: #020617;
+
+            color: white;
+        }
+
+        .loaderSpinner {
+            width: 45px;
+            height: 45px;
+
+            margin: 0 auto 20px;
+
+            border: 4px solid rgba(255, 255, 255, .15);
+
+            border-top-color: #ff9800;
+
+            border-radius: 50%;
+
+            animation: spin 1s linear infinite;
+        }
+
+        /* =========================
+        VERIFICATION
+        ========================= */
+
+        #verifyOverlay {
+            position: fixed;
+            inset: 0;
+
+            z-index: 9999;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 20px;
+
+            background: rgba(2, 6, 23, .88);
+
+            backdrop-filter: blur(8px);
+        }
+
+        .verifyBox {
+            width: min(430px, 100%);
+
+            padding: 30px;
+
+            background: #0f172a;
+
+            color: white;
+
+            border: 1px solid rgba(255, 255, 255, .1);
+
+            border-radius: 20px;
+
+            box-shadow:
+                    0 30px 80px rgba(0, 0, 0, .5);
+
+            animation: modalIn .4s ease;
+        }
+
+        .verifyIcon {
+            width: 65px;
+            height: 65px;
+
+            margin: 0 auto 15px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 50%;
+
+            background: linear-gradient(
+                    135deg,
+                    #6366f1,
+                    #8b5cf6
+            );
+
+            font-size: 28px;
+        }
+
+        .verifyBox h3 {
+            text-align: center;
+
+            margin-bottom: 12px;
+        }
+
+        .verifyBox > p {
+            text-align: center;
+
+            font-size: 13px;
+
+            color: #cbd5e1;
+        }
+
+        .verifyBox input[type="text"] {
+            width: 100%;
+
+            margin-top: 20px;
+
+            padding: 14px 16px;
+
+            border: 1px solid #334155;
+
+            border-radius: 10px;
+
+            outline: none;
+
+            background: #020617;
+
+            color: white;
+
+            transition: .25s;
+        }
+
+        .verifyBox input[type="text"]:focus {
+            border-color: #818cf8;
+
+            box-shadow:
+                    0 0 0 4px rgba(99, 102, 241, .15);
+        }
+
+        .robotCheck {
+            display: flex;
+            align-items: center;
+
+            gap: 8px;
+
+            margin-top: 15px;
+
+            font-size: 13px;
+
+            color: #cbd5e1;
+        }
+
+        .verifyButton {
+            width: 100%;
+
+            margin-top: 20px;
+
+            padding: 13px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: linear-gradient(
+                    135deg,
+                    #6366f1,
+                    #8b5cf6
+            );
+
+            color: white;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: .25s;
+        }
+
+        .verifyButton:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                    0 10px 25px rgba(99, 102, 241, .35);
+        }
+
+        /* =========================
+        HEADER
+        ========================= */
+
+        header {
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1000;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 20px;
+
+            padding: 16px 7%;
+
+            background: rgba(15, 23, 42, .9);
+
+            backdrop-filter: blur(18px);
+
+            border-bottom:
+                    1px solid rgba(255, 255, 255, .08);
+
+            box-shadow:
+                    0 8px 30px rgba(0, 0, 0, .2);
+        }
+
+        .logo {
+            color: white;
+
+            font-size: 27px;
+
+            font-weight: 600;
+
+            white-space: nowrap;
+        }
+
+        .logo span {
+            color: #ff9800;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+
+            gap: 8px;
+
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #e2e8f0;
+
+            text-decoration: none;
+
+            padding: 9px 15px;
+
+            border-radius: 9px;
+
+            font-size: 14px;
+
+            transition: .25s;
+        }
+
+        nav a:hover {
+            color: #ffb74d;
+
+            background: rgba(255, 255, 255, .07);
+
+            transform: translateY(-2px);
+        }
+
+        #dashboardLink {
+            background: linear-gradient(
+                    135deg,
+                    #6366f1,
+                    #8b5cf6
+            );
+
+            color: white;
+
+            box-shadow:
+                    0 6px 20px rgba(99, 102, 241, .3);
+        }
+
+        /* =========================
+        HERO
+        ========================= */
+
+        .hero {
+            min-height: 78vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            text-align: center;
+
+            padding: 40px 20px;
+
+            color: white;
 
             background:
-                    linear-gradient(135deg,#0f172a,#020617);
+                    linear-gradient(
+                            rgba(2, 6, 23, .55),
+                            rgba(2, 6, 23, .75)
+                    ),
+                    url("Kalp's Studio logo with Warli art.png")
+                    center / cover no-repeat;
 
-            display:flex;
-
-            justify-content:center;
-
-            align-items:center;
-
-            z-index:99999;
-
+            position: relative;
         }
 
-        .loaderContent{
+        .heroContent {
+            max-width: 850px;
 
-            text-align:center;
-
-            color:white;
-
+            animation: fadeUp .9s ease;
         }
 
-        .logoCircle{
+        .heroBadge {
+            display: inline-block;
 
-            width:110px;
+            margin-bottom: 28px;
 
-            height:110px;
+            padding: 12px 24px;
 
-            margin:auto;
+            border-radius: 50px;
 
-            border-radius:50%;
+            background: rgba(255, 255, 255, .12);
 
-            display:flex;
+            border: 1px solid rgba(255, 255, 255, .25);
 
-            justify-content:center;
+            backdrop-filter: blur(10px);
 
-            align-items:center;
+            color: #fed7aa;
 
-            font-size:54px;
+            font-size: 23px;
 
-            background:linear-gradient(135deg,#ff9800,#ff5722);
+            font-weight: 500;
 
-            box-shadow:0 0 40px rgba(255,152,0,.45);
+            letter-spacing: .5px;
 
-            animation:pulse 2s infinite;
-
+            box-shadow:
+                    0 8px 25px rgba(0, 0, 0, .15);
         }
 
-        .loaderContent h1{
 
-            margin-top:25px;
+        .hero h2 {
+            font-size: clamp(
+                    2.2rem,
+                    7vw,
+                    4.5rem
+            );
 
-            font-size:40px;
+            line-height: 1.15;
 
-            letter-spacing:1px;
-
+            margin-bottom: 20px;
         }
 
-        .loaderTag{
-
-            color:#cbd5e1;
-
-            margin:12px 0 30px;
-
+        .hero h2 span {
+            color: #ff9800;
         }
 
-        .loadingLine{
+        .hero p {
+            max-width: 650px;
 
-            width:260px;
+            margin: auto auto 30px;
 
-            height:6px;
+            color: #e2e8f0;
 
-            background:rgba(255,255,255,.1);
-
-            border-radius:50px;
-
-            overflow:hidden;
-
-            margin:auto;
-
+            font-size: 16px;
         }
 
-        .loadingFill{
+        .primaryButton {
+            display: inline-block;
 
-            width:40%;
+            padding: 13px 27px;
 
-            height:100%;
+            border: none;
 
-            background:linear-gradient(90deg,#ff9800,#fb923c);
+            border-radius: 12px;
 
-            animation:loading 1.8s infinite;
+            background: linear-gradient(
+                    135deg,
+                    #6366f1,
+                    #8b5cf6
+            );
 
+            color: white;
+
+            text-decoration: none;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: .3s;
+
+            box-shadow:
+                    0 8px 25px rgba(99, 102, 241, .3);
         }
 
-        .copyright{
+        .primaryButton:hover {
+            transform: translateY(-3px);
 
-            margin-top:40px;
-
-            font-size:13px;
-
-            color:#94a3b8;
-
-            line-height:1.8;
-
+            box-shadow:
+                    0 14px 30px rgba(99, 102, 241, .4);
         }
 
-        @keyframes pulse{
+        /* =========================
+        SECTIONS
+        ========================= */
 
-            0%,100%{
+        section {
+            padding: 90px 8%;
 
-                transform:scale(1);
-
-            }
-
-            50%{
-
-                transform:scale(1.08);
-
-            }
-
+            scroll-margin-top: 80px;
         }
 
-        @keyframes loading{
+        .sectionTitle {
+            text-align: center;
 
-            0%{
-
-                margin-left:-40%;
-
-            }
-
-            100%{
-
-                margin-left:100%;
-
-            }
-
+            margin-bottom: 45px;
         }
 
-        /* HERO */
-        .hero{
-            height:70vh;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            text-align:center;
-            color:white;
+        .sectionTitle h2 {
+            font-size: 2.2rem;
+
+            margin-bottom: 10px;
+        }
+
+        .sectionTitle p {
+            max-width: 650px;
+
+            margin: auto;
+
+            color: #64748b;
+        }
+
+        /* =========================
+        ABOUT
+        ========================= */
+
+        .aboutBox {
+            max-width: 850px;
+
+            margin: auto;
+
+            padding: 35px;
+
+            text-align: center;
+
+            background: white;
+
+            border-radius: 20px;
+
+            box-shadow:
+                    0 15px 40px rgba(15, 23, 42, .08);
+        }
+
+        /* =========================
+        CARDS
+        ========================= */
+
+        .cards {
+            display: grid;
+
+            grid-template-columns:
+    repeat(
+    auto-fit,
+    minmax(240px, 1fr)
+    );
+
+            gap: 25px;
+        }
+
+        .card {
+            padding: 30px;
+
+            background: white;
+
+            border-radius: 18px;
+
+            border:
+                    1px solid #eef2f7;
+
+            box-shadow:
+                    0 12px 35px rgba(15, 23, 42, .07);
+
+            transition: .35s;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+
+            box-shadow:
+                    0 20px 45px rgba(15, 23, 42, .12);
+        }
+
+        .cardIcon {
+            width: 55px;
+            height: 55px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            margin-bottom: 18px;
+
+            border-radius: 14px;
+
+            background: #fff7ed;
+
+            font-size: 25px;
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #64748b;
+
+            font-size: 14px;
+        }
+
+        /* =========================
+        GALLERY
+        ========================= */
+
+        .gallery {
+            display: grid;
+
+            grid-template-columns:
+    repeat(
+    auto-fit,
+    minmax(250px, 1fr)
+    );
+
+            gap: 20px;
+        }
+
+        .galleryItem {
+            position: relative;
+
+            overflow: hidden;
+
+            border-radius: 18px;
+
+            background: #ddd;
+
+            aspect-ratio: 4 / 3;
+
+            box-shadow:
+                    0 10px 30px rgba(0, 0, 0, .1);
+        }
+
+        .galleryItem img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+
+            transition: .5s;
+        }
+
+        .galleryItem:hover img {
+            transform: scale(1.08);
+        }
+
+        .galleryOverlay {
+            position: absolute;
+            inset: 0;
+
+            display: flex;
+            align-items: flex-end;
+
+            padding: 20px;
+
             background:
-                    linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.55)),
-                    url("https://images.unsplash.com/photo-1541961017774-22349e4a1262")
-                    center/cover no-repeat;
+                    linear-gradient(
+                            transparent,
+                            rgba(0, 0, 0, .7)
+                    );
+
+            color: white;
+
+            opacity: 0;
+
+            transition: .3s;
         }
 
-        .hero h2{
-            font-size:clamp(2rem,5vw,3.5rem);
-            font-weight:600;
-            padding:20px 35px;
-            border-radius:18px;
-            background:rgba(0,0,0,.35);
-            backdrop-filter:blur(8px);
-        }
-        .hero button{
-            padding:12px 28px;
-            border:none;
-            border-radius:12px;
-            background:linear-gradient(135deg,#6366f1,#8b5cf6);
-            color:#fff;
-            font-weight:600;
-            cursor:pointer;
-            transition:.3s;
+        .galleryItem:hover .galleryOverlay {
+            opacity: 1;
         }
 
-        .hero button:hover{
-            transform:translateY(-2px);
-            box-shadow:0 8px 20px rgba(99,102,241,.35);
-        }
+        /* =========================
+        CONTACT
+        ========================= */
 
-        /* HEADER */
-        /*header{*/
-        /*    position:sticky;*/
-        /*    top:60px;*/
-        /*    top:60px;*/
-        /*    z-index:1000;*/
+        .contactForm {
+            max-width: 700px;
 
-        /*    display:flex;*/
-        /*    justify-content:space-between;*/
-        /*    align-items:center;*/
+            margin: auto;
 
-        /*    padding:18px 45px;*/
+            display: flex;
 
-        /*    background:rgba(17,17,17,.82);*/
+            flex-direction: column;
 
-        /*    backdrop-filter:blur(18px);*/
-
-        /*    border-bottom:1px solid rgba(255,255,255,.08);*/
-
-        /*    box-shadow:0 8px 25px rgba(0,0,0,.18);*/
-        /*}*/
-        header{
-            position:sticky;
-            top:0;
-            z-index:1000;
-
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            flex-wrap:wrap;
-
-            padding:16px 8%;
-
-            background:rgba(17,17,17,.9);
-            backdrop-filter:blur(18px);
-
-            border-bottom:1px solid rgba(255,255,255,.08);
-            box-shadow:0 8px 25px rgba(0,0,0,.18);
-        }
-
-        header h1{
-
-            color:#fff;
-
-            font-size:28px;
-
-            letter-spacing:1px;
-
-            display:flex;
-            align-items:center;
-            gap:10px;
-
-        }
-
-        /* CARDS */
-        .cards{
-            display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-            gap:25px;
-        }
-
-        .card{
-            background:white;
-            border-radius:18px;
-            padding:28px;
-            box-shadow:0 12px 30px rgba(0,0,0,.08);
-            transition:.3s;
-        }
-
-        .card:hover{
-            transform:translateY(-8px);
-            box-shadow:0 20px 40px rgba(0,0,0,.15);
-        }
-
-        .card h3{
-            margin-bottom:10px;
-        }
-
-        /* GALLERY */
-        .gallery{
-            display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-            gap:20px;
-        }
-
-        .gallery img{
-            width:100%;
-            aspect-ratio:4/3;
-            object-fit:cover;
-            border-radius:18px;
-            transition:.35s;
-            box-shadow:0 10px 25px rgba(0,0,0,.12);
-        }
-
-        .gallery img:hover{
-            transform:scale(1.04);
-        }
-
-        /* FOOTER */
-        footer{
-            background:#111;
-            color:#fff;
-            text-align:center;
-            padding:15px;
-        }
-
-        #verifyOverlay{
-            position:fixed;
-            inset:0;
-            background:rgba(0,0,0,0.85);
-
-            display:flex;
-            justify-content:center;
-            align-items:center;
-
-            z-index:9999;
-        }
-
-        .verifyBox{
-            background:nlack;
-            color:#00ff00;
-            padding:25px;
-            border:2px solid #00ff00;
-            width:90%;
-            max-width:420px;
-
-            text-align:center;
-            border-radius:8px;
-        }
-
-        .verifyBox input{
-            width:100%;
-            padding:10px;
-            margin-top:10px;
-
-            background:black;
-            color:#00ff00;
-            border:1px solid #00ff00;
-        }
-
-        .verifyBox button{
-            margin-top:15px;
-            width:100%;
-            padding:10px;
-
-            background:black;
-            color:#00ff00;
-            border:1px solid #00ff00;
-            cursor:pointer;
-        }
-
-        .verifyBox label{
-            display:block;
-            margin-top:10px;
-        }
-
-        /* ADMIN */
-        #adminPanel{
-            display:none;
-            background:#222;
-            color:white;
-            padding:10px;
-            text-align:center;
-            flex-wrap:wrap;
-            gap:10px;
-        }
-
-        /* GEAR */
-        #gearBtn{
-            position:fixed;
-            bottom:20px;
-            right:20px;
-            background:#111;
-            color:#fff;
-            padding:12px;
-            border-radius:50%;
-            text-decoration:none;
-            z-index:999;
-        }
-
-        /* MOBILE */
-        /*@media(max-width:600px){*/
-
-        /*    header{*/
-        /*        flex-direction:column;*/
-        /*        text-align:center;*/
-        /*    }*/
-
-        /*    .cards{*/
-        /*        flex-direction:column;*/
-        /*    }*/
-
-        /*    .hero{*/
-        /*        height:50vh;*/
-        /*    }*/
-
-        /*}*/
-        button{
-            padding:12px 24px;
-            background:linear-gradient(135deg,#6366f1,#8b5cf6);
-            color:white;
-            text-decoration:none;
-            border-radius:12px;
-            font-weight:600;
-            box-shadow:0 4px 12px rgba(99,102,241,.25);
-        }
-        @media (max-width:768px){
-
-            header{
-                flex-direction:column;
-                gap:18px;
-                text-align:center;
-            }
-
-            nav{
-                width:100%;
-                justify-content:center;
-                gap:10px;
-            }
-
-            nav a{
-                padding:10px 14px;
-                font-size:14px;
-            }
-        }
-        /* ===========================
-           UPDATE BANNER
-        =========================== */
-
-        #updateBanner{
-            position:fixed;
-            top:0;
-            left:0;
-            right:0;
-            z-index:10000;
-
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            gap:15px;
-
-            padding:12px 18px;
-
-            background:linear-gradient(90deg,#ff9800,#ff5722);
-            color:#fff;
-
-            font-size:14px;
-            box-shadow:0 4px 18px rgba(0,0,0,.3);
-
-            transform:translateY(0);
-            transition:transform .4s ease, opacity .4s ease;
-        }
-
-        #updateBanner.hidden{
-            transform:translateY(-120%);
-            opacity:0;
-        }
-
-        .updateContent{
-            display:flex;
-            flex-direction:column;
-            gap:2px;
-        }
-
-        .updateContent span{
-            font-size:12px;
-            opacity:.9;
-        }
-
-        #updateBanner button{
-            border:none;
-            background:#fff;
-            color:#ff5722;
-            padding:8px 12px;
-            border-radius:8px;
-            cursor:pointer;
-            font-weight:600;
-            transition:.2s;
-        }
-
-        #updateBanner button:hover{
-            transform:scale(1.05);
-            background:#ffe6d5;
-        }
-
-        @media(max-width:600px){
-            #updateBanner{
-                flex-direction:column;
-                text-align:center;
-            }
-        }
-        #updateBanner span{
-            flex:1;
-        }
-
-        @keyframes slideDown{
-            from{
-                transform:translateY(-100%);
-                opacity:0;
-            }
-            to{
-                transform:translateY(0);
-                opacity:1;
-            }
-        }
-
-        @media(max-width:600px){
-            #updateBanner{
-                flex-direction:column;
-                text-align:center;
-            }
-        }
-        /*Contact*/
-        .contactForm{
-            max-width:700px;
-            margin:auto;
-            display:flex;
-            flex-direction:column;
-            gap:18px;
+            gap: 16px;
         }
 
         .contactForm input,
-        .contactForm textarea{
-            padding:16px;
-            border-radius:12px;
-            border:1px solid #ddd;
-            font-size:15px;
-            transition:.25s;
+        .contactForm textarea {
+            width: 100%;
+
+            padding: 15px 17px;
+
+            border:
+                    1px solid #dbe2ea;
+
+            border-radius: 12px;
+
+            background: white;
+
+            outline: none;
+
+            font-size: 14px;
+
+            transition: .25s;
+
+            resize: vertical;
         }
 
         .contactForm input:focus,
-        .contactForm textarea:focus{
-            outline:none;
-            border-color:#6366f1;
-            box-shadow:0 0 0 4px rgba(99,102,241,.12);
+        .contactForm textarea:focus {
+            border-color: #6366f1;
+
+            box-shadow:
+                    0 0 0 4px rgba(99, 102, 241, .1);
         }
 
-        .contactForm button{
-            width:220px;
-            align-self:center;
-        }
-        /*          navbar     */
-        /*nav{*/
+        .contactForm button {
+            align-self: center;
 
-        /*    display:flex;*/
-
-        /*    gap:10px;*/
-
-        /*    align-items:center;*/
-
-        /*}*/
-        nav{
-            display:flex;
-            align-items:center;
-            gap:12px;
-            flex-wrap:wrap;
+            min-width: 220px;
         }
 
-        /*nav a{*/
+        /* =========================
+        ADMIN
+        ========================= */
 
-        /*    color:#f5f5f5;*/
+        #adminPanel {
+            display: none;
 
-        /*    text-decoration:none;*/
+            padding: 12px 7%;
 
-        /*    padding:10px 18px;*/
+            background: #111827;
 
-        /*    border-radius:10px;*/
+            color: white;
 
-        /*    transition:.25s;*/
+            text-align: center;
 
-        /*    font-weight:500;*/
+            gap: 10px;
 
-        /*}*/
-        nav a{
-            color:#fff;
-            text-decoration:none;
-
-            padding:10px 18px;
-
-            border-radius:10px;
-
-            transition:.25s;
-
-            font-weight:500;
-            white-space:nowrap;
+            flex-wrap: wrap;
         }
 
-        nav a:hover{
+        .adminButton {
+            border:
+                    1px solid #475569;
 
-            background:rgba(255,255,255,.08);
+            padding: 7px 13px;
 
-            color:#ffb74d;
+            border-radius: 8px;
 
-            transform:translateY(-2px);
+            background: transparent;
 
-        }
-        #dashboardLink{
-            background:linear-gradient(135deg,#6366f1,#8b5cf6);
-            color:#fff;
-            box-shadow:0 8px 20px rgba(99,102,241,.35);
-        }
+            color: white;
 
-        #dashboardLink:hover{
-            transform:translateY(-2px);
-            box-shadow:0 12px 24px rgba(99,102,241,.45);
+            cursor: pointer;
+
+            transition: .2s;
         }
 
-        /*             section          */
-        section{
-            padding:70px 10%;
+        .adminButton:hover {
+            background: #334155;
         }
 
-        section h2{
-            text-align:center;
-            margin-bottom:30px;
-            font-size:2rem;
+        /* =========================
+        SETTINGS
+        ========================= */
+
+        #gearBtn {
+            position: fixed;
+
+            right: 22px;
+            bottom: 22px;
+
+            z-index: 900;
+
+            width: 52px;
+            height: 52px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 50%;
+
+            background: #111827;
+
+            color: white;
+
+            text-decoration: none;
+
+            box-shadow:
+                    0 8px 25px rgba(0, 0, 0, .25);
+
+            transition: .3s;
         }
 
-        section p{
-            max-width:800px;
-            margin:auto;
-            text-align:center;
-        }
-        section{
-            scroll-margin-top:100px;
-        }
+        #gearBtn:hover {
+            transform:
+                    rotate(25deg)
+                    scale(1.08);
 
-        /* ================= FOOTER ================= */
-
-        .footer{
-
-            margin-top:70px;
-
-            background:
-                    linear-gradient(135deg,#0f172a,#020617);
-
-            border-top:1px solid rgba(255,255,255,.08);
-
-            color:#ddd;
-
-            padding:45px 8% 20px;
-
+            background: #6366f1;
         }
 
-        .footer-content{
+        /* =========================
+        FOOTER
+        ========================= */
 
-            display:flex;
+        footer {
+            padding: 25px;
 
-            justify-content:space-between;
+            background: #020617;
 
-            align-items:flex-start;
+            color: #94a3b8;
 
-            flex-wrap:wrap;
+            text-align: center;
 
-            gap:35px;
-
+            font-size: 13px;
         }
 
-        .footer-brand h2{
-
-            color:#fff;
-
-            margin-bottom:12px;
-
-            font-size:28px;
-
-        }
-
-        .footer-brand span{
-
-            color:#f97316;
-
-        }
-
-        .footer-brand p{
-
-            color:#a8b3cf;
-
-            line-height:1.7;
-
-            max-width:320px;
-
-        }
-
-        .footer-links{
-
-            display:flex;
-
-            flex-direction:column;
-
-            gap:12px;
-
-        }
-
-        .footer-links a{
-
-            color:#ddd;
-
-            text-decoration:none;
-
-            transition:.3s;
-
-        }
-
-        .footer-links a:hover{
-
-            color:#f97316;
-
-            transform:translateX(6px);
-
-        }
-
-        .footer-social{
-
-            display:flex;
-
-            gap:15px;
-
-        }
-
-        .footer-social a{
-
-            width:48px;
-
-            height:48px;
-
-            display:flex;
-
-            justify-content:center;
-
-            align-items:center;
-
-            text-decoration:none;
-
-            border-radius:50%;
-
-            background:rgba(255,255,255,.05);
-
-            color:white;
-
-            font-size:20px;
-
-            transition:.35s;
-
-        }
-
-        .footer-social a:hover{
-
-            background:#f97316;
-
-            transform:translateY(-5px) scale(1.1);
-
-            box-shadow:0 12px 25px rgba(249,115,22,.35);
-
-        }
-
-        .footer hr{
-
-            margin:35px 0 20px;
-
-            border:none;
-
-            height:1px;
-
-            background:rgba(255,255,255,.08);
-
-        }
-
-        .footer-bottom{
-
-            text-align:center;
-
-            color:#9ca3af;
-
-            font-size:14px;
-
-        }
-
-        /* Mobile */
-
-        @media(max-width:768px){
-
-            .footer-content{
-
-                flex-direction:column;
-
-                text-align:center;
-
-                align-items:center;
-
+        /* =========================
+        ANIMATIONS
+        ========================= */
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
             }
 
-            .footer-brand p{
+            50% {
+                transform: scale(1.08);
+            }
+        }
 
-                max-width:100%;
+        @keyframes loading {
 
+            0% {
+                margin-left: -40%;
             }
 
-            .footer-links{
+            100% {
+                margin-left: 100%;
+            }
+        }
 
-                align-items:center;
+        @keyframes spin {
 
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fadeIn {
+
+            from {
+                opacity: 0;
             }
 
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeUp {
+
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes modalIn {
+
+            from {
+                opacity: 0;
+                transform:
+                        scale(.95)
+                        translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform:
+                        scale(1)
+                        translateY(0);
+            }
+        }
+
+        /* =========================
+        MOBILE
+        ========================= */
+
+        @media (max-width: 768px) {
+
+            header {
+                flex-direction: column;
+
+                padding: 15px 5%;
+
+                text-align: center;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            nav a {
+                font-size: 13px;
+
+                padding: 8px 10px;
+            }
+
+            .hero {
+                min-height: 70vh;
+            }
+
+            section {
+                padding: 65px 6%;
+            }
+
+            updateBanner {
+                flex-direction: column;
+                background-color: #1e293b;
+                text-align: center;
+
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            nav {
+                gap: 3px;
+            }
+
+            nav a {
+                padding: 7px 8px;
+
+                font-size: 12px;
+            }
+
+            .verifyBox {
+                padding: 24px 20px;
+            }
+
+            .hero h2 {
+                font-size: 2.1rem;
+            }
+
+            section {
+                padding: 55px 5%;
+            }
         }
 
     </style>
 </head>
-
 <body>
-<!-- UPDATE BANNER -->
-<div id="updateBanner">
-    <div class="updateContent">
-        📢 <strong>Website Update Available</strong>
-        <span>Check Settings → System Update to download latest improvements.</span>
-    </div>
+<!--  <div class="updateContent">-->
+<!--    <strong>📢 Website Update Available</strong>-->
+<!--    <span>-->
+<!--        Check Settings → System Update for the latest improvements.-->
+<!--    </span>-->
+<!--  </div>-->
 
-    <button onclick="closeBanner()">✖ Dismiss</button>
-</div>
-<!-- LOADER 1 (Verification Phase) -->
-<div id="loader1">
+<!--  <button onclick="closeBanner()">-->
+<!--    ✖ Dismiss-->
+<!--  </button>-->
 
+</div> <!-- ========================= LOADER ========================= --> <div id="loader1">
     <div class="loaderContent">
 
         <div class="logoCircle">
-
             🎨
-
         </div>
 
         <h1>Kalps Studio</h1>
 
         <p class="loaderTag">
-
             Creative • Design • Innovation
-
         </p>
 
         <div class="loadingLine">
-
             <div class="loadingFill"></div>
-
         </div>
 
         <p class="copyright">
-
             © 2026 Srivats Sridaran
-
             <br>
-
             Crafted with creativity.
-
         </p>
 
     </div>
 
-</div>
+</div> <!-- ========================= SECOND LOADER ========================= --> <div id="loader2">
+    <div style="text-align:center">
 
-<!-- LOADER 2 (Final Load) -->
-<div id="loader2" style="
-    position:fixed;
-    inset:0;
-    background:#000;
-    color:#fff;
-    display:none;
-    justify-content:center;
-    align-items:center;
-    z-index:9999;
-">
-    <h2>🚀 Loading Webpage...</h2>
-</div>
+        <div class="loaderSpinner"></div>
 
-<!-- VERIFY -->
-<div id="verifyOverlay">
+        <h2>
+            Loading...
+        </h2>
+
+    </div>
+
+</div> <!-- ========================= VERIFICATION ========================= --> <div id="verifyOverlay">
     <div class="verifyBox">
 
-        <h3 style="text-align:center;">User / Admin Verification</h3>
+        <div class="verifyIcon">
+            🔐
+        </div>
+
+        <h3>
+            User verification
+        </h3>
 
         <p>
-            Enter 8409 (user) or Ad@135 (admin)<br>
-            Open admin in one page and use the contact page to see the magic
+            Already have an account?<gr>Enter your access code to continue.
             <br><br>
-            <i><strong>Note:</strong> This is a static website with no database however it is still recommended that you don't use your original credentials</i>
+            If not<br>
+            User access: <strong>8409</strong>
+            <br>
+
+            <!--      <small>Admin access: Ad@135</small>-->
         </p>
 
-        <br><br>
+        <p style="margin-top:15px;">
+            This is a static website[As of now:)].<br>
+            Do not use real passwords.
+        </p>
 
-        <input id="answer" placeholder="Enter code">
+        <input
+                type="text"
+                id="answer"
+                placeholder="Enter access code"
+                autocomplete="on"
+        >
 
-        <br><br>
+        <label class="robotCheck">
 
-        <label>
-            <input type="checkbox" id="robot">
-            I am not a robot
+            <input type="checkbox" id="robot">I am not a robot</input>
+
         </label>
 
-        <br><br>
-
-        <button onclick="verifyUser()">Enter</button>
+        <button
+                class="verifyButton"
+                onclick="verifyUser()"
+        >
+            Enter Studio
+        </button>
 
     </div>
-</div>
 
-<!-- ADMIN -->
-<div id="adminPanel">
-    ⚙ Admin Panel Active
-    <button onclick="enableEdit()">Edit</button>
-    <button onclick="disableEdit()">Lock</button>
-    <button onclick="logout()">Logout</button>
-</div>
+</div> <!-- ========================= ADMIN PANEL ========================= --> <div id="adminPanel">
+<span>
+    ⚙ <strong>Admin Panel Active</strong>
+</span>
 
-<header>
-    <h1>
+    <button
+            class="adminButton"
+            onclick="enableEdit()"
+    >
+        Edit
+    </button>
 
-        🎨 Kalps <span style="color:#ff9800;">Studio</span>
+    <button
+            class="adminButton"
+            onclick="disableEdit()"
+    >
+        Lock
+    </button>
 
-    </h1>
+    <button
+            class="adminButton"
+            onclick="logout()"
+    >
+        Logout
+    </button>
+
+</div> <!-- ========================= HEADER ========================= --> <header>
+    <div class="logo">
+        🎨 Kalps <span>Studio</span>
+    </div>
 
     <nav>
-        <a href="about.html">About</a>
-        <a href="#services">Services</a>
-        <a href="#portfolio">Portfolio</a>
-        <a href="#contact">Contact</a>
-        <a id="dashboardLink" href="dashboard.html">Dashboard&raquo;</a>
-    </nav>
-</header>
 
-<div class="hero">
-    <div>
-        <h2>Creative Art & Design Studio</h2>
-        <br>
-        <a href="#portfolio">
-            <button>View Portfolio</button>
+        <a href="#about">
+            About
         </a>
+
+        <a href="#services">
+            Services
+        </a>
+
+        <a href="#portfolio">
+            Portfolio
+        </a>
+
+        <a href="#contact">
+            Contact
+        </a>
+
+        <a
+                id="dashboardLink"
+                href="dashboard.html"
+        >
+            Dashboard →
+        </a>
+
+    </nav>
+
+</header> <!-- ========================= HERO ========================= --> <section class="hero">
+    <div class="heroContent">
+
+    <span class="heroBadge">
+        At Kalps Studio
+    </span>
+
+        <h2>
+            Imagination<br>
+            <span>Comes to LIFE!</span>
+        </h2>
+
+        <p>
+            We teach and make art. We take every Idea into account and convert Imgination int artwork.
+        </p>
+
+        <a
+                href="#portfolio"
+                class="primaryButton"
+        >
+            Explore Portfolio
+        </a>
+
     </div>
-</div>
 
-<section id="about">
-    <h2>About Us</h2>
-    <p>Kalps Studio is a creative art company specializing in unique visual experiences.</p>
-</section>
+</section> <!-- ========================= ABOUT ========================= --> <section id="about">
+    <div class="sectionTitle">
 
-<section id="services">
-    <h2>Services</h2>
+        <h2>
+            About Us
+        </h2>
+
+        <p>
+            Discover the creative vision behind Kalps Studio.
+        </p>
+
+    </div>
+
+    <div class="aboutBox">
+
+        <p>
+            Kalps Studio is a creative art company specializing
+            in unique visual experiences, personalized artwork
+            and handcrafted designs.
+        </p>
+
+    </div>
+
+</section> <!-- ========================= SERVICES ========================= --> <section id="services">
+    <div class="sectionTitle">
+
+        <h2>
+            Our Services
+        </h2>
+
+        <p>
+            Creative services designed to turn ideas into reality.
+        </p>
+
+    </div>
 
     <div class="cards">
+
         <div class="card">
-            <h3>Custom Artwork</h3>
-            <p>Personalized paintings and Lippan art.</p>
+
+            <div class="cardIcon">
+                🎨
+            </div>
+
+            <h3>
+                Custom Artwork
+            </h3>
+
+            <p>
+                Personalized paintings, Lippan art and
+                handcrafted creative pieces.
+            </p>
+
         </div>
 
         <div class="card">
-            <h3>Classes</h3>
-            <p>Step-by-step art learning courses.</p>
+
+            <div class="cardIcon">
+                📚
+            </div>
+
+            <h3>
+                Art Classes
+            </h3>
+
+            <p>
+                Step-by-step art learning courses designed
+                for beginners and creative enthusiasts.
+            </p>
+
         </div>
+
+        <div class="card">
+
+            <div class="cardIcon">
+                ✨
+            </div>
+
+            <h3>
+                Creative Design
+            </h3>
+
+            <p>
+                Unique visual concepts and creative designs
+                tailored to your ideas.
+            </p>
+
+        </div>
+
     </div>
-</section>
 
-<section id="portfolio">
-    <h2>Portfolio</h2>
+</section> <!-- ========================= PORTFOLIO ========================= --> <section id="portfolio">
+    <div class="sectionTitle">
+
+        <h2>
+            Our Portfolio
+        </h2>
+
+        <p>
+            A collection of creative work from Kalps Studio.
+        </p>
+
+    </div>
 
     <div class="gallery">
-        <img src="Kalps Studio Gallery 1.jpeg" alt="Artwork 1">
-        <img src="Kalps Studio Gallery 2.jpeg" alt="Artwork 2">
-        <img src="Kalps Studio Gallery 3.jpeg" alt="Artwork 3">
-        <img src="Gemini_Generated_Image_pri9gpri9gpri9gp.png" alt="Artwork 4">
-        <img src="Gemini_Generated_Image_pri9gpri9gpri9gp.png" alt="Artwork 5">
-        <img src="Gemini_Generated_Image_pri9gpri9gpri9gp.png" alt="Artwork 6">
+
+        <div class="galleryItem">
+
+            <img
+                    src="Kalps Studio Gallery 1.jpeg"
+                    alt="Kalps Studio Artwork 1"
+            >
+
+            <div class="galleryOverlay">
+                <strong>
+                    Artwork 01
+                </strong>
+            </div>
+
+        </div>
+
+        <div class="galleryItem">
+
+            <img
+                    src="Kalps Studio Gallery 2.jpeg"
+                    alt="Kalps Studio Artwork 2"
+            >
+
+            <div class="galleryOverlay">
+                <strong>
+                    Artwork 02
+                </strong>
+            </div>
+
+        </div>
+
+        <div class="galleryItem">
+
+            <img
+                    src="Kalps Studio Gallery 3.jpeg"
+                    alt="Kalps Studio Artwork 3"
+            >
+
+            <div class="galleryOverlay">
+                <strong>
+                    Artwork 03
+                </strong>
+            </div>
+
+        </div>
+
+        <div class="galleryItem">
+
+            <img
+                    src="Gemini_Generated_Image_pri9gpri9gpri9gp.png"
+                    alt="Kalps Studio Artwork 4"
+            >
+
+            <div class="galleryOverlay">
+                <strong>
+                    Artwork 04
+                </strong>
+            </div>
+
+        </div>
+
+        <div class="galleryItem">
+
+            <img
+                    src="Gemini_Generated_Image_pri9gpri9gpri9gp.png"
+                    alt="Kalps Studio Artwork 5"
+            >
+
+            <div class="galleryOverlay">
+                <strong>
+                    Artwork 05
+                </strong>
+            </div>
+
+        </div>
+
+        <div class="galleryItem">
+
+            <img
+                    src="Gemini_Generated_Image_pri9gpri9gpri9gp.png"
+                    alt="Kalps Studio Artwork 6"
+            >
+
+            <div class="galleryOverlay">
+                <strong>
+                    Artwork 06
+                </strong>
+            </div>
+
+        </div>
+
     </div>
-</section>
 
-<section id="contact">
+</section> <!-- ========================= CONTACT ========================= --> <section id="contact">
+    <div class="sectionTitle">
 
-    <h2>Contact Us</h2>
+        <h2>
+            Let us Collaborate
+        </h2>
 
-    <form class="contactForm">
+        <p>
+            Have an idea? We'd love to hear about it.
+        </p>
 
-        <input type="text" placeholder="Your Name" required>
+    </div>
 
-        <input type="email" placeholder="Email Address" required>
+    <form
+            class="contactForm"
+            onsubmit="openContactPage(event)"
+    >
 
-        <input type="text" placeholder="Subject">
+        <input
+                type="text"
+                placeholder="Your Name"
 
-        <textarea rows="6" placeholder="Tell us about your project..." required></textarea>
+        >
 
-        <button type="button"
-                onclick="window.location.href='contact.html'">
-            Contact Us
+        <input
+                type="email"
+                placeholder="Email Address"
+
+        >
+
+        <input
+                type="text"
+                placeholder="Subject"
+        >
+
+        <textarea
+                rows="6"
+                placeholder="Tell us about your project..."
+
+        ></textarea>
+
+        <button
+                type="submit"
+                class="primaryButton"
+        >
+            Contact Us →
         </button>
 
     </form>
 
-</section>
+</section> <!-- ========================= FOOTER ========================= --> <footer>
+    © 2026 Srivats Sridaran.
+    All Rights Reserved.
 
-<footer>
-    © 2026 Srivats Sridaran. All Rights Reserved
-</footer>
-
-<a href="setting.html" id="gearBtn">⚙ Settings</a>
-
-<script>
-
-    /* VERIFY */
-    function verifyUser(){
-
-        let ans=document.getElementById("answer").value;
-        let robot=document.getElementById("robot").checked;
-
-        if(!robot){
-            alert("Confirm you're not a robot");
-            return;
-        }
-
-        if(ans==="8409"){
-            sessionStorage.setItem("role","user");
-        }
-        else if(ans==="Ad@135"){
-            sessionStorage.setItem("role","admin");
-            document.getElementById("adminPanel").style.display="block";
-
-            document.querySelectorAll("h1,h2,h3,p").forEach(el=>{
-                el.contentEditable=true;
-            });
-        }
-        else{
-            alert("Wrong code");
-            return;
-        }
-
-        document.querySelectorAll("h1,h2,h3,p").forEach(el=>{
-            el.contentEditable=true;
-        });
-
-        document.getElementById("verifyOverlay").style.display = "none";
+</footer> <!-- SETTINGS -->
+<a href="setting.html" id="gearBtn" title="Settings">Settings</a>
+</body>
+<script> /* ========================= VERIFICATION ========================= */
+function verifyUser() {
+    const answer = document.getElementById("answer").value.trim();
+    const robot = document.getElementById("robot").checked;
+    if (!robot) { alert("Please confirm that you're not a robot.");
+        return;
     }
-
-    /* EDIT MODE */
-    function enableEdit(){
-        document.querySelectorAll("h1,h2,h3,p").forEach(el=>{
-            el.contentEditable = true;
-        });
+    if (answer === "8409") { sessionStorage.setItem( "role", "user" );
     }
-
-    function disableEdit(){
-        document.querySelectorAll("h1,h2,h3,p").forEach(el=>{
-            el.contentEditable = false;
-        });
+    else if (answer === "Ad@135") { sessionStorage.setItem( "role", "admin" );
+        showAdminPanel();
+        enableEdit();
     }
-    if(sessionStorage.getItem("role")==="admin"){
-        document.getElementById("adminPanel").style.display="block";
+    else {
+        alert("Incorrect access code.");
+        return;
     }
-
-    function logout(){
-        sessionStorage.clear();
-        location.reload();
+    document .getElementById("verifyOverlay") .style.display = "none"; }
+/* ========================= ADMIN ========================= */
+function showAdminPanel() {
+    document .getElementById("adminPanel").style.display = "flex";
+}
+function enableEdit() {
+    document .querySelectorAll("h1, h2, h3, p") .forEach(element => { element.contentEditable = true;
+        element.style.outline = "1px dashed #6366f1";
+    });
+} function disableEdit() {
+    document .querySelectorAll("h1, h2, h3, p") .forEach(element => { element.contentEditable = false;
+        element.style.outline = "none";
+    }); }
+function logout() {
+    sessionStorage.clear();
+    location.reload();
+}
+/* ========================= CONTACT ========================= */
+function openContactPage(event) {
+    event.preventDefault();
+    window.location.href = "contact.html";
+} /* ========================= UPDATE BANNER ========================= */
+function closeBanner() {
+    const banner = document.getElementById("updateBanner");
+    banner.classList.add("hidden");
+    localStorage.setItem( "updateBannerClosed", "true" );
+}
+/* ========================= PAGE LOAD ========================= */
+window.addEventListener( "load", () => {
+    /* ========================= RESTORE BANNER ========================= */
+    if ( localStorage.getItem( "updateBannerClosed" ) === "true" ) {
+        document .getElementById("updateBanner") .style.display = "none";
     }
-    /* LOADER */
-    window.addEventListener("load", () => {
+    /* ========================= RESTORE ADMIN ========================= */
+    if ( sessionStorage.getItem("role") === "admin" ) { showAdminPanel();
+    }
+    /* ========================= LOADER ========================= */
+    setTimeout(() => {
 
-        if(localStorage.getItem("updateBannerClosed") === "true"){
-            document.getElementById("updateBanner").style.display="none";
-        }
+        document
+            .getElementById("loader1")
+            .style.display = "none";
+
+        document
+            .getElementById("loader2")
+            .style.display = "flex";
+
 
         setTimeout(() => {
 
-            document.getElementById("loader1").style.display="none";
+            document
+                .getElementById("loader2")
+                .style.display = "none";
 
-            document.getElementById("loader2").style.display="flex";
+            document
+                .getElementById("verifyOverlay")
+                .style.display = "flex";
 
-            setTimeout(() => {
+        }, 1400);
 
-                document.getElementById("loader2").style.display="none";
-                document.getElementById("verifyOverlay").style.display="flex";
+    }, 1500);
 
-            },1800);
+});
 
-        },1500);
-
-    });
-
-    function closeBanner(){
-        const banner = document.getElementById("updateBanner");
-        banner.classList.add("hidden");
-
-        // remember dismissal
-        localStorage.setItem("updateBannerClosed","true");
-
-        setTimeout(()=>{
-            banner.style.display="none";
-        },400);
-    }
-    
+/* ========================= ENTER KEY ========================= */
+document .getElementById("answer") .addEventListener( "keydown", event => {
+    if (event.key === "Enter") {
+        verifyUser(); } } );
 </script>
-<footer class="footer">
-
-    <div class="footer-content">
-
-        <div class="footer-brand">
-            <h2>🎨 Kalps <span>Studio</span></h2>
-            <p>Creative Design • Innovation • Future Ready</p>
-        </div>
-
-        <div class="footer-links">
-            <a href="index.html">Home</a>
-            <a href="shop.html">Shop</a>
-            <a href="about.html">About</a>
-            <a href="contact.html">Contact</a>
-            <a href="privacy.html">Privacy</a>
-        </div>
-
-        <div class="footer-social">
-            <a href="#"><i class="fa fa-instagram"></i></a>
-            <a href="#"><i class="fa fa-facebook"></i></a>
-            <a href="https://www.youtube.com/watch?v=qJs3nv7QJYg&list=PL6ZO9BI-BdnrPpKWwW53BY0KhcKtjiAG9"><i class="fa fa-youtube-play"></i></a>
-            <a href="#"><i class="fa fa-github"></i></a>
-        </div>
-
-    </div>
-
-    <hr>
-
-    <div class="footer-bottom">
-        © 2026 <strong>Srivats Sridaran</strong> • All Rights Reserved
-    </div>
-
-</footer>
 </body>
 </html>
