@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Canva Style Editor</title>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<style>
+body{ margin:0; font-family:Arial, sans-serif; background:#181818; color:white; overflow:hidden; }
+.topbar{ height:50px; background:#242424; display:flex; align-items:center; gap:15px; padding:0 15px; border-bottom:1px solid #333; }
+.sidebar{ width:220px; background:#2b2b2b; padding:15px; display:flex; flex-direction:column; gap:10px; border-right:1px solid #333; }
+.editor{ display:flex; height:calc(100vh - 50px); }
+.canvas-area{ flex:1; display:flex; justify-content:center; align-items:center; background:#1e1e1e; overflow:auto; padding:20px; }
+#canvas{ width:900px; height:550px; background:white; position:relative; box-shadow:0 10px 25px rgba(0,0,0,0.5); }
+.element{ position:absolute; cursor:move; border:2px solid transparent; box-sizing:border-box; }
+.element.selected{ border:2px dashed #00aaff; }
+.handle{ width:12px; height:12px; background:#00aaff; position:absolute; right:-6px; bottom:-6px; cursor:nwse-resize; border-radius:50%; }
+.rect{ width:120px; height:100px; background:#ff4444; }
+.circle{ width:100px; height:100px; background:#0077ff; border-radius:50%; }
+.text{ font-size:24px; color:black; min-width:80px; padding:4px; outline:none; word-break:break-word; }
+button, label.file-label{ display:block; width:100%; padding:10px; border:none; background:#444; color:white; cursor:pointer; text-align:center; border-radius:6px; font-weight:bold; font-size:13px; transition:background 0.2s; text-decoration:none; box-sizing:border-box; }
+button:hover, label.file-label:hover{ background:#555; }
+.btn-primary{ background:#00aaff; }
+.btn-primary:hover{ background:#0088cc; }
+input[type="color"]{ border:none; background:none; width:40px; height:30px; cursor:pointer; }
+.control-group{ display:flex; align-items:center; gap:8px; color:#aaa; font-size:12px; }
+input[type="range"]{ flex:1; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="control-group">
+    <label>Color:</label>
+    <input type="color" id="color" value="#000000">
+  </div>
+  <div class="control-group" style="width:180px;">
+    <label>Size:</label>
+    <input type="range" id="fontSize" min="10" max="100" value="24">
+  </div>
+  <button style="width:auto; padding:6px 12px;" onclick="bringFront()">Layer Up</button>
+  <button style="width:auto; padding:6px 12px;" onclick="sendBack()">Layer Down</button>
+  <button style="width:auto; padding:6px 12px; background:#22c55e;" onclick="download()">Export Image</button>
+</div>
+
+<div class="editor">
+  <div class="sidebar">
+    <button class="btn-primary" onclick="addText()">+ Add Text</button>
+    <button onclick="addRect()">+ Rectangle</button>
+    <button onclick="addCircle()">+ Circle</button>
+    <label class="file-label">
+      Upload Image
+      <input type="file" style="display:none;" onchange="uploadImage(event)">
+    </label>
+  </div>
+  <div class="canvas-area">
+    <div id="canvas"></div>
+  </div>
+</div>
+
+<script>
+let selected = null;
+let zIndexCounter = 10;
+const canvas = document.getElementById("canvas");
+
+function selectElement(el){
+  document.querySelectorAll(".element").forEach(e=>e.classList.remove("selected"));
+  selected = el;
+  el.classList.add("selected");
+  
+  if(el.classList.contains("text")){
+    document.getElementById("fontSize").value = parseInt(window.getComputedStyle(el).fontSize) || 24;
+  }
+}
+
+canvas.addEventListener("mousedown", (e) => {
+  if(e.target === canvas) {
+    document.querySelectorAll(".element").forEach(e=>e.classList.remove("selected"));
+    selected = null;
+  }
+});
+
+function makeDraggable(el){
+  el.addEventListener("mousedown", (e)=>{
+    if(e.target.classList.contains("handle")) return;
+    selectElement(el);
+    
+    let startX = e.clientX;
+    let startY = e.clientY;
+    let elemX = el.offsetLeft;
+    let elemY = el.offsetTop;
+
+    function onMouseMove(moveEvent) {
+      let deltaX = moveEvent.clientX - startX;
+      let deltaY = moveEvent.clientY - startY;
+      el.style.left = (elemX + deltaX) + "px";
+      el.style.top = (elemY + deltaY) + "px";
+    }
+
+    function onMouseUp() {
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+    }
+
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
+  });
+}
+
+function addResize(el){
+  let handle = document.createElement("div");
+  handle.className = "handle";
+  el.appendChild(handle);
+
+  handle.addEventListener("mousedown", (e)=>{
+    e.stopPropagation();
+    e.preventDefault();
+    
+    let startWidth = el.offsetWidth;
+    let startHeight = el.offsetHeight;
+    let startX = e.clientX;
+    let startY = e.clientY;
+
+    function onMouseMove(moveEvent) {
+      let width = startWidth + (moveEvent.clientX - startX);
+      let height = startHeight + (moveEvent.clientY - startY);
+      if(width > 20) el.style.width = width + "px";
+      if(height > 20) el.style.height = height + "px";
+    }
+
+    function onMouseUp() {
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+    }
+
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
+  });
+}
+
+function addText(){
+  let el = document.createElement("div");
+  el.className = "element text";
+  el.contentEditable = true;
+  el.innerText = "Double click to edit";
+  el.style.left = "100px";
+  el.style.top = "100px";
+  el.style.zIndex = ++zIndexCounter;
+  canvas.appendChild(el);
+  makeDraggable(el);
+  addResize(el);
+  selectElement(el);
+}
+
+function addRect(){
+  let el = document.createElement("div");
+  el.className = "element rect";
+  el.style.left = "150px";
+  el.style.top = "150px";
+  el.style.zIndex = ++zIndexCounter;
+  canvas.appendChild(el);
+  makeDraggable(el);
+  addResize(el);
+  selectElement(el);
+}
+
+function addCircle(){
+  let el = document.createElement("div");
+  el.className = "element circle";
+  el.style.left = "200px";
+  el.style.top = "200px";
+  el.style.zIndex = ++zIndexCounter;
+  canvas.appendChild(el);
+  makeDraggable(el);
+  addResize(el);
+  selectElement(el);
+}
+
+function uploadImage(e){
+  if(!e.target.files[0]) return;
+  let img = document.createElement("img");
+  img.src = URL.createObjectURL(e.target.files[0]);
+  img.className = "element";
+  img.style.width = "200px";
+  img.style.left = "250px";
+  img.style.top = "150px";
+  img.style.zIndex = ++zIndexCounter;
+  img.onload = () => {
+    canvas.appendChild(img);
+    makeDraggable(img);
+    addResize(img);
+    selectElement(img);
+  };
+}
+
+document.getElementById("color").oninput = (e)=>{
+  if(selected){
+    if(selected.classList.contains("text")) {
+      selected.style.color = e.target.value;
+    } else {
+      selected.style.backgroundColor = e.target.value;
+    }
+  }
+};
+
+document.getElementById("fontSize").oninput = (e)=>{
+  if(selected && selected.classList.contains("text")){
+    selected.style.fontSize = e.target.value + "px";
+  }
+};
+
+function bringFront(){
+  if(selected) selected.style.zIndex = ++zIndexCounter;
+}
+
+function sendBack(){
+  if(selected) {
+    zIndexCounter++;
+    let currentZ = parseInt(selected.style.zIndex) || 10;
+    if(currentZ > 1) selected.style.zIndex = currentZ - 1;
+  }
+}
+
+document.addEventListener("keydown", (e)=>{
+  if((e.key === "Delete" || e.key === "Backspace") && selected){
+    if(document.activeElement === selected) return; // don't delete while typing text
+    selected.remove();
+    selected = null;
+  }
+});
+
+function download(){
+  // Temporarily deselect element for clean screenshot
+  let currentSelected = selected;
+  if(selected) selected.classList.remove("selected");
+  
+  html2canvas(canvas, { scale: 2, useCORS: true }).then(c=>{
+    let link = document.createElement("a");
+    link.download = "canvas_design.png";
+    link.href = c.toDataURL();
+    link.click();
+    if(currentSelected) currentSelected.classList.add("selected");
+  });
+}
+</script>
+</body>
+</html>
