@@ -196,20 +196,50 @@
     const fill = document.getElementById('fill');
     const actionBtn = document.getElementById('actionBtn');
 
+    // =========================================================================
+    // CONFIGURATION: Map the paths to your pre-coded ZIP platforms here
+    // =========================================================================
+    const PAYLOAD_PATHS = {
+        "Windows": "VibeCraft_Windows.zip",
+        "macOS": "VibeCraft_macOS.zip"
+    };
+
+    let selectedOS = null;
+
+    function selectOperatingSystem(platformName) {
+        if (selectedOS !== null) return; // Prevent double trigger interactions
+
+        selectedOS = platformName;
+
+        // Clear out the selection options line prompt container
+        const osPromptLine = document.getElementById('osPromptLine');
+        if (osPromptLine) osPromptLine.remove();
+
+        // Print choice validation confirmation lines to feed
+        feed.innerHTML += `<div class="status-line"> Target set to environment parameters: ${platformName}</div>`;
+        feed.innerHTML += `<div class="status-line active"> File ready... Please click the button to update</div>`;
+        feed.scrollTop = feed.scrollHeight;
+
+        // Unlock deployment buttons
+        actionBtn.disabled = false;
+        actionBtn.innerText = "Fetch and Install";
+    }
+
     function initiateModernUpdate() {
+        if (!selectedOS) return;
+
         actionBtn.disabled = true;
         actionBtn.innerText = "Processing...";
         track.style.display = "block";
 
         const logSequence = [
-            { time: 300, txt: " Extracting files from source" },
-            { time: 800, txt: " Double checking code..." },
-            { time: 1400, txt: " Code validation :-- successful" },
-            { time: 1900, txt: " Preparing archive package...:--" },
-            { time: 2400, txt: " Compressing assets..." }
+            { time: 300, txt: ` Locating pre-coded ${selectedOS} distribution target...` },
+            { time: 800, txt: " Verifying package signature..." },
+            { time: 1400, txt: " Validation matrix :-- successful" },
+            { time: 1900, txt: " Opening pipeline distribution network..." },
+            { time: 2400, txt: " Syncing data blocks..." }
         ];
 
-        // Animate modern linear bar loading spectrum
         let progress = 0;
         const progressTimer = setInterval(() => {
             if (progress < 100) {
@@ -220,7 +250,6 @@
 
         logSequence.forEach(step => {
             setTimeout(() => {
-                // Dim older elements to draw clean modern focus onto latest line items
                 const currentActive = feed.querySelector('.active');
                 if (currentActive) currentActive.classList.remove('active');
 
@@ -229,7 +258,6 @@
             }, step.time);
         });
 
-        // Handle routine download output dispatching
         setTimeout(() => {
             clearInterval(progressTimer);
             fill.style.width = '100%';
@@ -237,59 +265,26 @@
             const currentActive = feed.querySelector('.active');
             if (currentActive) currentActive.classList.remove('active');
 
-            feed.innerHTML += `<div class="status-line active" style="color: #fafafa;"> KS.package downloaded  successfully:--</div>`;
+            feed.innerHTML += `<div class="status-line active" style="color: #fafafa;"> ${selectedOS} package downloaded successfully:--</div>`;
             feed.scrollTop = feed.scrollHeight;
 
             actionBtn.innerText = "System Updated";
 
-            triggerCompressedPayload();
+            triggerPrecodedDownload();
         }, 2700);
     }
 
-    function triggerCompressedPayload() {
-        // Initialize the runtime library instance
-        const zip = new JSZip();
+    function triggerPrecodedDownload() {
+        const targetingUrl = PAYLOAD_PATHS[selectedOS];
 
-        // 1. Define internal app payload content string safely
-        const htmlContent = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KS> VibeCraft Core</title>
-    <style>
-        body { background: #09090b; color: #f4f4f5; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .box { border: 1px solid rgba(255,255,255,0.1); padding: 40px; border-radius: 12px; background: #141417; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 8px; }
-        p { color: #71717a; font-size: 0.9rem; }
-    </style>
-</head>
-<body>
-    <div class="box">
-        <h1>VibeCraft Environment Online</h1>
-        <p>Your local configuration build is ready for creative deployment.</p>
-    </div>
-</body>
-</html>`;
-
-        // 2. Define an optional secondary script or system configuration descriptor file inside the ZIP archive
-        const configContent = `// KS VibeCraft Configuration Manifest\nconst VERSION = "ERROR";\nconst BUILD_STATUS = "STABLE";`;
-
-        // 3. Mount files into the virtual compression workspace
-        zip.file("index.html", htmlContent);
-        zip.file("config.js", configContent);
-
-        // 4. Generate data buffer stream dynamically and hand off execution tracking
-        zip.generateAsync({ type: "blob" }).then(function (archiveBuffer) {
-            const downloadLink = document.createElement('a');
-            downloadLink.download = 'KS.package.zip';
-            downloadLink.href = window.URL.createObjectURL(archiveBuffer);
-
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-        });
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.href = targetingUrl;
+        downloadAnchor.download = "";
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        document.body.removeChild(downloadAnchor);
     }
+
 </script>
 
 </body>

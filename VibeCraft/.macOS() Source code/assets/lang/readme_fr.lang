@@ -1,0 +1,11 @@
+# Application HTML Simple
+Une application HTML simple et légère conçue pour fonctionner parfaitement dans les navigateurs web comme Google Chrome.
+
+## Caractéristiques
+- HTML, CSS et JavaScript pur.
+- Aucun base de données requise (s'exécute entièrement côté client).
+- Aucune installation nécessaire.
+
+## Instructions de Configuration
+1. Extrayez tous les fichiers du dossier zip.
+2. Double-cliquez sur le fichier `index.html` pour lancer l'application instantanément dans votre navigateur.

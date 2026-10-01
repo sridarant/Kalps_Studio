@@ -3,15 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KS> Download Center</title>
-  <!-- Secure inclusion of JSZip library for browser-side compression -->
-  <script src="https://cloudflare.com"></script>
+  <title>KS > Download Center</title>
   <style>
     :root {
       --bg-main: #09090b;
       --card-bg: rgba(20, 20, 23, 0.6);
       --border-primary: rgba(255, 255, 255, 0.08);
-      --border-hover: rgba(255, 255, 255, 0.2);
       --text-main: #f4f4f5;
       --text-muted: #71717a;
     }
@@ -24,9 +21,6 @@
 
     body {
       background-color: var(--bg-main);
-      background-image:
-        radial-gradient(circle at 50% -20%, rgba(255, 255, 255, 0.04) 0%, transparent 50%),
-        radial-gradient(circle at 100% 100%, rgba(255, 255, 255, 0.01) 0%, transparent 40%);
       color: var(--text-main);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       display: flex;
@@ -34,22 +28,20 @@
       align-items: center;
       height: 100vh;
       overflow: hidden;
-      letter-spacing: -0.01em;
     }
 
     .dashboard-card {
       background: var(--card-bg);
       backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--border-primary);
       border-radius: 16px;
       width: 90%;
-      max-width: 480px;
+      max-width: 440px; /* Slightly narrowed for a more balanced layout */
       padding: 40px;
       box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.5);
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 28px; /* Slightly increased gap for visual breathing room */
     }
 
     .brand-meta {
@@ -62,7 +54,6 @@
       font-family: monospace;
       font-weight: 700;
       font-size: 0.95rem;
-      letter-spacing: 1px;
     }
 
     .version-badge {
@@ -79,7 +70,6 @@
       font-size: 1.5rem;
       font-weight: 600;
       margin-bottom: 8px;
-      color: var(--text-main);
     }
 
     .content-group p {
@@ -88,16 +78,21 @@
       color: var(--text-muted);
     }
 
-    /* Twin Button Layout Container Row */
     .btn-row {
       display: flex;
       gap: 12px;
       width: 100%;
     }
 
-    /* Sleek Modern CTA Button */
-    .cta-btn {
+    /* Target the link directly as the flex child */
+    .btn-row a {
       flex: 1;
+      text-decoration: none;
+    }
+
+    /* Direct styled button link layout */
+    .cta-btn {
+      width: 100%;
       background: var(--text-main);
       color: var(--bg-main);
       border: none;
@@ -105,44 +100,15 @@
       border-radius: 8px;
       font-size: 0.9rem;
       font-weight: 600;
+      text-align: center;
       cursor: pointer;
       transition: all 0.2s ease;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      display: block; /* Ensures total clickability within the container */
     }
 
-    .cta-btn:hover:not(:disabled) {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+    .cta-btn:hover {
       background: #ffffff;
-    }
-
-    .cta-btn:disabled {
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--text-muted);
-      border: 1px solid var(--border-primary);
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-
-    /* Modern Linear Progress Track */
-    .progress-track {
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 99px;
-      height: 4px;
-      width: 100%;
-      overflow: hidden;
-      display: none;
-    }
-
-    .progress-fill {
-      background: var(--text-main);
-      height: 100%;
-      width: 0%;
-      transition: width 0.08s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+      box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
     }
   </style>
 </head>
@@ -151,95 +117,26 @@
 <div class="dashboard-card">
   <div class="brand-meta">
     <span class="brand-tag">KS.package // Center</span>
-    <span class="version-badge">Build v1.4.0</span>
+    <span class="version-badge">Build V24.01.2014</span>
   </div>
 
   <div class="content-group">
     <h1>Download your KS package</h1>
-    <p>Grab the ready-to-run installation bundle. Compiles the exact same core source architecture formatted for your target OS platform env.</p>
+    <p>Download the Editor Studio(VibeCraft) via the KS package.</p>
   </div>
 
-  <div class="progress-track" id="track">
-    <div class="progress-fill" id="fill"></div>
-  </div>
-
-  <!-- Side-by-side Layout Action Block -->
   <div class="btn-row">
-    <button class="cta-btn" id="winBtn" onclick="initiateDownload('Windows')">For Windows</button>
-    <button class="cta-btn" id="macBtn" onclick="initiateDownload('macOS')">For macOS</button>
+    <!-- If the ZIP files are in the exact same folder as this HTML file -->
+    <a href="VibeCraft/.windows().zip" download>
+      <button type="button" class="cta-btn">Windows</button>
+    </a>
+
+    <a href="VibeCraft/.macOS().zip" download>
+      <button type="button" class="cta-btn">macOS</button>
+    </a>
   </div>
+
 </div>
-
-<script>
-  const track = document.getElementById('track');
-  const fill = document.getElementById('fill');
-  const winBtn = document.getElementById('winBtn');
-  const macBtn = document.getElementById('macBtn');
-
-  // Shared global asset source variables
-  const htmlContent = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>KS> VibeCraft Core</title>
-    <style>body { background: #09090b; color: #f4f4f5; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }</style>
-</head>
-<body>
-    <div style="border: 1px solid rgba(255,255,255,0.1); padding: 40px; border-radius: 12px; background: #141417; text-align: center;">
-        <h1>✨ VibeCraft Environment Online</h1>
-        <p>Your local configuration build is ready for creative deployment.</p>
-    </div>
-</body>
-</html>`;
-
-  const configContent = `// KS VibeCraft Configuration Manifest\nconst VERSION = "1.4.0";\nconst BUILD_STATUS = "STABLE";`;
-
-  function initiateDownload(targetOS) {
-    // Freeze both action states during compilation step
-    winBtn.disabled = true;
-    macBtn.disabled = true;
-
-    const activeBtn = targetOS === 'Windows' ? winBtn : macBtn;
-    const alternativeBtn = targetOS === 'Windows' ? macBtn : winBtn;
-
-    activeBtn.innerText = "Compiling...";
-    alternativeBtn.style.display = "none"; // Hide unused button elegantly
-    track.style.display = "block";
-
-    let progress = 0;
-    const progressTimer = setInterval(() => {
-      if (progress < 100) {
-        progress += 5;
-        fill.style.width = progress + '%';
-      }
-    }, 20);
-
-    setTimeout(() => {
-      clearInterval(progressTimer);
-      fill.style.width = '100%';
-      activeBtn.innerText = "Started";
-
-      triggerZipDownload(targetOS.toLowerCase());
-    }, 500);
-  }
-
-  function triggerZipDownload(platformName) {
-    const zip = new JSZip();
-
-    // Bundles identical tracking modules across either trigger profile click
-    zip.file("index.html", htmlContent);
-    zip.file("config.js", configContent);
-
-    zip.generateAsync({ type: "blob" }).then(function (archiveBuffer) {
-      const downloadLink = document.createElement('a');
-      downloadLink.download = `KS_VibeCraft_${platformName}_latest.zip`;
-      downloadLink.href = window.URL.createObjectURL(archiveBuffer);
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
-    });
-  }
-</script>
 
 </body>
 </html>

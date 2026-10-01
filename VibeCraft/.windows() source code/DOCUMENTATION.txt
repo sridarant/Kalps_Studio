@@ -1,0 +1,77 @@
+========================================================================
+                       VibeCraft
+========================================================================
+
+Thank you for downloading the VibeCraft Editor! This is a 
+static, html based application designed to run entirely offline 
+on your machine without any external database dependencies.
+
+------------------------------------------------------------------------
+1. HOW TO LAUNCH THE APPLICATION
+------------------------------------------------------------------------
+Because this application is packaged in a portable archive, it requires 
+no formal installation process.
+
+  - Step 1: Extract the contents of the downloaded ZIP folder 
+            completely onto your local drive.
+  - Step 2: Open the extracted folder and locate "index.html".
+  - Step 3: Double-click "index.html" to launch the studio workspace 
+            instantly inside Google Chrome or your default web browser.
+
+*IMPORTANT*: Do not run the app directly from inside the zipped file, 
+	     or core features like image exporting and image uploads will fail.
+
+------------------------------------------------------------------------
+2. WORKSPACE CONTROLS & UTILITIES
+------------------------------------------------------------------------
+  - Freestyle Paint: Click "Paintbrush" in the sidebar to draw directly 
+    on the canvas. Adjust thickness using the "Size" slider.
+
+  - Object Vectors: Use the "Shapes" dropdown grid to populate the 
+    canvas with rectangles, circles, triangles, stars, or lines.
+
+  - Image Stacking: Select an element on the canvas and use "Layer Up" 
+    or "Layer Down" in the top-bar to orchestrate depth overlap.
+
+  - Workspace Purging: Use the "Clear Drawings" button to reset the 
+    freestyle paint layer instantly.
+
+  - Deleting Items: Click a text box or shape and hit the [Delete] or 
+    [Backspace] key on your keyboard to remove it from the canvas.
+
+------------------------------------------------------------------------
+3. EXPORTING DESIGNS
+------------------------------------------------------------------------
+Clicking "Export Image" will render your workspace design and download 
+it as a clean PNG graphic file. Each download automatically includes 
+your unique secure signature prefix (KS_) alongside a randomized hash 
+id timestamp to ensure files never overwrite each other.
+
+------------------------------------------------------------------------
+4. TROUBLESHOOTING FILE STRUCTURE
+------------------------------------------------------------------------
+If the app splash screen loops indefinitely or images fail to export, 
+verify that the contents of your workspace directory look exactly 
+like this blueprint:
+
+  [Your App Directory Folder]
+   ├── index.html
+   ├── README.md
+   ├── DOCUMENTATION.txt 
+   ├── LICENCE.txt 
+   └── assets/
+       ├── lib/
+       |   ├── html2canvas.min.js
+       ├── lang
+       |   ├──readme_en.lang
+       |   ├──readme_fr.lang
+       |   ├──readme_es.lang
+       └── images/
+           ├── favicon.ico
+	   ├── favicon.png   
+	   ├── logo.jpg
+           └── logo.back.png
+
+========================================================================
+                      © 2026 VibeCraft, Kalps Studio
+========================================================================

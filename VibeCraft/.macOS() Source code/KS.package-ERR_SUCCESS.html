@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canva Style Editor</title>
+
+  <script src="html2canvas.min.js"></script>
+  <!-- Failsafe local icon linkage tags -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" href="assets/images/logo.jpg">
+
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    /* Modern Theme Variables */
+    :root {
+      --bg-darker: #121214;
+      --bg-dark: #1e1e24;
+      --bg-panel: #2a2a32;
+      --accent-blue: #00aaff;
+      --accent-blue-hover: #0088cc;
+      --accent-green: #22c55e;
+      --accent-green-hover: #16a34a;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --border-color: #374151;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-darker);
+      color: var(--text-main);
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* --- PREMIUM SPLASH SCREEN --- */
+    #splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: url('assets/images/logo.jpg') no-repeat center center;
+      background-image: url('assets/images/logo.back.png');
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease, visibility 0.5s;
+    }
+    .splash-window {
+      background: rgba(18, 18, 20, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      width: 400px;
+      padding: 40px 30px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .splash-logo {
+      width: 90px;
+      height: 90px;
+      margin-bottom: 20px;
+      border-radius: 18px;
+      object-fit: cover;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    .splash-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+    .splash-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 30px;
+    }
+    .buffer-spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-radius: 50%;
+      border-top-color: var(--accent-blue);
+      margin: 0 auto;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .fade-out {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    /* --- APPLICATION PLATFORM INTERFACE --- */
+    .topbar {
+      height: 60px;
+      background: var(--bg-dark);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      border-bottom: 1px solid var(--border-color);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 10;
+    }
+
+    .topbar-left, .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .editor {
+      display: flex;
+      height: calc(100vh - 60px);
+    }
+
+    /* Redesigned Sidebar Layout */
+    .sidebar {
+      width: 260px;
+      background: var(--bg-dark);
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      border-right: 1px solid var(--border-color);
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+
+    .sidebar-heading {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+
+    /* Canvas Workspace Area */
+    .canvas-area {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--bg-darker);
+      overflow: auto;
+      padding: 40px;
+      position: relative;
+    }
+
+    #canvas {
+      width: 900px;
+      height: 550px;
+      background: white;
+      position: relative;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    /* Interactive Editor Elements */
+    .element { position: absolute; cursor: move; border: 2px solid transparent; box-sizing: border-box; }
+    .element.selected { border: 2px dashed var(--accent-blue); }
+    .handle { width: 14px; height: 14px; background: var(--accent-blue); position: absolute; right: -7px; bottom: -7px; cursor: nwse-resize; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.3); border: 2px solid white; }
+
+    /* Clean export mechanism */
+    .element.selected .handle { display: block; }
+    #canvas:not(.exporting) .element:not(.selected) .handle { display: none; }
+
+    .rect { width: 120px; height: 100px; background: #ff4444; }
+    .circle { width: 100px; height: 100px; background: #0077ff; border-radius: 50%; }
+    /* --- NEW CORE SHAPE GEOMETRIES --- */
+    .triangle {
+      width: 120px;
+      height: 100px;
+      background: #eab308;
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    }
+    .star {
+      width: 120px;
+      height: 120px;
+      background: #a855f7;
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    }
+    .line-shape {
+      width: 150px;
+      height: 8px;
+      background: #f97316;
+      border-radius: 4px;
+    }
+
+    .text { font-size: 24px; color: black; min-width: 80px; padding: 6px; outline: none; word-break: break-word; }
+
+    /* Modernized Controls UI components */
+    button, label.file-label, select.lang-select {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 11px 16px;
+      border: 1px solid transparent;
+      background: var(--bg-panel);
+      color: var(--text-main);
+      cursor: pointer;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      box-sizing: border-box;
+    }
+
+    button:hover, label.file-label:hover {
+      background: #3a3a45;
+      border-color: #4b5563;
+    }
+    button:active, label.file-label:active { transform: scale(0.98); }
+
+    .btn-primary { background: var(--accent-blue); color: white; }
+    .btn-primary:hover { background: var(--accent-blue-hover); }
+
+    .btn-success { background: var(--accent-green); color: white; }
+    .btn-success:hover { background: var(--accent-green-hover); }
+
+    .btn-action { width: auto; padding: 8px 14px; background: var(--bg-panel); border: 1px solid var(--border-color); }
+
+    input[type="color"] {
+      -webkit-appearance: none;
+      border: 1px solid var(--border-color);
+      background: none;
+      width: 38px;
+      height: 34px;
+      cursor: pointer;
+      padding: 0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+    input[type="color"]::-webkit-color-swatch { border: none; }
+
+    .control-group { display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 13px; font-weight: 500; }
+
+    /* Modern custom range inputs */
+    input[type="range"] {
+      flex: 1;
+      -webkit-appearance: none;
+      background: var(--bg-panel);
+      height: 6px;
+      border-radius: 3px;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent-blue);
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+    select.lang-select {
+      width: auto;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      padding: 7px 14px;
+      color: white;
+      border-radius: 8px;
+      font-weight: 600;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Splash Screen Window Container -->
+<div id="splash-screen">
+  <div class="splash-window">
+    <img src="assets/images/logo.jpg" alt="App Logo" class="splash-logo" onerror="this.src='favicon.ico'">
+    <div class="splash-title">Canva Style Editor</div>
+    <div class="splash-subtitle">Setting up workspaces...</div>
+    <div class="buffer-spinner"></div>
+  </div>
+</div>
+
+<!-- Main Top Menu Controller Bar Layout -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div style="width: 1px; height: 24px; background: var(--border-color); margin: 0 5px;"></div>
+
+    <div class="control-group">
+      <label id="lbl-color">Color</label>
+      <input type="color" id="color" value="#000000">
+    </div>
+    <div class="control-group" style="width:180px; margin-left: 10px;">
+      <label id="lbl-size">Size</label>
+      <input type="range" id="fontSize" min="10" max="100" value="24">
+    </div>
+  </div>
+
+  <div class="topbar-right">
+    <button class="btn-action" id="btn-front" onclick="bringFront()">Layer Up</button>
+    <button class="btn-action" id="btn-back" onclick="sendBack()">Layer Down</button>
+    <button class="btn-success" style="width:auto; padding: 8px 16px;" id="btn-export" onclick="download()">Export Image</button>
+  </div>
+</div>
+
+<div class="editor">
+  <div class="sidebar">
+    <div class="sidebar-heading">Tools Mode</div>
+    <button class="btn-primary" id="btn-select-mode" onclick="setTool('select')">Select / Move</button>
+    <button id="btn-paint-mode" onclick="setTool('paint')">Paintbrush</button>
+    <button id="btn-erase-mode" onclick="setTool('erase')">Eraser</button>
+    <button style="background: #ef4444;" onclick="clearPaint()">Clear Drawings</button>
+
+    <div style="height: 10px;"></div>
+    <div class="sidebar-heading">Add Elements</div>
+    <button id="btn-text" onclick="addText()">+ Add Text</button>
+
+
+    <div style="position: relative; width: 100%;">
+      <button class="btn-primary" id="btn-shapes-toggle" onclick="toggleShapesDropdown()">Shapes </button>
+      <div id="shapes-dropdown" style="display: none; position: absolute; top: 100%; left: 0; width: 100%; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); z-index: 100; padding: 6px; box-sizing: border-box; flex-direction: column; gap: 6px;">
+        <button style="text-align: left; background: transparent;" onclick="addRect(); toggleShapesDropdown();">Rectangle</button>
+        <button style="text-align: left; background: transparent;" onclick="addCircle(); toggleShapesDropdown();">Circle</button>
+        <button style="text-align: left; background: transparent;" onclick="addTriangle(); toggleShapesDropdown();">Triangle</button>
+        <button style="text-align: left; background: transparent;" onclick="addStar(); toggleShapesDropdown();">Star</button>
+        <button style="text-align: left; background: transparent;" onclick="addLine(); toggleShapesDropdown();">Line</button>
+      </div>
+    </div>
+
+    <div style="height: 10px;"></div>
+    <div class="sidebar-heading">Media</div>
+
+    <label class="file-label" id="lbl-upload">
+      Upload Image
+      <input type="file" style="display:none;" onchange="uploadImage(event)">
+    </label>
+  </div>
+  <div class="canvas-area">
+    <div id="canvas"></div>
+  </div>
+</div>
+
+<script>
+  let selected = null;
+  let zIndexCounter = 10;
+  const canvas = document.getElementById("canvas");
+
+  // --- 🖌️ PAINT & ERASER ENGINE VARIABLES ---
+  let isDrawing = false;
+  let currentTool = 'select'; // Options: 'select', 'paint', 'erase'
+  let drawColor = '#000000';
+  let brushThickness = 6;
+
+  // Create persistent drawing canvas layer
+  const paintCanvas = document.createElement("canvas");
+  paintCanvas.width = 900;
+  paintCanvas.height = 550;
+  paintCanvas.style.position = "absolute";
+  paintCanvas.style.top = "0";
+  paintCanvas.style.left = "0";
+  paintCanvas.style.pointerEvents = "none";
+  paintCanvas.style.zIndex = "5";
+  canvas.appendChild(paintCanvas);
+  const ctx = paintCanvas.getContext("2d");
+
+  // --- INITIALIZE BOOT SEQUENCE & LOADING ENGINE ---
+  document.addEventListener("DOMContentLoaded", () => {
+    initPaintSettings();
+
+    // The loader will now safely fade out without waiting for any external files
+    const splash = document.getElementById("splash-screen");
+    if (splash) {
+      setTimeout(() => {
+        splash.classList.add("fade-out");
+      }, 1500); // Reduced delay to 1.5 seconds for a faster feel
+    }
+  });
+
+  function initPaintSettings() {
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+  }
+
+  // --- PIXEL-PERFECT CONTEXT TRACKING ENGINE ---
+  canvas.addEventListener("mousedown", (e) => {
+    if (currentTool === 'select') {
+      if (e.target === canvas || e.target === paintCanvas) {
+        document.querySelectorAll(".element").forEach(el => el.classList.remove("selected"));
+        selected = null;
+      }
+      return;
+    }
+
+    isDrawing = true;
+    const rect = paintCanvas.getBoundingClientRect();
+    ctx.beginPath();
+    ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+  });
+
+  canvas.addEventListener("mousemove", (e) => {
+    if (!isDrawing || currentTool === 'select') return;
+
+    const rect = paintCanvas.getBoundingClientRect();
+    ctx.lineWidth = brushThickness;
+
+    if (currentTool === 'erase') {
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.strokeStyle = 'rgba(0,0,0,1)';
+    } else {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.strokeStyle = drawColor;
+    }
+
+    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+    ctx.stroke();
+  });
+
+  document.addEventListener("mouseup", () => {
+    isDrawing = false;
+  });
+
+  function setTool(toolName) {
+    currentTool = toolName;
+
+    const btnSelect = document.getElementById("btn-select-mode");
+    const btnPaint = document.getElementById("btn-paint-mode");
+    const btnErase = document.getElementById("btn-erase-mode");
+
+    if(btnSelect) btnSelect.style.background = (toolName === 'select') ? 'var(--accent-blue)' : '';
+    if(btnPaint) btnPaint.style.background = (toolName === 'paint') ? 'var(--accent-blue)' : '';
+    if(btnErase) btnErase.style.background = (toolName === 'erase') ? 'var(--accent-blue)' : '';
+
+    if (toolName === 'select') {
+      paintCanvas.style.pointerEvents = "none";
+      canvas.style.cursor = "default";
+    } else {
+      paintCanvas.style.pointerEvents = "auto";
+      canvas.style.cursor = (toolName === 'erase') ? "cell" : "crosshair";
+      if (selected) {
+        selected.classList.remove("selected");
+        selected = null;
+      }
+    }
+  }
+
+  function clearPaint() {
+    ctx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
+  }
+
+  function selectElement(el){
+    if (currentTool !== 'select') return;
+    document.querySelectorAll(".element").forEach(e=>e.classList.remove("selected"));
+    selected = el;
+    el.classList.add("selected");
+
+    if(el.classList.contains("text")){
+      document.getElementById("fontSize").value = parseInt(window.getComputedStyle(el).fontSize) || 24;
+    }
+  }
+
+  function makeDraggable(el){
+    el.addEventListener("mousedown", (e)=>{
+      if(e.target.classList.contains("handle") || currentTool !== 'select') return;
+      selectElement(el);
+
+      let startX = e.clientX;
+      let startY = e.clientY;
+      let elemX = el.offsetLeft;
+      let elemY = el.offsetTop;
+
+      function onMouseMove(moveEvent) {
+        let deltaX = moveEvent.clientX - startX;
+        let deltaY = moveEvent.clientY - startY;
+        el.style.left = (elemX + deltaX) + "px";
+        el.style.top = (elemY + deltaY) + "px";
+      }
+
+      function onMouseUp() {
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+      }
+
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("mouseup", onMouseUp);
+    });
+  }
+
+  function addResize(el){
+    let handle = document.createElement("div");
+    handle.className = "handle";
+    el.appendChild(handle);
+
+    handle.addEventListener("mousedown", (e)=>{
+      if(currentTool !== 'select') return;
+      e.stopPropagation();
+      e.preventDefault();
+
+      let startWidth = el.offsetWidth;
+      let startHeight = el.offsetHeight;
+      let startX = e.clientX;
+      let startY = e.clientY;
+
+      function onMouseMove(moveEvent) {
+        let width = startWidth + (moveEvent.clientX - startX);
+        let height = startHeight + (moveEvent.clientY - startY);
+        if(width > 20) el.style.width = width + "px";
+        if(height > 20) el.style.height = height + "px";
+      }
+
+      function onMouseUp() {
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+      }
+
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("mouseup", onMouseUp);
+    });
+  }
+
+  function addText(){
+    let el = document.createElement("div");
+    el.className = "element text";
+    el.contentEditable = true;
+    el.innerText = "Double click to edit";
+    el.style.left = "100px";
+    el.style.top = "100px";
+    el.style.zIndex = ++zIndexCounter;
+    canvas.appendChild(el);
+    makeDraggable(el);
+    addResize(el);
+    setTool('select');
+    selectElement(el);
+  }
+
+  function addRect(){
+    let el = document.createElement("div");
+    el.className = "element rect";
+    el.style.left = "150px";
+    el.style.top = "150px";
+    el.style.zIndex = ++zIndexCounter;
+    canvas.appendChild(el);
+    makeDraggable(el);
+    addResize(el);
+    setTool('select');
+    selectElement(el);
+  }
+
+  function addCircle(){
+    let el = document.createElement("div");
+    el.className = "element circle";
+    el.style.left = "200px";
+    el.style.top = "200px";
+    el.style.zIndex = ++zIndexCounter;
+    canvas.appendChild(el);
+    makeDraggable(el);
+    addResize(el);
+    setTool('select');
+    selectElement(el);
+  }
+
+  function addTriangle(){
+    let el = document.createElement("div");
+    el.className = "element triangle";
+    el.style.left = "220px";
+    el.style.top = "180px";
+    el.style.zIndex = ++zIndexCounter;
+    canvas.appendChild(el);
+    makeDraggable(el);
+    addResize(el);
+    setTool('select');
+    selectElement(el);
+  }
+
+  function addStar(){
+    let el = document.createElement("div");
+    el.className = "element star";
+    el.style.left = "250px";
+    el.style.top = "200px";
+    el.style.zIndex = ++zIndexCounter;
+    canvas.appendChild(el);
+    makeDraggable(el);
+    addResize(el);
+    setTool('select');
+    selectElement(el);
+  }
+
+  function addLine(){
+    let el = document.createElement("div");
+    el.className = "element line-shape";
+    el.style.left = "180px";
+    el.style.top = "220px";
+    el.style.zIndex = ++zIndexCounter;
+    canvas.appendChild(el);
+    makeDraggable(el);
+    addResize(el);
+    setTool('select');
+    selectElement(el);
+  }
+
+  function toggleShapesDropdown() {
+    const dropdown = document.getElementById("shapes-dropdown");
+    if (dropdown) {
+      dropdown.style.display = (dropdown.style.display === "none" || dropdown.style.display === "") ? "flex" : "none";
+    }
+  }
+
+  window.addEventListener("click", (e) => {
+    const toggleBtn = document.getElementById("btn-shapes-toggle");
+    const dropdown = document.getElementById("shapes-dropdown");
+    if (dropdown && toggleBtn && e.target !== toggleBtn && !toggleBtn.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.style.display = "none";
+    }
+  });
+
+  function uploadImage(e){
+    if(!e.target.files || !e.target.files[0]) return;
+    let img = document.createElement("img");
+    img.src = URL.createObjectURL(e.target.files[0]);
+    img.className = "element";
+    img.style.width = "200px";
+    img.style.left = "250px";
+    img.style.top = "150px";
+    img.style.zIndex = ++zIndexCounter;
+    img.onload = () => {
+      canvas.appendChild(img);
+      makeDraggable(img);
+      addResize(img);
+      setTool('select');
+      selectElement(img);
+    };
+  }
+
+  document.getElementById("color").oninput = (e)=>{
+    drawColor = e.target.value;
+    if(selected){
+      if(selected.classList.contains("text")) {
+        selected.style.color = e.target.value;
+      } else {
+        selected.style.backgroundColor = e.target.value;
+      }
+    }
+  };
+
+  document.getElementById("fontSize").oninput = (e)=>{
+    brushThickness = Math.max(2, e.target.value / 3);
+    if(selected && selected.classList.contains("text")){
+      selected.style.fontSize = e.target.value + "px";
+    }
+  };
+
+  function bringFront(){
+    if(selected) selected.style.zIndex = ++zIndexCounter;
+  }
+
+  function sendBack(){
+    if(selected) {
+      let currentZ = parseInt(selected.style.zIndex) || 10;
+      if(currentZ > 1) selected.style.zIndex = currentZ - 1;
+    }
+  }
+
+  document.addEventListener("keydown", (e)=>{
+    if((e.key === "Delete" || e.key === "Backspace") && selected){
+      if(document.activeElement === selected) return;
+      selected.remove();
+      selected = null;
+    }
+  });
+
+  function download(){
+    let currentSelected = selected;
+    if(selected) selected.classList.remove("selected");
+    canvas.classList.add("exporting");
+
+    html2canvas(canvas, { scale: 2, useCORS: true }).then(c=>{
+
+      const timestamp = new Date().toISOString().slice(0,10).replace(/-/g, "");
+      const uniqueHash = Math.random().toString(36).substring(2, 8).toUpperCase();
+
+      const uniqueFileName = `KS_${timestamp}_${uniqueHash}.png`;
+
+      let link = document.createElement("a");
+      link.download = uniqueFileName;
+      link.href = c.toDataURL();
+      link.click();
+
+      canvas.classList.remove("exporting");
+      if(currentSelected) currentSelected.classList.add("selected");
+    });
+  }
+</script>
+</body>
+</html>
